@@ -1,8 +1,8 @@
 import { ButtonHTMLAttributes, FC } from 'react';
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ActionButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'accent';
 }
 
