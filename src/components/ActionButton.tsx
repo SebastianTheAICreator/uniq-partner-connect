@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, FC } from 'react';
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'accent';
@@ -12,22 +13,24 @@ const ActionButton: FC<ActionButtonProps> = ({
   ...props 
 }) => {
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       className={cn(
-        "px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition-all duration-300",
-        "hover:scale-105 hover:shadow-xl",
-        "active:scale-95",
+        "px-6 py-3 rounded-lg font-semibold text-white shadow-lg",
+        "transition-all duration-300",
+        "hover:shadow-xl",
         {
-          'bg-primary hover:bg-primary-hover': variant === 'primary',
-          'bg-secondary hover:bg-secondary-hover': variant === 'secondary',
-          'bg-accent hover:bg-accent-hover': variant === 'accent',
+          'bg-gradient-to-r from-primary to-primary-hover': variant === 'primary',
+          'bg-gradient-to-r from-secondary to-secondary-hover': variant === 'secondary',
+          'bg-gradient-to-r from-accent to-accent-hover': variant === 'accent',
         },
         className
       )}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
 

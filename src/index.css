@@ -5,9 +5,18 @@
 @layer base {
   body {
     @apply bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 min-h-screen;
+    background-attachment: fixed;
   }
 }
 
 .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+}
+
+.glass-card {
+  @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-xl;
+}
+
+.hover-lift {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
 }
