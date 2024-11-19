@@ -3,8 +3,11 @@ import Footer from "@/components/Footer";
 import ActionButton from "@/components/ActionButton";
 import { ArrowRight, Users, Heart, Shield } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -30,7 +33,11 @@ const Index = () => {
           </motion.div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-            <ActionButton variant="primary" className="group">
+            <ActionButton 
+              variant="primary" 
+              className="group"
+              onClick={() => navigate('/community')}
+            >
               Explorează Comunități
               <Users className="ml-2 h-5 w-5 inline-block transition-transform group-hover:scale-110" />
             </ActionButton>
