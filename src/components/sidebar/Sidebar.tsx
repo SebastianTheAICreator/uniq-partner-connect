@@ -16,14 +16,15 @@ const Sidebar = ({ isExpanded, setIsExpanded, conversations }: SidebarProps) => 
   return (
     <>
       <motion.div 
-        initial={{ x: isExpanded ? 0 : -240 }}
-        animate={{ x: isExpanded ? 0 : -240 }}
+        initial={{ x: isExpanded ? 0 : -280 }}
+        animate={{ x: isExpanded ? 0 : -280 }}
         className={cn(
-          "fixed left-0 top-0 h-full bg-white border-r border-gray-200 shadow-lg z-50",
-          isExpanded ? "w-60" : "w-16"
+          "fixed left-0 top-0 h-full bg-white/95 backdrop-blur-md border-r border-gray-100/50 shadow-2xl z-50",
+          "transition-all duration-300 ease-in-out",
+          isExpanded ? "w-[280px]" : "w-20"
         )}
       >
-        <div className="p-4">
+        <div className="p-6">
           <SidebarContent 
             isExpanded={isExpanded}
             conversations={conversations}
