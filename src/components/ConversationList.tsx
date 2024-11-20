@@ -78,7 +78,6 @@ const ConversationList = () => {
         conversations={mockConversations}
       />
 
-      {/* Main Content */}
       <motion.div 
         className={cn(
           "flex-1 p-6 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50",
@@ -119,44 +118,45 @@ const ConversationList = () => {
             </div>
           </motion.div>
 
-        {/* Conversations List */}
-        <ScrollArea className="h-[calc(100vh-24rem)]">
-          <div className="space-y-6">
-            {mockConversations.map((conv) => (
-              <motion.div
-                key={conv.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
-              >
-                <div className="flex items-start justify-between">
-                  <h3 className="text-xl font-semibold">{conv.title}</h3>
-                  <span className="text-sm text-gray-500">{conv.timestamp}</span>
-                </div>
-                <p className="mt-2 text-gray-600">{conv.lastMessage}</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex items-center space-x-6">
-                    <button 
-                      onClick={handleLike}
-                      className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors"
-                    >
-                      <ThumbsUp className="h-4 w-4" />
-                      <span>{conv.likes}</span>
-                    </button>
-                    <button className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors">
-                      <ThumbsDown className="h-4 w-4" />
-                      <span>{conv.dislikes}</span>
-                    </button>
+          {/* Conversations List */}
+          <ScrollArea className="h-[calc(100vh-24rem)]">
+            <div className="space-y-6">
+              {mockConversations.map((conv) => (
+                <motion.div
+                  key={conv.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+                >
+                  <div className="flex items-start justify-between">
+                    <h3 className="text-xl font-semibold">{conv.title}</h3>
+                    <span className="text-sm text-gray-500">{conv.timestamp}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <MessageCircle className="h-4 w-4" />
-                    <span>{conv.participants} participanți</span>
+                  <p className="mt-2 text-gray-600">{conv.lastMessage}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center space-x-6">
+                      <button 
+                        onClick={handleLike}
+                        className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors"
+                      >
+                        <ThumbsUp className="h-4 w-4" />
+                        <span>{conv.likes}</span>
+                      </button>
+                      <button className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors">
+                        <ThumbsDown className="h-4 w-4" />
+                        <span>{conv.dislikes}</span>
+                      </button>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-500">
+                      <MessageCircle className="h-4 w-4" />
+                      <span>{conv.participants} participanți</span>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </ScrollArea>
+                </motion.div>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
       </motion.div>
     </div>
   );
