@@ -56,20 +56,6 @@ const ConversationList = () => {
         conversations={mockConversations}
       />
 
-      <Button
-        variant="ghost"
-        onClick={() => setIsExpanded(!isExpanded)}
-        className={cn(
-          "fixed top-24 left-6 z-50 p-3",
-          "bg-white/95 backdrop-blur-md shadow-xl rounded-xl",
-          "hover:bg-primary/10 transition-all duration-300",
-          "border border-gray-100/50 hover:border-primary/20",
-          "hover:scale-105 hover:shadow-primary/20"
-        )}
-      >
-        <Menu className="h-5 w-5 text-gray-700 hover:text-primary transition-colors" />
-      </Button>
-
       <div 
         className={cn(
           "flex-1 p-6 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50",
