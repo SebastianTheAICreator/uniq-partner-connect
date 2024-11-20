@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, ThumbsUp, ThumbsDown, Image as ImageIcon, FileVideo, Paperclip, Menu } from 'lucide-react';
+import { MessageCircle, ThumbsUp, ThumbsDown, Image as ImageIcon, FileVideo, Paperclip } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
@@ -86,15 +86,6 @@ const ConversationList = () => {
         layout
       >
         <div className="max-w-4xl mx-auto space-y-8 mt-16">
-          {/* Toggle Sidebar Button */}
-          <Button
-            variant="ghost"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="fixed top-20 left-4 z-50 bg-white/80 backdrop-blur-sm shadow-md rounded-lg"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-
           {/* New Post Section */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
