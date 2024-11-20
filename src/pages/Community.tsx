@@ -29,7 +29,9 @@ const Community = () => {
       title: "Comunitate nouă",
       description: `Te-ai alăturat comunității: ${category}`,
     });
-    console.log("Joined community:", category);
+
+    // Trigger notification animation by dispatching a custom event
+    window.dispatchEvent(new CustomEvent('newNotification'));
   };
 
   return (
