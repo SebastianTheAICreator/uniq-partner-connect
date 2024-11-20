@@ -3,6 +3,7 @@ import { Heart, Users, Bell, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from './ui/use-toast';
 import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 import {
   Sheet,
   SheetContent,
