@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, ThumbsUp, ThumbsDown, Image as ImageIcon, FileVideo, Paperclip, Clock, Settings, Globe, BellRing, Menu } from 'lucide-react';
+import { MessageCircle, ThumbsUp, ThumbsDown, Image as ImageIcon, FileVideo, Paperclip } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
-import { Input } from './ui/input';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/lib/utils';
+import Sidebar from './sidebar/Sidebar';
 
 interface Conversation {
   id: string;
@@ -43,8 +43,6 @@ const ConversationList = () => {
   const { toast } = useToast();
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [newPost, setNewPost] = React.useState('');
-  const [hasNotification, setHasNotification] = React.useState(false);
-  const [notifications, setNotifications] = React.useState<string[]>([]);
 
   const handlePostSubmit = () => {
     if (newPost.trim()) {
@@ -63,111 +61,13 @@ const ConversationList = () => {
     });
   };
 
-  const handleLike = () => {
-    const newNotification = "Cineva a apreciat postarea ta!";
-    setNotifications(prev => [newNotification, ...prev]);
-    setHasNotification(true);
-    toast({
-      title: "Notificare nouă",
-      description: newNotification,
-    });
-  };
-
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
-      {/* Left Sidebar */}
-      <motion.div 
-        initial={{ x: isExpanded ? 0 : -240 }}
-        animate={{ x: isExpanded ? 0 : -240 }}
-        className={cn(
-          "fixed left-0 top-0 h-full bg-white border-r border-gray-200 shadow-lg z-50",
-          isExpanded ? "w-60" : "w-16"
-        )}
-      >
-        <div className="p-4">
-          <Button
-            variant="ghost"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full mb-4 flex items-center justify-center"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-
-          {/* Notifications */}
-          <div className="relative mb-4">
-            <motion.div
-              animate={hasNotification ? {
-                rotate: [0, 15, -15, 0],
-                transition: { duration: 0.5, repeat: 3 }
-              } : {}}
-            >
-              <Button
-                variant="ghost"
-                className="w-full relative"
-                onClick={() => setHasNotification(false)}
-              >
-                <BellRing className="h-5 w-5" />
-                {hasNotification && (
-                  <span className="absolute top-0 right-2 h-2 w-2 bg-red-500 rounded-full" />
-                )}
-              </Button>
-            </motion.div>
-            
-            {hasNotification && isExpanded && (
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-12 left-0 w-full bg-white rounded-md shadow-lg p-2 z-50"
-                >
-                  <ScrollArea className="h-40">
-                    {notifications.map((notification, index) => (
-                      <div key={index} className="p-2 text-sm border-b border-gray-100 last:border-0">
-                        {notification}
-                      </div>
-                    ))}
-                  </ScrollArea>
-                </motion.div>
-              </AnimatePresence>
-            )}
-          </div>
-          
-          {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-6"
-            >
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Conversații Recente</h3>
-                <ScrollArea className="h-[200px]">
-                  {mockConversations.map((conv) => (
-                    <div key={conv.id} className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-                      <Clock className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm truncate">{conv.title}</span>
-                    </div>
-                  ))}
-                </ScrollArea>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Setări</h3>
-                <div className="space-y-2">
-                  <Button variant="ghost" className="w-full justify-start">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Preferințe
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start">
-                    <Globe className="mr-2 h-4 w-4" />
-                    Limbă
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </motion.div>
+      <Sidebar 
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
+        conversations={mockConversations}
+      />
 
       {/* Main Content */}
       <motion.div 
@@ -227,10 +127,7 @@ const ConversationList = () => {
                   <p className="mt-2 text-gray-600">{conv.lastMessage}</p>
                   <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center space-x-6">
-                      <button 
-                        className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors"
-                        onClick={handleLike}
-                      >
+                      <button className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors">
                         <ThumbsUp className="h-4 w-4" />
                         <span>{conv.likes}</span>
                       </button>
