@@ -14,7 +14,7 @@ const SidebarToggle = ({ isExpanded, onClick }: SidebarToggleProps) => {
       onClick={onClick}
       className={cn(
         "fixed top-20 z-50 p-3 bg-white/95 backdrop-blur-md shadow-xl rounded-xl hover:bg-primary/10 transition-all duration-300 border border-gray-100/50",
-        isExpanded ? "left-[280px]" : "left-24",
+        isExpanded ? "right-6" : "right-6",
         "hover:scale-105 hover:shadow-primary/20"
       )}
     >
