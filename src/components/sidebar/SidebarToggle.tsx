@@ -13,11 +13,11 @@ const SidebarToggle = ({ isExpanded, onClick }: SidebarToggleProps) => {
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "fixed top-4 z-50 p-2 bg-white/80 backdrop-blur-sm shadow-md rounded-lg transition-all duration-300",
-        isExpanded ? "left-60" : "left-16"
+        "fixed top-20 z-50 p-3 bg-white/90 backdrop-blur-sm shadow-lg rounded-lg hover:bg-primary/5 transition-all duration-300 border border-gray-100",
+        isExpanded ? "left-64" : "left-20"
       )}
     >
-      <Menu className="h-5 w-5" />
+      <Menu className="h-5 w-5 text-gray-600 hover:text-primary transition-colors" />
     </Button>
   );
 };
