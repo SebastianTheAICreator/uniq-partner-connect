@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Users, MessageCircle, Heart, Sparkles, Shield } from "lucide-react";
+import { Search, Users, MessageCircle, Heart, Sparkles, Shield, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ActionButton from "@/components/ActionButton";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from "@/components/Navbar";
 import ConversationList from "@/components/ConversationList";
+import { Button } from "@/components/ui/button";
 
 const Community = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,8 +30,6 @@ const Community = () => {
       title: "Comunitate nouă",
       description: `Te-ai alăturat comunității: ${category}`,
     });
-
-    // Trigger notification animation by dispatching a custom event
     window.dispatchEvent(new CustomEvent('newNotification'));
   };
 
