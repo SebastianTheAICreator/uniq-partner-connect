@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { ArrowLeft, MessageCircle, Heart, Share2, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CreatePost from './CreatePost';
+import CreateDiscussion from './CreateDiscussion';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -70,6 +71,19 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   const [replyingTo, setReplyingTo] = React.useState<string | null>(null);
   const [replyContent, setReplyContent] = React.useState('');
   const { toast } = useToast();
+
+  const handleNewDiscussion = (discussion: { title: string; description: string }) => {
+    const newPost: Post = {
+      id: Date.now().toString(),
+      content: discussion.description,
+      author: 'CurrentUser',
+      timestamp: 'acum',
+      likes: 0,
+      dislikes: 0,
+      replies: [],
+    };
+    setPosts([newPost, ...posts]);
+  };
 
   const handleLike = (postId: string) => {
     setPosts(prevPosts => 
@@ -164,6 +178,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
 
+      <CreateDiscussion onDiscussionCreated={handleNewDiscussion} />
       <CreatePost topicId={topicId} onPostCreated={() => console.log('Post created')} />
 
       <ScrollArea className="h-[calc(100vh-24rem)]">

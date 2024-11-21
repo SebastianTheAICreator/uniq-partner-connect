@@ -41,7 +41,7 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
         </div>
         <div className="flex items-center space-x-2 text-gray-500">
           <MessageCircle className="h-4 w-4" />
-          <span>{topic.participants} participanți</span>
+          <span>{topic.participants}/100 participanți</span>
         </div>
       </div>
     </motion.div>
