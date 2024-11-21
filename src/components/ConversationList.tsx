@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Menu } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
 import TopicCard from './conversation/TopicCard';
 import TopicPosts from './conversation/TopicPosts';
+import CreateDiscussion from './conversation/CreateDiscussion';
 
 interface Conversation {
   id: string;
@@ -40,27 +40,21 @@ const mockConversations: Conversation[] = [
 const ConversationList = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [showSidebar, setShowSidebar] = useState(false);
 
   const handleTopicClick = (topicId: string) => {
     setSelectedTopic(topicId);
     console.log('Selected topic:', topicId);
   };
 
+  const handleNewDiscussion = (discussion: { title: string; description: string }) => {
+    console.log('New discussion created:', discussion);
+    // Here you can add the new discussion to your list if needed
+  };
+
   const selectedTopicData = mockConversations.find(conv => conv.id === selectedTopic);
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
-      {!selectedTopic && (
-        <Button
-          variant="ghost"
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="fixed left-4 top-20 z-50 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white/90 transition-all duration-300"
-        >
-          <Menu className="h-6 w-6 text-gray-600" />
-        </Button>
-      )}
-
       <Sidebar 
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
@@ -85,6 +79,7 @@ const ConversationList = () => {
             />
           ) : (
             <div className="space-y-6">
+              <CreateDiscussion onDiscussionCreated={handleNewDiscussion} />
               {mockConversations.map((conv) => (
                 <TopicCard
                   key={conv.id}
