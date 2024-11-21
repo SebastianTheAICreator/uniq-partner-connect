@@ -27,7 +27,6 @@ const Navbar = () => {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    // Simulăm primirea de notificări în timp real
     const interval = setInterval(() => {
       const newNotification: Notification = {
         id: Date.now().toString(),
@@ -41,7 +40,7 @@ const Navbar = () => {
       setUnreadCount(prev => prev + 1);
       
       console.log('New notification received:', newNotification);
-    }, 30000); // La fiecare 30 secunde
+    }, 30000);
 
     return () => clearInterval(interval);
   }, []);
@@ -112,22 +111,34 @@ const Navbar = () => {
                   )}
                 </motion.button>
               </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px]">
+              <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30 backdrop-blur-lg border-l border-white/20">
                 <SheetHeader>
                   <SheetTitle className="flex justify-between items-center">
-                    <span>Notificări</span>
-                    <button
+                    <motion.span
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-2xl font-bold gradient-text"
+                    >
+                      Notificări
+                    </motion.span>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={handleClearAll}
-                      className="text-sm text-gray-500 hover:text-primary transition-colors"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors"
                     >
                       Șterge tot
-                    </button>
+                    </motion.button>
                   </SheetTitle>
                   <SheetDescription>
                     Vezi toate notificările tale recente
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-6 space-y-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-4 custom-scrollbar"
+                >
                   <AnimatePresence>
                     {notifications.map((notification) => (
                       <motion.div
@@ -136,10 +147,11 @@ const Navbar = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, x: -100 }}
                         className={cn(
-                          "p-4 rounded-lg border transition-colors",
+                          "p-4 rounded-lg transition-all duration-300 hover:scale-[1.02]",
+                          "border border-white/20 shadow-lg",
                           notification.read
-                            ? "bg-gray-50 border-gray-100"
-                            : "bg-blue-50 border-blue-100"
+                            ? "bg-white/40"
+                            : "bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5"
                         )}
                       >
                         <div className="flex justify-between items-start">
@@ -155,12 +167,14 @@ const Navbar = () => {
                             </span>
                           </div>
                           {!notification.read && (
-                            <button
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
                               onClick={() => handleMarkAsRead(notification.id)}
-                              className="text-xs text-blue-600 hover:text-blue-800"
+                              className="text-xs text-primary hover:text-primary/80 transition-colors"
                             >
                               Marchează ca citit
-                            </button>
+                            </motion.button>
                           )}
                         </div>
                       </motion.div>
@@ -168,11 +182,15 @@ const Navbar = () => {
                   </AnimatePresence>
                   
                   {notifications.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center py-8 text-gray-500"
+                    >
                       Nu ai notificări noi
-                    </div>
+                    </motion.div>
                   )}
-                </div>
+                </motion.div>
               </SheetContent>
             </Sheet>
           </div>

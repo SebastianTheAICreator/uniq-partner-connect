@@ -2,6 +2,7 @@ import { Menu } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 interface SidebarToggleProps {
   isExpanded: boolean;
@@ -9,12 +10,37 @@ interface SidebarToggleProps {
 }
 
 const SidebarToggle = ({ isExpanded, onClick }: SidebarToggleProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [showToggle, setShowToggle] = useState(false);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
+    if (!isHovered) {
+      timeout = setTimeout(() => {
+        setShowToggle(false);
+      }, 300);
+    }
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [isHovered]);
+
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3 }}
-      className="fixed left-0 top-20 z-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: showToggle || isHovered ? 1 : 0 }}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        setShowToggle(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+      }}
+      className="fixed left-0 top-0 bottom-0 w-16 z-50 flex items-center"
     >
       <Button
         variant="ghost"
