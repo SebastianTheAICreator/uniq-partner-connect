@@ -1,80 +1,57 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Users, MessageCircle, Heart, Sparkles, Shield, Menu } from "lucide-react";
+import { Search, Users, MessageCircle, Heart, Sparkles, Shield } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ActionButton from "@/components/ActionButton";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from "@/components/Navbar";
 import ConversationList from "@/components/ConversationList";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import CreateCommunityDialog from "@/components/community/CreateCommunityDialog";
+
+interface Community {
+  name: string;
+  description: string;
+  interests: string[];
+  memberCount?: number;
+  conversationCount?: number;
+}
 
 const Community = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { toast } = useToast();
-  const [isCreatingCommunity, setIsCreatingCommunity] = useState(false);
-  const [newCommunityData, setNewCommunityData] = useState({
-    name: "",
-    description: "",
-    interests: [] as string[]
-  });
+  const [communities, setCommunities] = useState<Community[]>([
+    {
+      name: "Arte & Cultură",
+      description: "Pentru pasionații de artă și cultură",
+      interests: ["Artă", "Cultură"],
+      memberCount: 1234,
+      conversationCount: 45
+    },
+    {
+      name: "Gaming & Tech",
+      description: "Discuții despre jocuri și tehnologie",
+      interests: ["Gaming", "Tehnologie"],
+      memberCount: 2345,
+      conversationCount: 67
+    },
+  ]);
 
-  const categories = [
-    { name: "Arte & Cultură", icon: Sparkles, color: "from-purple-500/10 to-pink-500/5" },
-    { name: "Gaming & Tech", icon: Shield, color: "from-blue-500/10 to-cyan-500/5" },
-    { name: "LGBTQ+", icon: Heart, color: "from-pink-500/10 to-rose-500/5" },
-    { name: "Lifestyle", icon: Users, color: "from-green-500/10 to-emerald-500/5" },
-    { name: "Muzică", icon: MessageCircle, color: "from-yellow-500/10 to-amber-500/5" },
-    { name: "Sport & Fitness", icon: Shield, color: "from-red-500/10 to-orange-500/5" },
-    { name: "Spiritualitate", icon: Sparkles, color: "from-indigo-500/10 to-violet-500/5" },
-    { name: "Hobby-uri", icon: Heart, color: "from-teal-500/10 to-emerald-500/5" },
-  ];
-
-  // Sample interests - you can expand this list
-  const interests = [
-    "Pictură", "Sculptură", "Fotografie", "Design", "Arhitectură",
-    "Gaming PC", "Console Gaming", "Mobile Gaming", "eSports", "Game Development",
-    "LGBTQ+ Rights", "LGBTQ+ Culture", "LGBTQ+ Events", "LGBTQ+ Support",
-    "Fashion", "Beauty", "Travel", "Food & Cooking", "Home & Garden",
-    "Rock", "Pop", "Jazz", "Classical", "Electronic",
-    "Football", "Basketball", "Tennis", "Running", "Yoga",
-    "Meditation", "Mindfulness", "Religion", "Philosophy", "Astrology",
-    "Reading", "Writing", "Crafts", "DIY", "Collecting"
-  ];
-
-  const handleJoinCommunity = (category: string) => {
-    setSelectedCategory(category);
+  const handleJoinCommunity = (communityName: string) => {
+    setSelectedCategory(communityName);
     toast({
       title: "Comunitate nouă",
-      description: `Te-ai alăturat comunității: ${category}`,
+      description: `Te-ai alăturat comunității: ${communityName}`,
     });
   };
 
-  const handleCreateCommunity = () => {
-    if (newCommunityData.name && newCommunityData.description && newCommunityData.interests.length > 0) {
-      toast({
-        title: "Comunitate creată",
-        description: `Comunitatea "${newCommunityData.name}" a fost creată cu succes!`,
-      });
-      setIsCreatingCommunity(false);
-      setNewCommunityData({ name: "", description: "", interests: [] });
-    } else {
-      toast({
-        title: "Eroare",
-        description: "Te rugăm să completezi toate câmpurile necesare.",
-        variant: "destructive"
-      });
-    }
+  const handleCommunityCreated = (newCommunity: Community) => {
+    const communityWithCounts = {
+      ...newCommunity,
+      memberCount: 1, // Starting with the creator
+      conversationCount: 0
+    };
+    setCommunities(prev => [communityWithCounts, ...prev]);
   };
 
   return (
@@ -120,125 +97,49 @@ const Community = () => {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {categories.map((category, index) => (
-                <motion.div
-                  key={category.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="glass-card rounded-xl overflow-hidden hover-lift"
-                >
-                  <div className={`p-6 space-y-4 bg-gradient-to-br ${category.color}`}>
-                    <div className="flex items-center justify-between">
-                      <category.icon className="w-8 h-8 text-primary" />
-                      <span className="text-sm text-gray-500">
-                        {Math.floor(Math.random() * 1000 + 100)} membri
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-xl font-semibold text-gray-800">{category.name}</h3>
-                    
-                    <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                      <MessageCircle className="h-4 w-4" />
-                      <span>{Math.floor(Math.random() * 50 + 10)} conversații active</span>
-                    </div>
+              {communities
+                .filter(community => 
+                  community.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  community.interests.some(interest => 
+                    interest.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                )
+                .map((community, index) => (
+                  <motion.div
+                    key={community.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="glass-card rounded-xl overflow-hidden hover-lift"
+                  >
+                    <div className="p-6 space-y-4 bg-gradient-to-br from-purple-500/10 to-pink-500/5">
+                      <div className="flex items-center justify-between">
+                        <Users className="w-8 h-8 text-primary" />
+                        <span className="text-sm text-gray-500">
+                          {community.memberCount} membri
+                        </span>
+                      </div>
+                      
+                      <h3 className="text-xl font-semibold text-gray-800">{community.name}</h3>
+                      
+                      <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                        <MessageCircle className="h-4 w-4" />
+                        <span>{community.conversationCount} conversații active</span>
+                      </div>
 
-                    <ActionButton
-                      onClick={() => handleJoinCommunity(category.name)}
-                      className="w-full group flex items-center justify-center space-x-2 bg-white/50 hover:bg-white/80"
-                    >
-                      <Heart className="h-5 w-5 group-hover:text-primary transition-colors" />
-                      <span>Alătură-te</span>
-                    </ActionButton>
-                  </div>
-                </motion.div>
-              ))}
+                      <ActionButton
+                        onClick={() => handleJoinCommunity(community.name)}
+                        className="w-full group flex items-center justify-center space-x-2 bg-white/50 hover:bg-white/80"
+                      >
+                        <Heart className="h-5 w-5 group-hover:text-primary transition-colors" />
+                        <span>Alătură-te</span>
+                      </ActionButton>
+                    </div>
+                  </motion.div>
+                ))}
             </div>
 
-            <Dialog>
-              <DialogTrigger asChild>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                  className="text-center space-y-6 max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg"
-                >
-                  <h2 className="text-2xl font-semibold gradient-text">Nu găsești ce cauți?</h2>
-                  <p className="text-gray-600">
-                    Creează propria ta comunitate și conectează-te cu persoane care împărtășesc aceleași pasiuni ca tine.
-                  </p>
-                  <ActionButton
-                    variant="secondary"
-                    className="group"
-                  >
-                    Creează o Comunitate Nouă
-                    <Sparkles className="ml-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
-                  </ActionButton>
-                </motion.div>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Creează o comunitate nouă</DialogTitle>
-                  <DialogDescription>
-                    Completează detaliile pentru noua ta comunitate. Fă-o unică și atractivă!
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="name">Numele comunității</Label>
-                    <Input
-                      id="name"
-                      value={newCommunityData.name}
-                      onChange={(e) => setNewCommunityData(prev => ({
-                        ...prev,
-                        name: e.target.value
-                      }))}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="description">Descriere</Label>
-                    <Textarea
-                      id="description"
-                      value={newCommunityData.description}
-                      onChange={(e) => setNewCommunityData(prev => ({
-                        ...prev,
-                        description: e.target.value
-                      }))}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Interese (selectează minim unul)</Label>
-                    <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2">
-                      {interests.map((interest) => (
-                        <Button
-                          key={interest}
-                          variant={newCommunityData.interests.includes(interest) ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => {
-                            setNewCommunityData(prev => ({
-                              ...prev,
-                              interests: prev.interests.includes(interest)
-                                ? prev.interests.filter(i => i !== interest)
-                                : [...prev.interests, interest]
-                            }));
-                          }}
-                          className="text-sm"
-                        >
-                          {interest}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <Button onClick={handleCreateCommunity}>
-                    Creează comunitatea
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <CreateCommunityDialog onCommunityCreated={handleCommunityCreated} />
           </motion.div>
         </div>
       ) : (
