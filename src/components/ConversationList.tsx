@@ -40,6 +40,7 @@ const mockConversations: Conversation[] = [
 const ConversationList = () => {
   const [isExpanded, setIsExpanded] = React.useState(true);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const handleTopicClick = (topicId: string) => {
     setSelectedTopic(topicId);
@@ -50,6 +51,16 @@ const ConversationList = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
+      {!selectedTopic && (
+        <Button
+          variant="ghost"
+          onClick={() => setShowSidebar(!showSidebar)}
+          className="fixed left-4 top-20 z-50 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white/90 transition-all duration-300"
+        >
+          <Menu className="h-6 w-6 text-gray-600" />
+        </Button>
+      )}
+
       <Sidebar 
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
