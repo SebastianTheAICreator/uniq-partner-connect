@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
 import TopicCard from './conversation/TopicCard';
@@ -38,7 +37,6 @@ const mockConversations: Conversation[] = [
 ];
 
 const ConversationList = () => {
-  const [isExpanded, setIsExpanded] = React.useState(true);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
   const handleTopicClick = (topicId: string) => {
@@ -48,26 +46,16 @@ const ConversationList = () => {
 
   const handleNewDiscussion = (discussion: { title: string; description: string }) => {
     console.log('New discussion created:', discussion);
-    // Here you can add the new discussion to your list if needed
   };
 
   const selectedTopicData = mockConversations.find(conv => conv.id === selectedTopic);
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
-      <Sidebar 
-        isExpanded={isExpanded}
-        setIsExpanded={setIsExpanded}
-        conversations={mockConversations}
-      />
+      <Sidebar conversations={mockConversations} />
 
-      <div 
-        className={cn(
-          "flex-1 p-6 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50",
-          isExpanded ? "ml-60" : "ml-16"
-        )}
-      >
-        <div className="max-w-4xl mx-auto space-y-8 mt-16">
+      <div className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+        <div className="max-w-4xl mx-auto space-y-8 mt-8">
           {selectedTopic ? (
             <TopicPosts
               topicId={selectedTopic}

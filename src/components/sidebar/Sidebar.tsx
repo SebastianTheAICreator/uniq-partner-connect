@@ -1,44 +1,27 @@
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import SidebarContent from './SidebarContent';
-import SidebarToggle from './SidebarToggle';
 
 interface SidebarProps {
-  isExpanded: boolean;
-  setIsExpanded: (value: boolean) => void;
   conversations: Array<{
     id: string;
     title: string;
   }>;
 }
 
-const Sidebar = ({ isExpanded, setIsExpanded, conversations }: SidebarProps) => {
+const Sidebar = ({ conversations }: SidebarProps) => {
   return (
-    <>
-      <motion.div 
-        initial={{ x: isExpanded ? 0 : -280 }}
-        animate={{ x: isExpanded ? 0 : -280 }}
-        className={cn(
-          "fixed left-0 top-0 h-full",
-          "bg-gradient-to-b from-white/95 to-white/90",
-          "backdrop-blur-md border-r border-gray-100/50",
-          "shadow-[0_0_15px_rgba(0,0,0,0.05)]",
-          "transition-all duration-300 ease-in-out z-50",
-          isExpanded ? "w-[280px]" : "w-20"
-        )}
-      >
-        <div className="p-6">
-          <SidebarContent 
-            isExpanded={isExpanded}
-            conversations={conversations}
-          />
-        </div>
-      </motion.div>
-      <SidebarToggle 
-        isExpanded={isExpanded}
-        onClick={() => setIsExpanded(!isExpanded)}
-      />
-    </>
+    <div 
+      className={cn(
+        "fixed left-0 top-[4rem] h-[calc(100vh-4rem)]",
+        "w-[240px] bg-gradient-to-b from-white/95 to-white/90",
+        "backdrop-blur-md border-r border-gray-100/50",
+        "shadow-[4px_0_15px_rgba(0,0,0,0.05)] z-40"
+      )}
+    >
+      <div className="p-4">
+        <SidebarContent conversations={conversations} />
+      </div>
+    </div>
   );
 };
 
