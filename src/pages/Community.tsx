@@ -14,6 +14,7 @@ interface Community {
   interests: string[];
   memberCount?: number;
   conversationCount?: number;
+  maxConversations?: number;
 }
 
 const Community = () => {
@@ -24,32 +25,92 @@ const Community = () => {
     {
       name: "Arte & Cultură",
       description: "Pentru pasionații de artă și cultură",
-      interests: ["Artă", "Cultură"],
+      interests: ["Artă", "Cultură", "Muzee"],
       memberCount: 1234,
-      conversationCount: 45
+      conversationCount: 45,
+      maxConversations: 500
     },
     {
       name: "Gaming & Tech",
       description: "Discuții despre jocuri și tehnologie",
-      interests: ["Gaming", "Tehnologie"],
+      interests: ["Gaming", "Tehnologie", "eSports"],
       memberCount: 2345,
-      conversationCount: 67
+      conversationCount: 67,
+      maxConversations: 500
     },
+    {
+      name: "Literatură & Poezie",
+      description: "Explorează lumea cuvintelor și a imaginației",
+      interests: ["Cărți", "Poezie", "Scriitori"],
+      memberCount: 890,
+      conversationCount: 123,
+      maxConversations: 500
+    },
+    {
+      name: "Sport & Fitness",
+      description: "Pentru pasionații de sport și viață sănătoasă",
+      interests: ["Sport", "Fitness", "Nutriție"],
+      memberCount: 3456,
+      conversationCount: 234,
+      maxConversations: 500
+    },
+    {
+      name: "Călătorii & Aventură",
+      description: "Împărtășește experiențe din călătorii",
+      interests: ["Călătorii", "Aventură", "Cultură"],
+      memberCount: 1567,
+      conversationCount: 89,
+      maxConversations: 500
+    },
+    {
+      name: "Muzică & Audio",
+      description: "Discuții despre muzică și producție audio",
+      interests: ["Muzică", "Producție", "Instrumente"],
+      memberCount: 2789,
+      conversationCount: 156,
+      maxConversations: 500
+    },
+    {
+      name: "Film & Televiziune",
+      description: "Analize și discuții despre producții cinematografice",
+      interests: ["Film", "Seriale", "Critică"],
+      memberCount: 1890,
+      conversationCount: 178,
+      maxConversations: 500
+    },
+    {
+      name: "Știință & Inovație",
+      description: "Explorează ultimele descoperiri științifice",
+      interests: ["Știință", "Tehnologie", "Inovație"],
+      memberCount: 1234,
+      conversationCount: 145,
+      maxConversations: 500
+    },
+    {
+      name: "Fotografie & Design",
+      description: "Pentru pasionații de artă vizuală",
+      interests: ["Fotografie", "Design", "Artă"],
+      memberCount: 2156,
+      conversationCount: 167,
+      maxConversations: 500
+    }
   ]);
 
   const handleJoinCommunity = (communityName: string) => {
     setSelectedCategory(communityName);
     toast({
-      title: "Comunitate nouă",
+      title: "Bine ai venit în comunitate! 🎉",
       description: `Te-ai alăturat comunității: ${communityName}`,
+      className: "bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 border-none shadow-xl",
     });
   };
 
   const handleCommunityCreated = (newCommunity: Community) => {
     const communityWithCounts = {
       ...newCommunity,
-      memberCount: 1, // Starting with the creator
-      conversationCount: 0
+      memberCount: 1,
+      conversationCount: 0,
+      maxConversations: 500
     };
     setCommunities(prev => [communityWithCounts, ...prev]);
   };
@@ -96,7 +157,7 @@ const Community = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {communities
                 .filter(community => 
                   community.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -110,7 +171,8 @@ const Community = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="glass-card rounded-xl overflow-hidden hover-lift"
+                    whileHover={{ y: -5 }}
+                    className="glass-card rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300"
                   >
                     <div className="p-6 space-y-4 bg-gradient-to-br from-purple-500/10 to-pink-500/5">
                       <div className="flex items-center justify-between">
@@ -124,7 +186,18 @@ const Community = () => {
                       
                       <div className="flex items-center space-x-2 text-gray-600 text-sm">
                         <MessageCircle className="h-4 w-4" />
-                        <span>{community.conversationCount} conversații active</span>
+                        <span>{community.conversationCount}/{community.maxConversations} conversații active</span>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {community.interests.map((interest, i) => (
+                          <span 
+                            key={i}
+                            className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary"
+                          >
+                            {interest}
+                          </span>
+                        ))}
                       </div>
 
                       <ActionButton
