@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface CreatePostProps {
   topicId: string;
-  onPostCreated: () => void;
+  onPostCreated: (post: { content: string; files: FilePreview[] }) => void;
 }
 
 interface FilePreview {
@@ -20,7 +20,7 @@ interface FilePreview {
 
 const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const { toast } = useToast();
-  const [newPost, setNewPost] = useState('');
+  const [content, setContent] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<FilePreview[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   
@@ -108,14 +108,13 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   };
 
   const handlePostSubmit = () => {
-    if (newPost.trim() || selectedFiles.length > 0) {
-      console.log('Posting to topic:', topicId, 'with files:', selectedFiles);
-      toast({
-        title: "Postare adăugată cu succes! 🎉",
-        description: "Mesajul tău a fost publicat împreună cu atașamentele.",
+    if (content.trim() || selectedFiles.length > 0) {
+      console.log('Submitting post:', { content, files: selectedFiles });
+      onPostCreated({
+        content: content.trim(),
+        files: selectedFiles
       });
-      onPostCreated();
-      setNewPost('');
+      setContent('');
       setSelectedFiles([]);
     }
   };
@@ -140,8 +139,8 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         onDrop={handleDrop}
       >
         <Textarea
-          value={newPost}
-          onChange={(e) => setNewPost(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           placeholder="Ce gânduri vrei să împărtășești?"
           className="min-h-[120px] border-2 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
         />
@@ -234,7 +233,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
             "hover:from-primary/90 hover:via-purple-700 hover:to-pink-600",
             "text-white shadow-lg hover:shadow-xl transition-all duration-300"
           )}
-          disabled={!newPost.trim() && selectedFiles.length === 0}
+          disabled={!content.trim() && selectedFiles.length === 0}
         >
           <Send className="mr-2 h-4 w-4" />
           Publică

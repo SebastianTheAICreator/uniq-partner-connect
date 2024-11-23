@@ -154,7 +154,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     }
   };
 
-  const handlePostCreated = (newPost: { content: string, files: any[] }) => {
+  const handlePostCreated = (newPost: { content: string, files: FilePreview[] }) => {
     console.log('New post created:', newPost);
     const post: Post = {
       id: Date.now().toString(),
