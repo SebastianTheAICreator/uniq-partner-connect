@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import { ArrowLeft, MessageCircle, Heart, Share2, ThumbsUp, ThumbsDown, FileVideo, Paperclip } from 'lucide-react';
@@ -81,6 +81,11 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   const [replyingTo, setReplyingTo] = React.useState<string | null>(null);
   const [replyContent, setReplyContent] = React.useState('');
   const { toast } = useToast();
+  const [selectedFile, setSelectedFile] = useState<{
+    type: 'image' | 'video' | 'document';
+    preview?: string;
+    file: File;
+  } | null>(null);
 
   const handleLike = (postId: string) => {
     setPosts(prevPosts => 
@@ -175,11 +180,6 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       description: `Mesajul tău ${newPost.files.length > 0 ? 'și atașamentele' : ''} au fost publicate.`,
     });
   };
-  const [selectedFile, setSelectedFile] = useState<{
-    type: 'image' | 'video' | 'document';
-    preview?: string;
-    file: File;
-  } | null>(null);
 
   const handleFileClick = (file: FilePreview) => {
     console.log('Opening file:', file);
