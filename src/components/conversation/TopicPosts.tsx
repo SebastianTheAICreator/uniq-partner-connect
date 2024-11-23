@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CreatePost from './CreatePost';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import FileViewerModal from './FileViewerModal';
 
 interface Post {
   id: string;
@@ -174,6 +175,20 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       description: `Mesajul tău ${newPost.files.length > 0 ? 'și atașamentele' : ''} au fost publicate.`,
     });
   };
+  const [selectedFile, setSelectedFile] = useState<{
+    type: 'image' | 'video' | 'document';
+    preview?: string;
+    file: File;
+  } | null>(null);
+
+  const handleFileClick = (file: FilePreview) => {
+    console.log('Opening file:', file);
+    setSelectedFile({
+      type: file.type,
+      preview: file.preview,
+      file: file.file
+    });
+  };
 
   return (
     <motion.div
@@ -225,7 +240,11 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                 {post.attachments && post.attachments.length > 0 && (
                   <div className="flex flex-wrap gap-4 mt-4">
                     {post.attachments.map((file, index) => (
-                      <div key={index} className="relative group">
+                      <div 
+                        key={index} 
+                        className="relative group cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => handleFileClick(file)}
+                      >
                         <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
                           {file.preview ? (
                             <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
@@ -373,6 +392,12 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
           </AnimatePresence>
         </div>
       </ScrollArea>
+
+      <FileViewerModal
+        isOpen={selectedFile !== null}
+        onClose={() => setSelectedFile(null)}
+        file={selectedFile}
+      />
     </motion.div>
   );
 };
