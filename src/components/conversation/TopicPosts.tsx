@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
-import { ArrowLeft, MessageCircle, Heart, Share2, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Heart, Share2, ThumbsUp, ThumbsDown, FileVideo, Paperclip } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CreatePost from './CreatePost';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +17,7 @@ interface Post {
   replies: Reply[];
   hasLiked?: boolean;
   hasDisliked?: boolean;
+  attachments?: FilePreview[];
 }
 
 interface Reply {
@@ -36,6 +37,13 @@ interface TopicPostsProps {
   onBack: () => void;
 }
 
+interface FilePreview {
+  id: string;
+  file: File;
+  type: 'image' | 'video' | 'document';
+  preview?: string;
+}
+
 const mockPosts: Post[] = [
   {
     id: '1',
@@ -52,7 +60,8 @@ const mockPosts: Post[] = [
         timestamp: '1 min ago',
         likes: 3
       }
-    ]
+    ],
+    attachments: []
   },
   {
     id: '2',
@@ -61,7 +70,8 @@ const mockPosts: Post[] = [
     timestamp: '5 min ago',
     likes: 8,
     dislikes: 1,
-    replies: []
+    replies: [],
+    attachments: []
   }
 ];
 
@@ -144,6 +154,27 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     }
   };
 
+  const handlePostCreated = (newPost: { content: string, files: any[] }) => {
+    console.log('New post created:', newPost);
+    const post: Post = {
+      id: Date.now().toString(),
+      content: newPost.content,
+      author: 'CurrentUser',
+      timestamp: 'acum',
+      likes: 0,
+      dislikes: 0,
+      replies: [],
+      attachments: newPost.files
+    };
+
+    setPosts(prevPosts => [post, ...prevPosts]);
+    
+    toast({
+      title: "Postare adăugată cu succes! 🎉",
+      description: `Mesajul tău ${newPost.files.length > 0 ? 'și atașamentele' : ''} au fost publicate.`,
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -164,7 +195,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
 
-      <CreatePost topicId={topicId} onPostCreated={() => console.log('Post created')} />
+      <CreatePost topicId={topicId} onPostCreated={handlePostCreated} />
 
       <ScrollArea className="h-[calc(100vh-24rem)]">
         <div className="space-y-6">
@@ -190,6 +221,25 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                 </div>
 
                 <p className="text-gray-700 text-lg">{post.content}</p>
+
+                {post.attachments && post.attachments.length > 0 && (
+                  <div className="flex flex-wrap gap-4 mt-4">
+                    {post.attachments.map((file, index) => (
+                      <div key={index} className="relative group">
+                        <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                          {file.preview ? (
+                            <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="text-gray-400">
+                              {file.type === 'video' && <FileVideo className="w-8 h-8" />}
+                              {file.type === 'document' && <Paperclip className="w-8 h-8" />}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="flex items-center space-x-6 pt-4 border-t">
                   <Button
