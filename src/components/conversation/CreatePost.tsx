@@ -1,28 +1,18 @@
 import React, { useRef, useState } from 'react';
-import { ImageIcon, FileVideo, Paperclip, X, Send } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-
-interface CreatePostProps {
-  topicId: string;
-  onPostCreated: (post: { content: string; files: FilePreview[] }) => void;
-}
-
-interface FilePreview {
-  id: string;
-  file: File;
-  type: 'image' | 'video' | 'document';
-  preview?: string;
-}
+import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '../ui/textarea';
+import { cn } from '@/lib/utils';
+import { FilePreviewList } from './post/FilePreviewList';
+import { ActionButtons } from './post/ActionButtons';
+import { CreatePostProps, FilePreview } from './post/types';
 
 const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<FilePreview[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -109,13 +99,13 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
 
   const handlePostSubmit = () => {
     if (content.trim() || selectedFiles.length > 0) {
-      console.log('Submitting post:', { content, files: selectedFiles });
       onPostCreated({
         content: content.trim(),
         files: selectedFiles
       });
       setContent('');
       setSelectedFiles([]);
+      setIsExpanded(false);
     }
   };
 
@@ -123,11 +113,21 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-gray-100 p-6 space-y-4"
+      className={cn(
+        "bg-black/40 backdrop-blur-xl rounded-xl border border-white/10",
+        "shadow-2xl transition-all duration-500",
+        isExpanded ? "p-6" : "p-4",
+        "hover:border-white/20"
+      )}
     >
-      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-500 bg-clip-text text-transparent">
+      <motion.h2 
+        className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-400 to-pink-500 bg-clip-text text-transparent mb-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         Creează o postare nouă
-      </h2>
+      </motion.h2>
 
       <div
         className={cn(
@@ -137,108 +137,61 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        onClick={() => setIsExpanded(true)}
       >
         <Textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Ce gânduri vrei să împărtășești?"
-          className="min-h-[120px] border-2 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+          className={cn(
+            "min-h-[120px] bg-white/5 border-white/10 text-white/90 placeholder:text-white/40",
+            "focus:ring-2 focus:ring-primary/20 transition-all duration-300",
+            "backdrop-blur-sm resize-none",
+            isExpanded ? "min-h-[200px]" : "min-h-[120px]"
+          )}
         />
         {isDragging && (
-          <div className="absolute inset-0 bg-primary/5 rounded-xl flex items-center justify-center">
+          <div className="absolute inset-0 bg-primary/5 rounded-xl flex items-center justify-center backdrop-blur-sm">
             <p className="text-primary font-medium">Trage fișierele aici pentru a le atașa</p>
           </div>
         )}
       </div>
       
       <AnimatePresence>
-        {selectedFiles.length > 0 && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="flex flex-wrap gap-4"
-          >
-            {selectedFiles.map(file => (
-              <motion.div
-                key={file.id}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="relative group"
-              >
-                <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                  {file.preview ? (
-                    <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="text-gray-400">
-                      {file.type === 'video' && <FileVideo className="w-8 h-8" />}
-                      {file.type === 'document' && <Paperclip className="w-8 h-8" />}
-                    </div>
-                  )}
-                </div>
-                <button
-                  onClick={() => removeFile(file.id)}
-                  className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                >
-                  <X className="w-4 h-4 text-gray-500" />
-                </button>
-              </motion.div>
-            ))}
-          </motion.div>
+        {isExpanded && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-4"
+            >
+              <FilePreviewList files={selectedFiles} onRemove={removeFile} />
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="mt-4"
+            >
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                multiple
+              />
+              
+              <ActionButtons 
+                onFileSelect={handleFileSelect}
+                onSubmit={handlePostSubmit}
+                isDisabled={!content.trim() && selectedFiles.length === 0}
+              />
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-
-      <div className="flex items-center gap-4">
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-          multiple
-        />
-        
-        <Button 
-          onClick={() => handleFileSelect('image')} 
-          variant="outline" 
-          className="group hover:bg-primary/5"
-        >
-          <ImageIcon className="mr-2 h-4 w-4 group-hover:text-primary transition-colors" />
-          Imagine
-        </Button>
-
-        <Button 
-          onClick={() => handleFileSelect('video')} 
-          variant="outline"
-          className="group hover:bg-primary/5"
-        >
-          <FileVideo className="mr-2 h-4 w-4 group-hover:text-primary transition-colors" />
-          Video
-        </Button>
-
-        <Button 
-          onClick={() => handleFileSelect('document')} 
-          variant="outline"
-          className="group hover:bg-primary/5"
-        >
-          <Paperclip className="mr-2 h-4 w-4 group-hover:text-primary transition-colors" />
-          Atașament
-        </Button>
-
-        <Button 
-          onClick={handlePostSubmit}
-          className={cn(
-            "ml-auto",
-            "bg-gradient-to-r from-primary via-purple-600 to-pink-500",
-            "hover:from-primary/90 hover:via-purple-700 hover:to-pink-600",
-            "text-white shadow-lg hover:shadow-xl transition-all duration-300"
-          )}
-          disabled={!content.trim() && selectedFiles.length === 0}
-        >
-          <Send className="mr-2 h-4 w-4" />
-          Publică
-        </Button>
-      </div>
     </motion.div>
   );
 };
