@@ -4,7 +4,7 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Sparkles, MessageSquarePlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CreateDiscussionProps {
@@ -42,10 +42,21 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="w-full bg-gradient-to-r from-primary via-purple-600 to-pink-500 hover:from-primary/90 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              className="group relative w-full h-14 bg-[#1a1a1a] bg-opacity-80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-all duration-300"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              Creează o discuție nouă
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-indigo-500/20"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              />
+              <motion.div
+                className="relative z-10 flex items-center justify-center space-x-2 text-lg font-medium text-white"
+                whileHover={{ scale: 1.02 }}
+              >
+                <MessageSquarePlus className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <span>Creează o discuție nouă</span>
+                <Sparkles className="w-4 h-4 text-pink-400 group-hover:text-pink-300 transition-colors" />
+              </motion.div>
             </Button>
           </motion.div>
         ) : (
@@ -53,63 +64,83 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="space-y-4 p-8 bg-white/90 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-100"
+            className="relative space-y-6 p-8 bg-[#1a1a1a] bg-opacity-90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(123,_97,_255,_0.15)]"
             onSubmit={handleSubmit}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-500 bg-clip-text text-transparent">
-                Creează o discuție nouă
-              </h3>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="rounded-full hover:bg-gray-100"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-indigo-500/5 rounded-2xl"
+            />
 
-            <div className="space-y-4">
-              <div>
-                <Input
-                  placeholder="Titlul discuției"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full text-lg font-medium border-2 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                />
+            <div className="relative z-10 space-y-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
+                  Creează o discuție nouă
+                </h3>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full hover:bg-white/5 transition-colors"
+                >
+                  <X className="h-5 w-5 text-gray-400" />
+                </Button>
               </div>
-              <div>
-                <Textarea
-                  placeholder="Descrie despre ce vrei să discuți..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full min-h-[150px] text-base border-2 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                />
-              </div>
-            </div>
 
-            <div className="flex justify-end space-x-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsOpen(false)}
-                className="hover:bg-gray-50"
-              >
-                Anulează
-              </Button>
-              <Button
-                type="submit"
-                className={cn(
-                  "bg-gradient-to-r from-primary via-purple-600 to-pink-500",
-                  "hover:from-primary/90 hover:via-purple-700 hover:to-pink-600",
-                  "text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                )}
-                disabled={!title.trim() || !description.trim()}
-              >
-                Creează discuția
-              </Button>
+              <div className="space-y-4">
+                <div>
+                  <Input
+                    placeholder="Titlul discuției"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full h-12 text-lg font-medium bg-white/5 border-white/10 focus:border-white/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300"
+                  />
+                </div>
+                <div>
+                  <Textarea
+                    placeholder="Descrie despre ce vrei să discuți..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full min-h-[150px] text-base bg-white/5 border-white/10 focus:border-white/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setIsOpen(false)}
+                  className="px-6 h-12 rounded-xl border border-white/10 hover:bg-white/5 text-gray-300 hover:text-white transition-all duration-300"
+                >
+                  Anulează
+                </Button>
+                <Button
+                  type="submit"
+                  className={cn(
+                    "relative overflow-hidden px-6 h-12 rounded-xl",
+                    "bg-gradient-to-r from-purple-500 to-pink-500",
+                    "hover:from-purple-600 hover:to-pink-600",
+                    "text-white font-medium",
+                    "border border-white/10 hover:border-white/20",
+                    "transition-all duration-300",
+                    "disabled:opacity-50 disabled:cursor-not-allowed"
+                  )}
+                  disabled={!title.trim() || !description.trim()}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  />
+                  <span className="relative z-10 flex items-center">
+                    Creează discuția
+                    <Sparkles className="ml-2 h-4 w-4" />
+                  </span>
+                </Button>
+              </div>
             </div>
           </motion.form>
         )}
