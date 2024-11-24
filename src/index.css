@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 min-h-screen;
+    @apply bg-gradient-to-br from-[#1A1A2E] via-[#16213E] to-[#0F172A] min-h-screen;
     background-attachment: fixed;
   }
 }
@@ -14,11 +14,41 @@
 }
 
 .glass-card {
-  @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg;
+  @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
 }
 
 .hover-lift {
-  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl;
+}
+
+.premium-gradient {
+  @apply bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20;
+}
+
+.premium-border {
+  @apply border border-white/10 hover:border-white/20;
+}
+
+.premium-glass {
+  @apply bg-black/40 backdrop-blur-xl;
+}
+
+.premium-text-gradient {
+  @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent;
+}
+
+.premium-button {
+  @apply bg-gradient-to-r from-primary via-secondary to-accent 
+         hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90
+         text-white font-medium px-6 py-3 rounded-xl
+         transition-all duration-300 shadow-lg hover:shadow-xl
+         border border-white/10 hover:border-white/20;
+}
+
+.premium-input {
+  @apply bg-black/40 border border-white/10 focus:border-white/20 
+         rounded-xl px-4 py-3 text-white placeholder-white/40
+         focus:ring-2 focus:ring-primary/20 transition-all duration-300;
 }
 
 .custom-scrollbar {
@@ -44,12 +74,10 @@
   background-color: theme('colors.primary.hover');
 }
 
-/* Adăugăm umbre pentru sidebar */
 .sidebar-shadow {
-  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Animație pentru join community */
 @keyframes pulse-scale {
   0% {
     transform: scale(1);
@@ -67,4 +95,21 @@
 
 .join-animation {
   animation: pulse-scale 0.5s ease-out;
+}
+
+.premium-card {
+  @apply relative overflow-hidden rounded-2xl;
+}
+
+.premium-card::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 opacity-0 transition-opacity duration-300;
+}
+
+.premium-card:hover::before {
+  @apply opacity-100;
+}
+
+.premium-shadow {
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.1);
 }
