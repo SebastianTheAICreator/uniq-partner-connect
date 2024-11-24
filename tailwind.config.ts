@@ -25,33 +25,31 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#6366F1", // Indigo
-          hover: "#4F46E5",
-        },
-        secondary: {
-          DEFAULT: "#EC4899", // Pink
-          hover: "#DB2777",
-        },
-        accent: {
-          DEFAULT: "#8B5CF6", // Purple
+          DEFAULT: "#8B5CF6",
           hover: "#7C3AED",
         },
-        success: {
-          DEFAULT: "#10B981", // Emerald
-          hover: "#059669",
+        secondary: {
+          DEFAULT: "#0EA5E9",
+          hover: "#0284C7",
         },
-        warning: {
-          DEFAULT: "#F59E0B", // Amber
-          hover: "#D97706",
+        accent: {
+          DEFAULT: "#D946EF",
+          hover: "#C026D3",
         },
-        destructive: {
-          DEFAULT: "#EF4444", // Red
-          hover: "#DC2626",
+      },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
         },
-        info: {
-          DEFAULT: "#3B82F6", // Blue
-          hover: "#2563EB",
+        "scale-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" }
         },
+      },
+      animation: {
+        "fade-in": "fade-in 0.5s ease-out",
+        "scale-in": "scale-in 0.3s ease-out",
       },
     },
   },
