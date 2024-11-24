@@ -10,11 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { cn } from '@/lib/utils';
+import BasicInfoStep from './steps/BasicInfoStep';
+import InterestsStep from './steps/InterestsStep';
 
 interface CreateCommunityDialogProps {
   onCommunityCreated: (community: {
@@ -45,7 +43,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
       toast({
         title: "Comunitate creată cu succes! 🎉",
         description: `"${newCommunityData.name}" este acum live și gata să primească membri.`,
-        className: "bg-gradient-to-r from-primary/10 to-accent/10 border-none"
+        className: "bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-none"
       });
       setNewCommunityData({ name: "", description: "", interests: [] });
       setStep(1);
@@ -64,45 +62,45 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         <motion.div
           whileHover={{ scale: 1.02, y: -5 }}
           whileTap={{ scale: 0.98 }}
-          className="relative overflow-hidden text-center space-y-6 max-w-2xl mx-auto bg-gradient-to-br from-white/90 via-purple-50/30 to-blue-50/30 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 cursor-pointer"
+          className="relative overflow-hidden text-center space-y-6 max-w-2xl mx-auto rounded-2xl p-8 cursor-pointer bg-[#1a1a1a] bg-opacity-80 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(123,_97,_255,_0.15)]"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5"
+            className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-indigo-500/5"
           />
           
           <motion.div className="relative z-10 space-y-6">
             <div className="flex items-center justify-center space-x-4">
-              <Rocket className="w-8 h-8 text-primary animate-pulse" />
-              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
+              <Rocket className="w-8 h-8 text-purple-400" />
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
                 Creează-ți Propria Comunitate
               </h2>
             </div>
             
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-300 text-lg">
               Transformă-ți pasiunea într-o comunitate vibrantă și conectează-te cu persoane care împărtășesc aceleași interese.
             </p>
 
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center space-x-8">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center space-x-2 text-primary/80"
+                className="flex items-center space-x-2 text-purple-400"
               >
                 <Users className="w-5 h-5" />
                 <span>Comunitate Personalizată</span>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center space-x-2 text-secondary/80"
+                className="flex items-center space-x-2 text-pink-400"
               >
                 <Globe className="w-5 h-5" />
                 <span>Vizibilitate Globală</span>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center space-x-2 text-accent/80"
+                className="flex items-center space-x-2 text-indigo-400"
               >
                 <Hash className="w-5 h-5" />
                 <span>Hashtag-uri Personalizate</span>
@@ -110,40 +108,34 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             </div>
 
             <Button
-              variant="secondary"
-              className="group relative overflow-hidden bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white px-8 py-6 text-lg"
+              variant="ghost"
+              className="group relative overflow-hidden px-8 py-6 text-lg rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 border-2 border-white/10 hover:border-white/20 transition-all duration-300"
             >
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="relative z-10"
+                className="relative z-10 text-white"
               >
                 Începe Aventura
               </motion.span>
-              <motion.div
-                className="absolute inset-0 bg-white/20"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: '100%' }}
-                transition={{ duration: 0.5 }}
-              />
-              <Sparkles className="ml-2 h-5 w-5 inline-block group-hover:rotate-12 transition-transform" />
+              <Sparkles className="ml-2 h-5 w-5 inline-block text-purple-400 group-hover:rotate-12 transition-transform" />
             </Button>
           </motion.div>
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[600px] bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30 backdrop-blur-lg border-white/20">
+      <DialogContent className="max-w-3xl bg-[#1a1a1a] bg-opacity-90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(123,_97,_255,_0.15)]">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-2"
           >
-            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
+            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
               {step === 1 ? 'Începe o nouă aventură' : 'Personalizează-ți comunitatea'}
             </DialogTitle>
-            <DialogDescription className="text-lg text-gray-600">
+            <DialogDescription className="text-lg text-gray-400">
               {step === 1 ? 'Hai să-ți dăm viață comunității!' : 'Alege interesele care definesc comunitatea ta'}
             </DialogDescription>
           </motion.div>
@@ -151,120 +143,56 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
 
         <AnimatePresence mode="wait">
           {step === 1 ? (
-            <motion.div
-              key="step1"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              className="grid gap-6 py-4"
-            >
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-lg font-medium">
-                  Numele comunității
-                </Label>
-                <Input
-                  id="name"
-                  value={newCommunityData.name}
-                  onChange={(e) => setNewCommunityData(prev => ({
-                    ...prev,
-                    name: e.target.value
-                  }))}
-                  className="bg-white/50 border-white/20 focus:border-primary/50 text-lg py-6"
-                  placeholder="Ex: Pasionații de artă digitală"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-lg font-medium">
-                  Descriere
-                </Label>
-                <Textarea
-                  id="description"
-                  value={newCommunityData.description}
-                  onChange={(e) => setNewCommunityData(prev => ({
-                    ...prev,
-                    description: e.target.value
-                  }))}
-                  className="bg-white/50 border-white/20 focus:border-primary/50 min-h-[120px] text-lg"
-                  placeholder="Descrie viziunea și scopul comunității tale..."
-                />
-              </div>
-
-              <Button
-                onClick={() => setStep(2)}
-                className="w-full bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white py-6 text-lg"
-                disabled={!newCommunityData.name || !newCommunityData.description}
-              >
-                Continuă
-                <Rocket className="ml-2 h-5 w-5" />
-              </Button>
-            </motion.div>
+            <BasicInfoStep
+              name={newCommunityData.name}
+              description={newCommunityData.description}
+              onNameChange={(value) => setNewCommunityData(prev => ({ ...prev, name: value }))}
+              onDescriptionChange={(value) => setNewCommunityData(prev => ({ ...prev, description: value }))}
+            />
           ) : (
-            <motion.div
-              key="step2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6 py-4"
-            >
-              <div className="space-y-4">
-                <Label className="text-lg font-medium">
-                  Interese (minim unul)
-                </Label>
-                <div className="grid grid-cols-3 gap-3 max-h-[300px] overflow-y-auto custom-scrollbar p-2">
-                  {interests.map((interest) => (
-                    <motion.div
-                      key={interest}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Button
-                        variant={newCommunityData.interests.includes(interest) ? "default" : "outline"}
-                        size="lg"
-                        onClick={() => {
-                          setNewCommunityData(prev => ({
-                            ...prev,
-                            interests: prev.interests.includes(interest)
-                              ? prev.interests.filter(i => i !== interest)
-                              : [...prev.interests, interest]
-                          }));
-                        }}
-                        className={cn(
-                          "w-full transition-all duration-300",
-                          newCommunityData.interests.includes(interest)
-                            ? "bg-gradient-to-r from-primary/80 via-secondary/80 to-accent/80 text-white"
-                            : "hover:bg-gradient-to-r hover:from-primary/10 hover:via-secondary/10 hover:to-accent/10"
-                        )}
-                      >
-                        {interest}
-                      </Button>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-between gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setStep(1)}
-                  className="flex-1 py-6 text-lg"
-                >
-                  Înapoi
-                </Button>
-                <Button
-                  onClick={handleCreateCommunity}
-                  disabled={newCommunityData.interests.length === 0}
-                  className="flex-1 bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 text-white py-6 text-lg"
-                >
-                  Creează Comunitatea
-                  <Sparkles className="ml-2 h-5 w-5" />
-                </Button>
-              </div>
-            </motion.div>
+            <InterestsStep
+              interests={interests}
+              selectedInterests={newCommunityData.interests}
+              onInterestToggle={(interest) => {
+                setNewCommunityData(prev => ({
+                  ...prev,
+                  interests: prev.interests.includes(interest)
+                    ? prev.interests.filter(i => i !== interest)
+                    : [...prev.interests, interest]
+                }));
+              }}
+            />
           )}
         </AnimatePresence>
+
+        <div className="flex justify-between gap-4 mt-6">
+          {step === 2 && (
+            <Button
+              variant="ghost"
+              onClick={() => setStep(1)}
+              className="flex-1 h-14 text-lg rounded-xl bg-white/5 border-2 border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-300 hover:text-white transition-all duration-300"
+            >
+              Înapoi
+            </Button>
+          )}
+          <Button
+            onClick={step === 1 ? () => setStep(2) : handleCreateCommunity}
+            disabled={step === 1 ? !newCommunityData.name || !newCommunityData.description : newCommunityData.interests.length === 0}
+            className="flex-1 h-14 text-lg rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-2 border-white/10 hover:border-white/20 transition-all duration-300"
+          >
+            {step === 1 ? (
+              <>
+                Continuă
+                <Rocket className="ml-2 h-5 w-5" />
+              </>
+            ) : (
+              <>
+                Creează Comunitatea
+                <Sparkles className="ml-2 h-5 w-5" />
+              </>
+            )}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
