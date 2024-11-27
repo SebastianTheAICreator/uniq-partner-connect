@@ -1,62 +1,12 @@
 import { Link } from 'react-router-dom';
 import { Heart, Users, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useToast } from './ui/use-toast';
-import { useState, useEffect } from 'react';
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { NotificationsPanel } from './notifications/NotificationsPanel';
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  timestamp: string;
-  read: boolean;
-}
+import { useNotifications } from '@/contexts/NotificationContext';
 
 const Navbar = () => {
-  const { toast } = useToast();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newNotification: Notification = {
-        id: Date.now().toString(),
-        title: 'Notificare nouă',
-        message: 'Cineva a răspuns la postarea ta',
-        timestamp: 'acum',
-        read: false
-      };
-      
-      setNotifications(prev => [newNotification, ...prev]);
-      setUnreadCount(prev => prev + 1);
-      
-      console.log('New notification received:', newNotification);
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleMarkAsRead = (notificationId: string) => {
-    setNotifications(prev =>
-      prev.map(notif =>
-        notif.id === notificationId
-          ? { ...notif, read: true }
-          : notif
-      )
-    );
-    setUnreadCount(prev => Math.max(0, prev - 1));
-  };
-
-  const handleClearAll = () => {
-    setNotifications([]);
-    setUnreadCount(0);
-    toast({
-      title: "Notificări șterse",
-      description: "Toate notificările au fost șterse cu succes.",
-    });
-  };
+  const { unreadCount } = useNotifications();
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50">
@@ -104,11 +54,7 @@ const Navbar = () => {
                   )}
                 </motion.button>
               </SheetTrigger>
-              <NotificationsPanel 
-                notifications={notifications}
-                onMarkAsRead={handleMarkAsRead}
-                onClearAll={handleClearAll}
-              />
+              <NotificationsPanel />
             </Sheet>
           </div>
         </div>
