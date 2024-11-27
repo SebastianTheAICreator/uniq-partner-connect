@@ -114,14 +114,17 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "bg-black/40 backdrop-blur-xl rounded-xl border border-white/10",
-        "shadow-2xl transition-all duration-500",
+        "bg-gradient-to-br from-[#1a1a2e]/90 via-[#16213e]/90 to-[#1a1a2e]/90",
+        "backdrop-blur-xl rounded-xl border border-white/10",
+        "shadow-[0_8px_32px_rgba(0,0,0,0.12)]",
+        "transition-all duration-500 ease-in-out",
         isExpanded ? "p-6" : "p-4",
-        "hover:border-white/20"
+        "hover:border-indigo-500/20 hover:shadow-indigo-500/10",
+        "group"
       )}
     >
       <motion.h2 
-        className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-400 to-pink-500 bg-clip-text text-transparent mb-4"
+        className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -132,7 +135,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       <div
         className={cn(
           "relative rounded-xl transition-all duration-300",
-          isDragging && "ring-2 ring-primary/20"
+          isDragging && "ring-2 ring-indigo-500/20"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -145,14 +148,15 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
           placeholder="Ce gânduri vrei să împărtășești?"
           className={cn(
             "min-h-[120px] bg-white/5 border-white/10 text-white/90 placeholder:text-white/40",
-            "focus:ring-2 focus:ring-primary/20 transition-all duration-300",
-            "backdrop-blur-sm resize-none",
+            "focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300",
+            "backdrop-blur-sm resize-none rounded-xl",
+            "hover:bg-white/10",
             isExpanded ? "min-h-[200px]" : "min-h-[120px]"
           )}
         />
         {isDragging && (
-          <div className="absolute inset-0 bg-primary/5 rounded-xl flex items-center justify-center backdrop-blur-sm">
-            <p className="text-primary font-medium">Trage fișierele aici pentru a le atașa</p>
+          <div className="absolute inset-0 bg-indigo-500/5 rounded-xl flex items-center justify-center backdrop-blur-sm">
+            <p className="text-indigo-400 font-medium">Trage fișierele aici pentru a le atașa</p>
           </div>
         )}
       </div>

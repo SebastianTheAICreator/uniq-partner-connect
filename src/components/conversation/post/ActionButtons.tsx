@@ -20,27 +20,27 @@ export const ActionButtons = ({ onFileSelect, onSubmit, isDisabled }: ActionButt
       <Button 
         onClick={() => onFileSelect('image')} 
         variant="outline" 
-        className="group hover:bg-white/5 border-white/10 bg-white/5 backdrop-blur-sm text-white"
+        className="group hover:bg-indigo-500/10 border-white/10 bg-white/5 backdrop-blur-sm text-white"
       >
-        <ImageIcon className="mr-2 h-4 w-4 group-hover:text-primary transition-colors" />
+        <ImageIcon className="mr-2 h-4 w-4 group-hover:text-indigo-400 transition-colors" />
         Imagine
       </Button>
 
       <Button 
         onClick={() => onFileSelect('video')} 
         variant="outline"
-        className="group hover:bg-white/5 border-white/10 bg-white/5 backdrop-blur-sm text-white"
+        className="group hover:bg-purple-500/10 border-white/10 bg-white/5 backdrop-blur-sm text-white"
       >
-        <FileVideo className="mr-2 h-4 w-4 group-hover:text-primary transition-colors" />
+        <FileVideo className="mr-2 h-4 w-4 group-hover:text-purple-400 transition-colors" />
         Video
       </Button>
 
       <Button 
         onClick={() => onFileSelect('document')} 
         variant="outline"
-        className="group hover:bg-white/5 border-white/10 bg-white/5 backdrop-blur-sm text-white"
+        className="group hover:bg-pink-500/10 border-white/10 bg-white/5 backdrop-blur-sm text-white"
       >
-        <Paperclip className="mr-2 h-4 w-4 group-hover:text-primary transition-colors" />
+        <Paperclip className="mr-2 h-4 w-4 group-hover:text-pink-400 transition-colors" />
         Atașament
       </Button>
 
@@ -48,9 +48,11 @@ export const ActionButtons = ({ onFileSelect, onSubmit, isDisabled }: ActionButt
         onClick={onSubmit}
         className={cn(
           "ml-auto",
-          "bg-gradient-to-r from-primary via-purple-600 to-pink-500",
-          "hover:from-primary/90 hover:via-purple-700 hover:to-pink-600",
-          "text-white shadow-lg hover:shadow-xl transition-all duration-300"
+          "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
+          "hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600",
+          "text-white shadow-lg hover:shadow-xl transition-all duration-300",
+          "border border-white/10 hover:border-white/20",
+          "disabled:opacity-50 disabled:cursor-not-allowed"
         )}
         disabled={isDisabled}
       >
