@@ -42,10 +42,10 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="group relative w-full h-14 bg-[#1a1a1a] bg-opacity-80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-all duration-300"
+              className="group relative w-full h-14 bg-gradient-to-br from-[#1a1a2e]/90 via-[#16213e]/90 to-[#1a1a2e]/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-indigo-500/20 hover:shadow-indigo-500/10 transition-all duration-300"
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-indigo-500/20"
+                className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               />
@@ -53,9 +53,9 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                 className="relative z-10 flex items-center justify-center space-x-2 text-lg font-medium text-white"
                 whileHover={{ scale: 1.02 }}
               >
-                <MessageSquarePlus className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <MessageSquarePlus className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
                 <span>Creează o discuție nouă</span>
-                <Sparkles className="w-4 h-4 text-pink-400 group-hover:text-pink-300 transition-colors" />
+                <Sparkles className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
               </motion.div>
             </Button>
           </motion.div>
@@ -64,18 +64,18 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="relative space-y-6 p-8 bg-[#1a1a1a] bg-opacity-90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(123,_97,_255,_0.15)]"
+            className="relative space-y-6 p-8 bg-gradient-to-br from-[#1a1a2e]/90 via-[#16213e]/90 to-[#1a1a2e]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
             onSubmit={handleSubmit}
           >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-indigo-500/5 rounded-2xl"
+              className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 rounded-2xl"
             />
 
             <div className="relative z-10 space-y-6">
               <div className="flex justify-between items-center">
-                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
+                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
                   Creează o discuție nouă
                 </h3>
                 <Button
@@ -95,7 +95,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                     placeholder="Titlul discuției"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full h-12 text-lg font-medium bg-white/5 border-white/10 focus:border-white/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300"
+                    className="w-full h-12 text-lg font-medium bg-white/5 border-white/10 focus:border-indigo-500/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 hover:bg-white/10"
                   />
                 </div>
                 <div>
@@ -103,7 +103,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                     placeholder="Descrie despre ce vrei să discuți..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full min-h-[150px] text-base bg-white/5 border-white/10 focus:border-white/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300"
+                    className="w-full min-h-[150px] text-base bg-white/5 border-white/10 focus:border-indigo-500/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 hover:bg-white/10"
                   />
                 </div>
               </div>
@@ -121,8 +121,8 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                   type="submit"
                   className={cn(
                     "relative overflow-hidden px-6 h-12 rounded-xl",
-                    "bg-gradient-to-r from-purple-500 to-pink-500",
-                    "hover:from-purple-600 hover:to-pink-600",
+                    "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
+                    "hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600",
                     "text-white font-medium",
                     "border border-white/10 hover:border-white/20",
                     "transition-all duration-300",
@@ -131,7 +131,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                   disabled={!title.trim() || !description.trim()}
                 >
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20"
+                    className="absolute inset-0 bg-gradient-to-r from-indigo-400/20 to-pink-400/20"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   />
