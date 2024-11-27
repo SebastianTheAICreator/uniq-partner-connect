@@ -23,7 +23,7 @@
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: theme('colors.primary.DEFAULT') transparent;
+  scrollbar-color: theme('colors.indigo.400') transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -35,13 +35,13 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: theme('colors.primary.DEFAULT');
+  background-color: theme('colors.indigo.400');
   border-radius: 20px;
   border: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: theme('colors.primary.hover');
+  background-color: theme('colors.indigo.300');
 }
 
 /* Adăugăm umbre pentru sidebar */

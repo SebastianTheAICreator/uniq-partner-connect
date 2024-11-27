@@ -1,17 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Heart, Users, Bell, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Users, Bell } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useToast } from './ui/use-toast';
 import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { NotificationsPanel } from './notifications/NotificationsPanel';
 
 interface Notification {
   id: string;
@@ -111,87 +104,11 @@ const Navbar = () => {
                   )}
                 </motion.button>
               </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30 backdrop-blur-lg border-l border-white/20">
-                <SheetHeader>
-                  <SheetTitle className="flex justify-between items-center">
-                    <motion.span
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-2xl font-bold gradient-text"
-                    >
-                      Notificări
-                    </motion.span>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleClearAll}
-                      className="text-sm text-primary hover:text-primary/80 transition-colors"
-                    >
-                      Șterge tot
-                    </motion.button>
-                  </SheetTitle>
-                  <SheetDescription>
-                    Vezi toate notificările tale recente
-                  </SheetDescription>
-                </SheetHeader>
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-4 custom-scrollbar"
-                >
-                  <AnimatePresence>
-                    {notifications.map((notification) => (
-                      <motion.div
-                        key={notification.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, x: -100 }}
-                        className={cn(
-                          "p-4 rounded-lg transition-all duration-300 hover:scale-[1.02]",
-                          "border border-white/20 shadow-lg",
-                          notification.read
-                            ? "bg-white/40"
-                            : "bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5"
-                        )}
-                      >
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-medium text-gray-900">
-                              {notification.title}
-                            </h4>
-                            <p className="text-sm text-gray-600 mt-1">
-                              {notification.message}
-                            </p>
-                            <span className="text-xs text-gray-400 mt-2 block">
-                              {notification.timestamp}
-                            </span>
-                          </div>
-                          {!notification.read && (
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => handleMarkAsRead(notification.id)}
-                              className="text-xs text-primary hover:text-primary/80 transition-colors"
-                            >
-                              Marchează ca citit
-                            </motion.button>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                  
-                  {notifications.length === 0 && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-8 text-gray-500"
-                    >
-                      Nu ai notificări noi
-                    </motion.div>
-                  )}
-                </motion.div>
-              </SheetContent>
+              <NotificationsPanel 
+                notifications={notifications}
+                onMarkAsRead={handleMarkAsRead}
+                onClearAll={handleClearAll}
+              />
             </Sheet>
           </div>
         </div>
