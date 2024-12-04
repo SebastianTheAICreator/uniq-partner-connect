@@ -1,66 +1,57 @@
 import { motion } from 'framer-motion';
-import { useNotifications } from '@/contexts/NotificationContext';
-import { Notification } from '@/types/notifications';
 import { cn } from '@/lib/utils';
 
-export const NotificationItem = (notification: Notification) => {
-  const { markAsRead } = useNotifications();
+interface NotificationProps {
+  id: string;
+  title: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+  onMarkAsRead: (id: string) => void;
+}
 
-  const getIcon = () => {
-    switch (notification.type) {
-      case 'POST_LIKE':
-        return '❤️';
-      case 'POST_COMMENT':
-        return '💬';
-      case 'COMMENT_REPLY':
-        return '↩️';
-      case 'GROUP_JOIN':
-        return '👥';
-      case 'NEW_DISCUSSION':
-        return '💡';
-      case 'NEW_GROUP':
-        return '🌟';
-      case 'MENTION':
-        return '@';
-      default:
-        return '📢';
-    }
-  };
-
+export const NotificationItem = ({ 
+  id, 
+  title, 
+  message, 
+  timestamp, 
+  read, 
+  onMarkAsRead 
+}: NotificationProps) => {
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -100 }}
-      onClick={() => !notification.read && markAsRead(notification.id)}
       className={cn(
-        "p-4 rounded-xl backdrop-blur-sm transition-all duration-200",
-        "border border-white/10 hover:border-indigo-500/20",
-        "bg-gradient-to-br from-white/5 to-white/10",
-        "hover:from-white/10 hover:to-white/15",
-        "cursor-pointer group",
-        !notification.read && "bg-indigo-500/10"
+        "p-4 rounded-lg transition-all duration-300 hover:scale-[1.02]",
+        "border border-white/10 shadow-lg hover:shadow-xl",
+        read
+          ? "bg-gradient-to-r from-gray-900/40 to-gray-800/40"
+          : "bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10"
       )}
     >
-      <div className="flex items-start gap-3">
-        <div className="text-2xl">{getIcon()}</div>
-        <div className="flex-1 min-w-0">
-          <h4 className={cn(
-            "text-white font-medium mb-1",
-            !notification.read && "text-indigo-300"
-          )}>
-            {notification.title}
+      <div className="flex justify-between items-start">
+        <div>
+          <h4 className="font-medium text-white/90">
+            {title}
           </h4>
-          <p className="text-white/60 text-sm line-clamp-2">
-            {notification.message}
+          <p className="text-sm text-white/70 mt-1">
+            {message}
           </p>
-          <span className="text-white/40 text-xs mt-2 block">
-            {notification.timestamp}
+          <span className="text-xs text-white/50 mt-2 block">
+            {timestamp}
           </span>
         </div>
-        {!notification.read && (
-          <div className="w-2 h-2 rounded-full bg-indigo-500 group-hover:bg-indigo-400 transition-colors" />
+        {!read && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onMarkAsRead(id)}
+            className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+          >
+            Marchează ca citit
+          </motion.button>
         )}
       </div>
     </motion.div>

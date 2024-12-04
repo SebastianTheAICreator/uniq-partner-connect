@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
-import { useNotifications } from '@/contexts/NotificationContext';
 import {
   Sheet,
   SheetContent,
@@ -10,9 +9,25 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-export const NotificationsPanel = () => {
-  const { notifications, clearAll } = useNotifications();
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+}
 
+interface NotificationsPanelProps {
+  notifications: Notification[];
+  onMarkAsRead: (id: string) => void;
+  onClearAll: () => void;
+}
+
+export const NotificationsPanel = ({
+  notifications,
+  onMarkAsRead,
+  onClearAll
+}: NotificationsPanelProps) => {
   return (
     <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-gray-900/95 via-indigo-900/95 to-purple-900/95 backdrop-blur-xl border-l border-white/10 shadow-2xl">
       <SheetHeader>
@@ -27,7 +42,7 @@ export const NotificationsPanel = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={clearAll}
+            onClick={onClearAll}
             className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
           >
             Șterge tot
@@ -47,6 +62,7 @@ export const NotificationsPanel = () => {
             <NotificationItem
               key={notification.id}
               {...notification}
+              onMarkAsRead={onMarkAsRead}
             />
           ))}
         </AnimatePresence>
