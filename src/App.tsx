@@ -3,12 +3,12 @@ import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
 import { NotificationProvider } from './contexts/NotificationContext';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Matches from './pages/Matches';
-import Community from './pages/Community';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import NotFound from './pages/NotFound';
+import Home from '@/pages/Home';
+import Matches from '@/pages/Matches';
+import Community from '@/pages/Community';
+import Profile from '@/pages/Profile';
+import Settings from '@/pages/Settings';
+import NotFound from '@/pages/NotFound';
 
 function App() {
   return (
