@@ -1,21 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { NotificationItem } from './NotificationItem';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  timestamp: string;
-  read: boolean;
-}
+import { Notification } from '@/types/notifications';
 
 interface NotificationsPanelProps {
   notifications: Notification[];
@@ -39,19 +25,22 @@ export const NotificationsPanel = ({
           >
             Notificări
           </motion.span>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onClearAll}
-            className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
-          >
-            Șterge tot
-          </motion.button>
+          {notifications.length > 0 && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onClearAll}
+              className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Șterge tot
+            </motion.button>
+          )}
         </SheetTitle>
         <SheetDescription className="text-white/60">
           Vezi toate notificările tale recente
         </SheetDescription>
       </SheetHeader>
+      
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -61,7 +50,7 @@ export const NotificationsPanel = ({
           {notifications.map((notification) => (
             <NotificationItem
               key={notification.id}
-              {...notification}
+              notification={notification}
               onMarkAsRead={onMarkAsRead}
             />
           ))}
