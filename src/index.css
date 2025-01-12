@@ -4,17 +4,17 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50 min-h-screen;
+    @apply bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 min-h-screen;
     background-attachment: fixed;
   }
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-pink-600 to-purple-600;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-pink-400 to-purple-400;
 }
 
 .glass-card {
-  @apply bg-white/80 backdrop-blur-sm border border-indigo-100/20 shadow-lg;
+  @apply bg-white/10 backdrop-blur-sm border border-indigo-500/20 shadow-lg;
 }
 
 .hover-lift {
@@ -45,7 +45,7 @@
 }
 
 .sidebar-shadow {
-  box-shadow: 4px 0 15px rgba(99, 102, 241, 0.1);
+  box-shadow: 4px 0 15px rgba(99, 102, 241, 0.2);
 }
 
 @keyframes pulse-scale {

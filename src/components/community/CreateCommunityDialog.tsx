@@ -62,19 +62,19 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         <motion.div
           whileHover={{ scale: 1.02, y: -5 }}
           whileTap={{ scale: 0.98 }}
-          className="relative overflow-hidden text-center space-y-6 max-w-2xl mx-auto rounded-2xl p-8 cursor-pointer bg-[#1a1a1a] bg-opacity-80 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(123,_97,_255,_0.15)]"
+          className="relative overflow-hidden text-center space-y-6 max-w-2xl mx-auto rounded-2xl p-8 cursor-pointer bg-[#1a1a1a] bg-opacity-80 backdrop-blur-xl border border-indigo-500/20 shadow-[0_0_40px_rgba(99,102,241,0.2)]"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-indigo-500/5"
+            className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-pink-500/10 to-purple-500/10"
           />
           
           <motion.div className="relative z-10 space-y-6">
             <div className="flex items-center justify-center space-x-4">
-              <Rocket className="w-8 h-8 text-purple-400" />
-              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
+              <Rocket className="w-8 h-8 text-indigo-400" />
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-pink-400 to-purple-400">
                 Creează-ți Propria Comunitate
               </h2>
             </div>
@@ -86,7 +86,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             <div className="flex justify-center space-x-8">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center space-x-2 text-purple-400"
+                className="flex items-center space-x-2 text-indigo-400"
               >
                 <Users className="w-5 h-5" />
                 <span>Comunitate Personalizată</span>
@@ -100,7 +100,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center space-x-2 text-indigo-400"
+                className="flex items-center space-x-2 text-purple-400"
               >
                 <Hash className="w-5 h-5" />
                 <span>Hashtag-uri Personalizate</span>
@@ -109,7 +109,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
 
             <Button
               variant="ghost"
-              className="group relative overflow-hidden px-8 py-6 text-lg rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 border-2 border-white/10 hover:border-white/20 transition-all duration-300"
+              className="group relative overflow-hidden px-8 py-6 text-lg rounded-xl bg-gradient-to-r from-indigo-500/20 to-pink-500/20 hover:from-indigo-500/30 hover:to-pink-500/30 border-2 border-indigo-500/20 hover:border-indigo-500/30 transition-all duration-300"
             >
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
@@ -119,20 +119,20 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               >
                 Începe Aventura
               </motion.span>
-              <Sparkles className="ml-2 h-5 w-5 inline-block text-purple-400 group-hover:rotate-12 transition-transform" />
+              <Sparkles className="ml-2 h-5 w-5 inline-block text-indigo-400 group-hover:rotate-12 transition-transform" />
             </Button>
           </motion.div>
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-3xl bg-[#1a1a1a] bg-opacity-90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(123,_97,_255,_0.15)]">
+      <DialogContent className="max-w-3xl bg-[#1a1a1a] bg-opacity-90 backdrop-blur-xl border border-indigo-500/20 rounded-2xl shadow-[0_0_40px_rgba(99,102,241,0.2)]">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-2"
           >
-            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
+            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-pink-400 to-purple-400">
               {step === 1 ? 'Începe o nouă aventură' : 'Personalizează-ți comunitatea'}
             </DialogTitle>
             <DialogDescription className="text-lg text-gray-400">
@@ -170,7 +170,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             <Button
               variant="ghost"
               onClick={() => setStep(1)}
-              className="flex-1 h-14 text-lg rounded-xl bg-white/5 border-2 border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-300 hover:text-white transition-all duration-300"
+              className="flex-1 h-14 text-lg rounded-xl bg-white/5 border-2 border-indigo-500/20 hover:bg-white/10 hover:border-indigo-500/30 text-gray-300 hover:text-white transition-all duration-300"
             >
               Înapoi
             </Button>
@@ -178,7 +178,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
           <Button
             onClick={step === 1 ? () => setStep(2) : handleCreateCommunity}
             disabled={step === 1 ? !newCommunityData.name || !newCommunityData.description : newCommunityData.interests.length === 0}
-            className="flex-1 h-14 text-lg rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-2 border-white/10 hover:border-white/20 transition-all duration-300"
+            className="flex-1 h-14 text-lg rounded-xl bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white border-2 border-indigo-500/20 hover:border-indigo-500/30 transition-all duration-300"
           >
             {step === 1 ? (
               <>
