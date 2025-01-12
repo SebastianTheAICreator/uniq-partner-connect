@@ -15,7 +15,7 @@ export const NotificationsPanel = ({
   onClearAll
 }: NotificationsPanelProps) => {
   return (
-    <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-gray-900/95 via-indigo-900/95 to-purple-900/95 backdrop-blur-xl border-l border-white/10 shadow-2xl">
+    <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-indigo-900/95 via-purple-900/95 to-pink-900/95 backdrop-blur-xl border-l border-white/10 shadow-2xl">
       <SheetHeader>
         <SheetTitle className="flex justify-between items-center">
           <motion.span

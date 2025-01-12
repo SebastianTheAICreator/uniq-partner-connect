@@ -116,7 +116,7 @@ const Community = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       <Navbar />
       
       {!selectedCategory ? (
@@ -174,9 +174,9 @@ const Community = () => {
                     whileHover={{ y: -5 }}
                     className="glass-card rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300"
                   >
-                    <div className="p-6 space-y-4 bg-gradient-to-br from-purple-500/10 to-pink-500/5">
+                    <div className="p-6 space-y-4 bg-gradient-to-br from-indigo-500/10 to-pink-500/5">
                       <div className="flex items-center justify-between">
-                        <Users className="w-8 h-8 text-primary" />
+                        <Users className="w-8 h-8 text-indigo-500" />
                         <span className="text-sm text-gray-500">
                           {community.memberCount} membri
                         </span>
@@ -193,7 +193,7 @@ const Community = () => {
                         {community.interests.map((interest, i) => (
                           <span 
                             key={i}
-                            className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary"
+                            className="text-xs px-2 py-1 rounded-full bg-indigo-500/10 text-indigo-600"
                           >
                             {interest}
                           </span>
@@ -204,7 +204,7 @@ const Community = () => {
                         onClick={() => handleJoinCommunity(community.name)}
                         className="w-full group flex items-center justify-center space-x-2 bg-white/50 hover:bg-white/80"
                       >
-                        <Heart className="h-5 w-5 group-hover:text-primary transition-colors" />
+                        <Heart className="h-5 w-5 group-hover:text-indigo-500 transition-colors" />
                         <span>Alătură-te</span>
                       </ActionButton>
                     </div>

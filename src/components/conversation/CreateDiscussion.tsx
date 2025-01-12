@@ -42,7 +42,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="group relative w-full h-14 bg-gradient-to-br from-[#1a1a2e]/90 via-[#16213e]/90 to-[#1a1a2e]/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-indigo-500/20 hover:shadow-indigo-500/10 transition-all duration-300"
+              className="group relative w-full h-14 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-indigo-500/20 hover:shadow-indigo-500/10 transition-all duration-300"
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20"
@@ -64,7 +64,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="relative space-y-6 p-8 bg-gradient-to-br from-[#1a1a2e]/90 via-[#16213e]/90 to-[#1a1a2e]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
+            className="relative space-y-6 p-8 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
             onSubmit={handleSubmit}
           >
             <motion.div
