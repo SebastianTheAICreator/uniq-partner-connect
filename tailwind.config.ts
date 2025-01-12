@@ -25,16 +25,16 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#8B5CF6",
-          hover: "#7C3AED",
+          DEFAULT: "#6366f1", // Indigo
+          hover: "#4f46e5",
         },
         secondary: {
-          DEFAULT: "#0EA5E9",
-          hover: "#0284C7",
+          DEFAULT: "#ec4899", // Pink
+          hover: "#db2777",
         },
         accent: {
-          DEFAULT: "#D946EF",
-          hover: "#C026D3",
+          DEFAULT: "#8b5cf6", // Purple
+          hover: "#7c3aed",
         },
       },
       keyframes: {
