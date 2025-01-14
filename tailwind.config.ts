@@ -25,31 +25,41 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#6366f1", // Indigo
-          hover: "#4f46e5",
+          DEFAULT: "#8B5CF6",
+          hover: "#7C3AED",
         },
         secondary: {
-          DEFAULT: "#ec4899", // Pink
-          hover: "#db2777",
+          DEFAULT: "#D946EF",
+          hover: "#C026D3",
         },
         accent: {
-          DEFAULT: "#8b5cf6", // Purple
-          hover: "#7c3aed",
+          DEFAULT: "#0EA5E9",
+          hover: "#0284C7",
         },
       },
       keyframes: {
-        "fade-in": {
-          "0%": { opacity: "0", transform: "translateY(10px)" },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" }
         },
         "scale-in": {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" }
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" }
+        }
       },
       animation: {
-        "fade-in": "fade-in 0.5s ease-out",
+        "fade-up": "fade-up 0.5s ease-out",
+        "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
+        "float": "float 3s ease-in-out infinite"
       },
     },
   },

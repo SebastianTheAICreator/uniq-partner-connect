@@ -4,17 +4,17 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50 min-h-screen;
+    @apply bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#1a1a2e] min-h-screen text-white;
     background-attachment: fixed;
   }
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-pink-600 to-purple-600;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
 }
 
 .glass-card {
-  @apply bg-white/80 backdrop-blur-sm border border-indigo-100/20 shadow-lg;
+  @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)];
 }
 
 .hover-lift {
@@ -23,7 +23,7 @@
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: theme('colors.indigo.400') transparent;
+  scrollbar-color: theme('colors.primary.DEFAULT') transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -35,34 +35,35 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: theme('colors.indigo.400');
+  background-color: theme('colors.primary.DEFAULT');
   border-radius: 20px;
   border: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: theme('colors.indigo.300');
+  background-color: theme('colors.primary.hover');
 }
 
 .sidebar-shadow {
-  box-shadow: 4px 0 15px rgba(99, 102, 241, 0.1);
+  box-shadow: 4px 0 15px rgba(139, 92, 246, 0.1);
 }
 
-@keyframes pulse-scale {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.glass-gradient {
+  @apply bg-gradient-to-br from-white/10 to-white/5;
 }
 
-.join-animation {
-  animation: pulse-scale 0.5s ease-out;
+.card-hover {
+  @apply transition-all duration-300 hover:bg-white/10 hover:scale-[1.02] hover:shadow-lg;
+}
+
+.button-gradient {
+  @apply bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+.border-glow {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
 }
