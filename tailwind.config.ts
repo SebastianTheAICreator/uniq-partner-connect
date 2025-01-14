@@ -25,8 +25,8 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#8B5CF6",
-          hover: "#7C3AED",
+          DEFAULT: "#7C3AED",
+          hover: "#6D28D9",
         },
         secondary: {
           DEFAULT: "#D946EF",
@@ -53,13 +53,24 @@ export default {
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" }
+        },
+        "text-shine": {
+          "0%": {
+            "background-size": "200% 200%",
+            "background-position": "left center"
+          },
+          "100%": {
+            "background-size": "200% 200%",
+            "background-position": "right center"
+          }
         }
       },
       animation: {
         "fade-up": "fade-up 0.5s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
-        "float": "float 3s ease-in-out infinite"
+        "float": "float 3s ease-in-out infinite",
+        "text-shine": "text-shine 3s ease-in-out infinite"
       },
     },
   },
