@@ -52,39 +52,54 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="p-6 rounded-xl bg-white/80 backdrop-blur shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              whileHover={{ scale: 1.05 }}
+              className="glass-card p-8 rounded-xl hover:border-primary/30 transition-all duration-300"
             >
-              <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-3 mb-4">
-                <Users className="w-8 h-8 text-primary mx-auto" />
+              <div className="bg-gradient-to-br from-primary/20 to-primary/5 rounded-lg p-4 mb-6">
+                <Users className="w-10 h-10 text-primary mx-auto animate-float" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-primary">Comunități Diverse</h3>
-              <p className="text-gray-600">Găsește grupuri care împărtășesc aceleași valori, interese și experiențe ca tine.</p>
+              <h3 className="text-xl font-semibold mb-4 bg-gradient-to-r from-primary via-primary-hover to-primary bg-clip-text text-transparent animate-text-shine">
+                Comunități Diverse
+              </h3>
+              <p className="text-gray-300/80">
+                Găsește grupuri care împărtășesc aceleași valori, interese și experiențe ca tine.
+              </p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="p-6 rounded-xl bg-white/80 backdrop-blur shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              whileHover={{ scale: 1.05 }}
+              className="glass-card p-8 rounded-xl hover:border-secondary/30 transition-all duration-300"
             >
-              <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-lg p-3 mb-4">
-                <Heart className="w-8 h-8 text-secondary mx-auto" />
+              <div className="bg-gradient-to-br from-secondary/20 to-secondary/5 rounded-lg p-4 mb-6">
+                <Heart className="w-10 h-10 text-secondary mx-auto animate-float" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-secondary">Conexiuni Autentice</h3>
-              <p className="text-gray-600">Creează legături profunde cu persoane care te înțeleg cu adevărat.</p>
+              <h3 className="text-xl font-semibold mb-4 bg-gradient-to-r from-secondary via-secondary-hover to-secondary bg-clip-text text-transparent animate-text-shine">
+                Conexiuni Autentice
+              </h3>
+              <p className="text-gray-300/80">
+                Creează legături profunde cu persoane care te înțeleg cu adevărat.
+              </p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="p-6 rounded-xl bg-white/80 backdrop-blur shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              whileHover={{ scale: 1.05 }}
+              className="glass-card p-8 rounded-xl hover:border-accent/30 transition-all duration-300"
             >
-              <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg p-3 mb-4">
-                <Shield className="w-8 h-8 text-accent mx-auto" />
+              <div className="bg-gradient-to-br from-accent/20 to-accent/5 rounded-lg p-4 mb-6">
+                <Shield className="w-10 h-10 text-accent mx-auto animate-float" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-accent">Spațiu Sigur</h3>
-              <p className="text-gray-600">Un mediu protejat unde poți fi tu însuți, fără judecată sau discriminare.</p>
+              <h3 className="text-xl font-semibold mb-4 bg-gradient-to-r from-accent via-accent-hover to-accent bg-clip-text text-transparent animate-text-shine">
+                Spațiu Sigur
+              </h3>
+              <p className="text-gray-300/80">
+                Un mediu protejat unde poți fi tu însuți, fără judecată sau discriminare.
+              </p>
             </motion.div>
           </div>
 
