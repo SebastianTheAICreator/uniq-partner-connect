@@ -35,7 +35,36 @@ function notificationReducer(state: Notification[], action: NotificationAction):
 }
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
-  const [notifications, dispatch] = useReducer(notificationReducer, []);
+  const [notifications, dispatch] = useReducer(notificationReducer, [
+    {
+      id: "1",
+      type: "POST_LIKE",
+      title: "Nou like la postarea ta",
+      message: "Maria a apreciat postarea ta despre evenimentul de vineri",
+      timestamp: new Date().toISOString(),
+      read: false,
+      metadata: { postId: "123" }
+    },
+    {
+      id: "2",
+      type: "COMMENT_REPLY",
+      title: "Răspuns nou",
+      message: "Alex ți-a răspuns la comentariul despre proiectul de grup",
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+      read: false,
+      metadata: { commentId: "456" }
+    },
+    {
+      id: "3",
+      type: "GROUP_JOIN",
+      title: "Membru nou în grup",
+      message: "Elena s-a alăturat grupului Programare Web",
+      timestamp: new Date(Date.now() - 7200000).toISOString(),
+      read: true,
+      metadata: { groupId: "789" }
+    }
+  ]);
+
   const { toast } = useToast();
 
   const unreadCount = notifications.filter(n => !n.read).length;

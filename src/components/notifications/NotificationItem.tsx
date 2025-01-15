@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Notification } from '@/types/notifications';
-import { Heart, MessageCircle, Users, PlusCircle, AtSign } from 'lucide-react';
+import { Heart, MessageCircle, Users, PlusCircle, AtSign, Bell } from 'lucide-react';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -23,7 +23,7 @@ const getNotificationIcon = (type: Notification['type']) => {
     case 'MENTION':
       return <AtSign className="w-5 h-5 text-yellow-400" />;
     default:
-      return null;
+      return <Bell className="w-5 h-5 text-gray-400" />;
   }
 };
 
@@ -33,30 +33,36 @@ export const NotificationItem = ({
 }: NotificationItemProps) => {
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -100 }}
       className={cn(
-        "p-4 rounded-lg transition-all duration-300 hover:scale-[1.02]",
-        "border border-white/10 shadow-lg hover:shadow-xl",
+        "glass-card p-4 rounded-lg transition-all duration-300 hover:scale-[1.02] card-hover",
         notification.read
-          ? "bg-gradient-to-r from-gray-900/40 to-gray-800/40"
-          : "bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10"
+          ? "bg-gradient-to-r from-white/5 to-white/0"
+          : "bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border-glow"
       )}
     >
       <div className="flex items-start space-x-4">
-        <div className="p-2 rounded-full bg-white/5">
+        <motion.div 
+          whileHover={{ scale: 1.1 }}
+          className="p-2 rounded-full bg-white/10 backdrop-blur-sm"
+        >
           {getNotificationIcon(notification.type)}
-        </div>
+        </motion.div>
         
-        <div className="flex-1">
-          <h4 className="font-medium text-white/90">
+        <div className="flex-1 space-y-1">
+          <h4 className={cn(
+            "font-medium",
+            notification.read ? "text-white/80" : "text-white gradient-text"
+          )}>
             {notification.title}
           </h4>
-          <p className="text-sm text-white/70 mt-1">
+          <p className="text-sm text-white/70">
             {notification.message}
           </p>
-          <span className="text-xs text-white/50 mt-2 block">
+          <span className="text-xs text-white/50 block">
             {new Date(notification.timestamp).toLocaleString()}
           </span>
         </div>
@@ -66,7 +72,7 @@ export const NotificationItem = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onMarkAsRead(notification.id)}
-            className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors whitespace-nowrap"
+            className="text-xs text-primary hover:text-primary-hover transition-colors whitespace-nowrap"
           >
             Marchează ca citit
           </motion.button>
