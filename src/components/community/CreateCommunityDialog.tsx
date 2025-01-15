@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Users, Globe, Rocket, Hash } from 'lucide-react';
+import { Sparkles, Users, Globe, Rocket, Hash, Wand2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import {
   Dialog,
@@ -68,7 +68,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-0 bg-gradient-to-br from-[#2D3250] via-[#424769] to-[#2D3250] opacity-50"
+            className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-blue-500/20 opacity-50"
           />
           
           <motion.div 
@@ -79,13 +79,13 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
           >
             <div className="flex flex-col items-center space-y-4">
               <motion.div
-                whileHover={{ rotate: 360 }}
+                whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.5 }}
-                className="p-4 rounded-full bg-white/10 backdrop-blur-lg"
+                className="p-4 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-lg border border-white/20"
               >
-                <Rocket className="w-8 h-8 text-[#7C3AED]" />
+                <Wand2 className="w-8 h-8 text-purple-400" />
               </motion.div>
-              <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#7C3AED] via-[#D946EF] to-[#0EA5E9] animate-text-shine">
+              <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 animate-text-shine">
                 Creează-ți Propria Comunitate
               </h2>
             </div>
@@ -96,31 +96,31 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-white/5 backdrop-blur-sm"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10"
               >
-                <Users className="w-6 h-6 text-[#7C3AED]" />
+                <Users className="w-6 h-6 text-purple-400" />
                 <span className="text-white/90">Comunitate Personalizată</span>
               </motion.div>
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-white/5 backdrop-blur-sm"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10"
               >
-                <Globe className="w-6 h-6 text-[#D946EF]" />
+                <Globe className="w-6 h-6 text-pink-400" />
                 <span className="text-white/90">Vizibilitate Globală</span>
               </motion.div>
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-white/5 backdrop-blur-sm"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10"
               >
-                <Hash className="w-6 h-6 text-[#0EA5E9]" />
+                <Hash className="w-6 h-6 text-blue-400" />
                 <span className="text-white/90">Hashtag-uri Personalizate</span>
               </motion.div>
             </div>
 
             <Button
               variant="ghost"
-              className="group relative overflow-hidden px-8 py-6 text-lg rounded-xl bg-gradient-to-r from-[#7C3AED]/20 to-[#D946EF]/20 hover:from-[#7C3AED]/30 hover:to-[#D946EF]/30 border border-white/10 hover:border-white/20 transition-all duration-500"
+              className="group relative overflow-hidden px-8 py-6 text-lg rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 border border-white/10 hover:border-white/20 transition-all duration-500"
             >
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
@@ -129,21 +129,21 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
                 className="relative z-10 text-white flex items-center gap-2"
               >
                 Începe Aventura
-                <Sparkles className="w-5 h-5 text-[#D946EF] group-hover:rotate-12 transition-transform" />
+                <Sparkles className="w-5 h-5 text-pink-400 group-hover:rotate-12 transition-transform" />
               </motion.span>
             </Button>
           </motion.div>
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-3xl bg-[#1a1a2e]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(124,58,237,0.15)]">
+      <DialogContent className="max-w-3xl bg-gradient-to-br from-purple-950/90 via-pink-950/90 to-purple-950/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.2)]">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-2"
           >
-            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#7C3AED] via-[#D946EF] to-[#0EA5E9]">
+            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 animate-text-shine">
               {step === 1 ? 'Începe o nouă aventură' : 'Personalizează-ți comunitatea'}
             </DialogTitle>
             <DialogDescription className="text-lg text-gray-400">
@@ -189,17 +189,17 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
           <Button
             onClick={step === 1 ? () => setStep(2) : handleCreateCommunity}
             disabled={step === 1 ? !newCommunityData.name || !newCommunityData.description : newCommunityData.interests.length === 0}
-            className="flex-1 h-14 text-lg rounded-xl bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-[#6D28D9] hover:to-[#C026D3] text-white border border-white/10 hover:border-white/20 transition-all duration-300"
+            className="flex-1 h-14 text-lg rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border border-white/10 hover:border-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {step === 1 ? (
               <>
                 Continuă
-                <Rocket className="ml-2 h-5 w-5" />
+                <Rocket className="ml-2 h-5 w-5 animate-pulse" />
               </>
             ) : (
               <>
                 Creează Comunitatea
-                <Sparkles className="ml-2 h-5 w-5" />
+                <Sparkles className="ml-2 h-5 w-5 animate-pulse" />
               </>
             )}
           </Button>
