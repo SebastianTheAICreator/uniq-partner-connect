@@ -47,7 +47,15 @@ const CommunityPage = () => {
 
   const handleCommunityCreated = async (newCommunity: Omit<Community, 'id' | 'createdAt'>) => {
     try {
-      await addCommunity(newCommunity);
+      // Adăugăm valorile inițiale pentru membri și conversații
+      const communityWithDefaults = {
+        ...newCommunity,
+        memberCount: 0,
+        conversationCount: 0,
+        maxConversations: 100
+      };
+
+      await addCommunity(communityWithDefaults);
       const updatedCommunities = await getAllCommunities();
       setCommunities(updatedCommunities);
       
