@@ -86,3 +86,19 @@ export const getAllCommunities = async (): Promise<Community[]> => {
     throw error;
   }
 };
+
+export const updateCommunityMemberCount = async (communityId: number): Promise<void> => {
+  console.log('Updating member count for community:', communityId);
+  try {
+    const community = await db.communities.get(communityId);
+    if (community) {
+      await db.communities.update(communityId, {
+        memberCount: 1
+      });
+      console.log('Successfully updated member count for community:', communityId);
+    }
+  } catch (error) {
+    console.error('Error updating community member count:', error);
+    throw error;
+  }
+};

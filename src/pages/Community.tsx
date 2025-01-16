@@ -3,17 +3,19 @@ import { motion } from "framer-motion";
 import { Search, Users, MessageCircle, Heart, Shield } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ActionButton from "@/components/ActionButton";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import ConversationList from "@/components/ConversationList";
 import CreateCommunityDialog from "@/components/community/CreateCommunityDialog";
-import { getAllCommunities, addCommunity, type Community } from "@/db/database";
+import { getAllCommunities, addCommunity, type Community, updateCommunityMemberCount } from "@/db/database";
+import { useNotifications } from "@/contexts/NotificationContext";
 
 const CommunityPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { toast } = useToast();
   const [communities, setCommunities] = useState<Community[]>([]);
+  const { addNotification } = useNotifications();
 
   // Încarcă comunitățile la montarea componentei
   useEffect(() => {
@@ -36,23 +38,45 @@ const CommunityPage = () => {
     loadCommunities();
   }, [toast]);
 
-  const handleJoinCommunity = (communityName: string) => {
-    setSelectedCategory(communityName);
-    toast({
-      title: "Bine ai venit în comunitate! 🎉",
-      description: `Te-ai alăturat comunității: ${communityName}`,
-      className: "bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 border-none shadow-xl",
-    });
+  const handleJoinCommunity = async (communityId: number, communityName: string) => {
+    try {
+      await updateCommunityMemberCount(communityId);
+      const updatedCommunities = await getAllCommunities();
+      setCommunities(updatedCommunities);
+      setSelectedCategory(communityName);
+
+      // Notificare toast
+      toast({
+        title: "Bine ai venit în comunitate! 🎉",
+        description: `Te-ai alăturat comunității: ${communityName}`,
+        className: "bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 border-none shadow-xl",
+      });
+
+      // Notificare în panoul de notificări
+      addNotification(
+        "GROUP_JOIN",
+        "Te-ai alăturat unei noi comunități!",
+        `Ai devenit membru în comunitatea "${communityName}". Explorează conversațiile și conectează-te cu alți membri.`,
+        { groupId: communityId.toString() }
+      );
+
+    } catch (error) {
+      console.error('Error joining community:', error);
+      toast({
+        title: "Eroare",
+        description: "Nu am putut actualiza numărul de membri. Te rugăm să încerci din nou.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleCommunityCreated = async (newCommunity: Omit<Community, 'id' | 'createdAt'>) => {
     try {
-      // Adăugăm valorile inițiale pentru membri și conversații
       const communityWithDefaults = {
         ...newCommunity,
         memberCount: 0,
         conversationCount: 0,
-        maxConversations: 100
+        maxConversations: 500
       };
 
       await addCommunity(communityWithDefaults);
@@ -169,7 +193,7 @@ const CommunityPage = () => {
                       </div>
 
                       <ActionButton
-                        onClick={() => handleJoinCommunity(community.name)}
+                        onClick={() => handleJoinCommunity(community.id!, community.name)}
                         className="w-full group flex items-center justify-center space-x-2 button-gradient text-white"
                       >
                         <Heart className="h-5 w-5 group-hover:text-pink-300 transition-colors" />
