@@ -79,8 +79,20 @@ export const getAllCommunities = async (): Promise<Community[]> => {
   console.log('Fetching all communities');
   try {
     const communities = await db.communities.toArray();
-    console.log('Retrieved communities:', communities);
-    return communities;
+    // Update maxConversations to 500 for all existing communities
+    const updatedCommunities = await Promise.all(
+      communities.map(async (community) => {
+        if (community.maxConversations !== 500) {
+          await db.communities.update(community.id!, {
+            maxConversations: 500
+          });
+          return { ...community, maxConversations: 500 };
+        }
+        return community;
+      })
+    );
+    console.log('Retrieved communities:', updatedCommunities);
+    return updatedCommunities;
   } catch (error) {
     console.error('Error fetching communities:', error);
     throw error;
