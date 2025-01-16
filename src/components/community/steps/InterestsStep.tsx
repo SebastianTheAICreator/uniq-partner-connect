@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sparkles, Tag, Heart, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { addCustomInterest, getAllCustomInterests } from "@/db/database";
 
 interface InterestsStepProps {
   interests: string[];
@@ -19,7 +20,29 @@ const InterestsStep = ({ interests: defaultInterests, selectedInterests, onInter
   const [isAddingInterest, setIsAddingInterest] = useState(false);
   const { toast } = useToast();
 
-  const handleAddCustomInterest = () => {
+  // Încarcă interesele salvate când componenta se montează
+  useEffect(() => {
+    const loadSavedInterests = async () => {
+      try {
+        console.log('Loading saved interests from database');
+        const savedInterests = await getAllCustomInterests();
+        const savedInterestNames = savedInterests.map(interest => interest.name);
+        setInterests(prev => [...new Set([...prev, ...savedInterestNames])]);
+        console.log('Successfully loaded saved interests:', savedInterestNames);
+      } catch (error) {
+        console.error('Error loading saved interests:', error);
+        toast({
+          title: "Eroare la încărcarea intereselor",
+          description: "Nu am putut încărca interesele salvate. Te rugăm să încerci din nou.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    loadSavedInterests();
+  }, [toast]);
+
+  const handleAddCustomInterest = async () => {
     if (newInterest.trim()) {
       if (interests.includes(newInterest.trim())) {
         toast({
@@ -30,15 +53,26 @@ const InterestsStep = ({ interests: defaultInterests, selectedInterests, onInter
         return;
       }
 
-      setInterests(prev => [...prev, newInterest.trim()]);
-      setNewInterest("");
-      setIsAddingInterest(false);
-      
-      toast({
-        title: "Interes adăugat cu succes! 🎉",
-        description: "Poți selecta noul interes din lista de mai jos.",
-        className: "bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-none"
-      });
+      try {
+        console.log('Adding new custom interest:', newInterest.trim());
+        await addCustomInterest(newInterest.trim());
+        setInterests(prev => [...prev, newInterest.trim()]);
+        setNewInterest("");
+        setIsAddingInterest(false);
+        
+        toast({
+          title: "Interes adăugat cu succes! 🎉",
+          description: "Interesul tău a fost salvat și va fi disponibil și data viitoare.",
+          className: "bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-none"
+        });
+      } catch (error) {
+        console.error('Error saving custom interest:', error);
+        toast({
+          title: "Eroare la salvare",
+          description: "Nu am putut salva noul interes. Te rugăm să încerci din nou.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
