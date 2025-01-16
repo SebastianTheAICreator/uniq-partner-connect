@@ -1,100 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, Users, MessageCircle, Heart, Sparkles, Shield } from "lucide-react";
+import { Search, Users, MessageCircle, Heart, Shield } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ActionButton from "@/components/ActionButton";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from "@/components/Navbar";
 import ConversationList from "@/components/ConversationList";
 import CreateCommunityDialog from "@/components/community/CreateCommunityDialog";
+import { getAllCommunities, addCommunity, type Community } from "@/db/database";
 
-interface Community {
-  name: string;
-  description: string;
-  interests: string[];
-  memberCount?: number;
-  conversationCount?: number;
-  maxConversations?: number;
-}
-
-const Community = () => {
+const CommunityPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { toast } = useToast();
-  const [communities, setCommunities] = useState<Community[]>([
-    {
-      name: "Arte & Cultură",
-      description: "Pentru pasionații de artă și cultură",
-      interests: ["Artă", "Cultură", "Muzee"],
-      memberCount: 1234,
-      conversationCount: 45,
-      maxConversations: 500
-    },
-    {
-      name: "Gaming & Tech",
-      description: "Discuții despre jocuri și tehnologie",
-      interests: ["Gaming", "Tehnologie", "eSports"],
-      memberCount: 2345,
-      conversationCount: 67,
-      maxConversations: 500
-    },
-    {
-      name: "Literatură & Poezie",
-      description: "Explorează lumea cuvintelor și a imaginației",
-      interests: ["Cărți", "Poezie", "Scriitori"],
-      memberCount: 890,
-      conversationCount: 123,
-      maxConversations: 500
-    },
-    {
-      name: "Sport & Fitness",
-      description: "Pentru pasionații de sport și viață sănătoasă",
-      interests: ["Sport", "Fitness", "Nutriție"],
-      memberCount: 3456,
-      conversationCount: 234,
-      maxConversations: 500
-    },
-    {
-      name: "Călătorii & Aventură",
-      description: "Împărtășește experiențe din călătorii",
-      interests: ["Călătorii", "Aventură", "Cultură"],
-      memberCount: 1567,
-      conversationCount: 89,
-      maxConversations: 500
-    },
-    {
-      name: "Muzică & Audio",
-      description: "Discuții despre muzică și producție audio",
-      interests: ["Muzică", "Producție", "Instrumente"],
-      memberCount: 2789,
-      conversationCount: 156,
-      maxConversations: 500
-    },
-    {
-      name: "Film & Televiziune",
-      description: "Analize și discuții despre producții cinematografice",
-      interests: ["Film", "Seriale", "Critică"],
-      memberCount: 1890,
-      conversationCount: 178,
-      maxConversations: 500
-    },
-    {
-      name: "Știință & Inovație",
-      description: "Explorează ultimele descoperiri științifice",
-      interests: ["Știință", "Tehnologie", "Inovație"],
-      memberCount: 1234,
-      conversationCount: 145,
-      maxConversations: 500
-    },
-    {
-      name: "Fotografie & Design",
-      description: "Pentru pasionații de artă vizuală",
-      interests: ["Fotografie", "Design", "Artă"],
-      memberCount: 2156,
-      conversationCount: 167,
-      maxConversations: 500
-    }
-  ]);
+  const [communities, setCommunities] = useState<Community[]>([]);
+
+  // Încarcă comunitățile la montarea componentei
+  useEffect(() => {
+    const loadCommunities = async () => {
+      try {
+        const savedCommunities = await getAllCommunities();
+        if (savedCommunities.length > 0) {
+          setCommunities(savedCommunities);
+        }
+      } catch (error) {
+        console.error('Error loading communities:', error);
+        toast({
+          title: "Eroare",
+          description: "Nu am putut încărca comunitățile. Te rugăm să încerci din nou.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    loadCommunities();
+  }, [toast]);
 
   const handleJoinCommunity = (communityName: string) => {
     setSelectedCategory(communityName);
@@ -105,14 +45,25 @@ const Community = () => {
     });
   };
 
-  const handleCommunityCreated = (newCommunity: Community) => {
-    const communityWithCounts = {
-      ...newCommunity,
-      memberCount: 1,
-      conversationCount: 0,
-      maxConversations: 500
-    };
-    setCommunities(prev => [communityWithCounts, ...prev]);
+  const handleCommunityCreated = async (newCommunity: Omit<Community, 'id' | 'createdAt'>) => {
+    try {
+      await addCommunity(newCommunity);
+      const updatedCommunities = await getAllCommunities();
+      setCommunities(updatedCommunities);
+      
+      toast({
+        title: "Comunitate creată cu succes! 🎉",
+        description: `"${newCommunity.name}" este acum live și gata să primească membri.`,
+        className: "bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-none"
+      });
+    } catch (error) {
+      console.error('Error creating community:', error);
+      toast({
+        title: "Eroare",
+        description: "Nu am putut crea comunitatea. Te rugăm să încerci din nou.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -143,7 +94,6 @@ const Community = () => {
                 className="text-xl text-gray-300 max-w-2xl mx-auto"
               >
                 Aici vei găsi persoane care te înțeleg, te acceptă și împărtășesc aceleași pasiuni ca tine.
-                Alătură-te unei comunități din peste 1200 de opțiuni.
               </motion.p>
             </div>
 
@@ -178,7 +128,7 @@ const Community = () => {
                 )
                 .map((community, index) => (
                   <motion.div
-                    key={community.name}
+                    key={community.id || index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -232,4 +182,4 @@ const Community = () => {
   );
 };
 
-export default Community;
+export default CommunityPage;

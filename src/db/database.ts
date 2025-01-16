@@ -6,14 +6,27 @@ export interface CustomInterest {
   createdAt: Date;
 }
 
+export interface Community {
+  id?: number;
+  name: string;
+  description: string;
+  interests: string[];
+  createdAt: Date;
+  memberCount: number;
+  conversationCount: number;
+  maxConversations: number;
+}
+
 export class AppDatabase extends Dexie {
   customInterests!: Table<CustomInterest>;
+  communities!: Table<Community>;
 
   constructor() {
     super('communityApp');
     
     this.version(1).stores({
-      customInterests: '++id, name, createdAt'
+      customInterests: '++id, name, createdAt',
+      communities: '++id, name, createdAt'
     });
   }
 }
@@ -43,6 +56,33 @@ export const getAllCustomInterests = async (): Promise<CustomInterest[]> => {
     return interests;
   } catch (error) {
     console.error('Error fetching custom interests:', error);
+    throw error;
+  }
+};
+
+// Helper functions pentru comunități
+export const addCommunity = async (community: Omit<Community, 'id' | 'createdAt'>): Promise<void> => {
+  console.log('Attempting to add community:', community);
+  try {
+    await db.communities.add({
+      ...community,
+      createdAt: new Date()
+    });
+    console.log('Successfully added community:', community.name);
+  } catch (error) {
+    console.error('Error adding community:', error);
+    throw error;
+  }
+};
+
+export const getAllCommunities = async (): Promise<Community[]> => {
+  console.log('Fetching all communities');
+  try {
+    const communities = await db.communities.toArray();
+    console.log('Retrieved communities:', communities);
+    return communities;
+  } catch (error) {
+    console.error('Error fetching communities:', error);
     throw error;
   }
 };
