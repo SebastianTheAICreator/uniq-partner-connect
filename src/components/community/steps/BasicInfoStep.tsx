@@ -54,8 +54,8 @@ const BasicInfoStep = ({ name, description, onNameChange, onDescriptionChange }:
                 id="name"
                 value={name}
                 onChange={(e) => onNameChange(e.target.value)}
-                className="h-16 text-lg bg-black/50 border-2 border-white/10 focus:border-white/20 rounded-xl backdrop-blur-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20 pl-14 pr-4"
-                placeholder="Ex: Pasionații de artă digitală"
+                className="h-16 text-lg bg-black/50 border-2 border-white/10 focus:border-white/20 rounded-xl backdrop-blur-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20 pl-14 pr-4 font-[system-ui]"
+                placeholder="Ex: Pasionații de artă digitală 🎨"
               />
               <Hash className="absolute left-4 text-purple-400 h-6 w-6 group-hover:scale-110 transition-transform duration-300" />
               <motion.div
