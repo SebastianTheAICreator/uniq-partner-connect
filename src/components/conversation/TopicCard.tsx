@@ -20,28 +20,39 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 cursor-pointer"
+      className="glass-card rounded-xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer card-hover"
       onClick={() => onTopicClick(topic.id)}
     >
       <div className="flex items-start justify-between">
         <h3 className="text-xl font-semibold gradient-text">{topic.title}</h3>
-        <span className="text-sm text-gray-500">{topic.timestamp}</span>
+        <span className="text-sm text-white/60">{topic.timestamp}</span>
       </div>
-      <p className="mt-2 text-gray-600">{topic.lastMessage}</p>
+      <p className="mt-2 text-white/80">{topic.lastMessage}</p>
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <Button variant="ghost" className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors">
-            <ThumbsUp className="h-4 w-4" />
-            <span>{topic.likes}</span>
-          </Button>
-          <Button variant="ghost" className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors">
-            <ThumbsDown className="h-4 w-4" />
-            <span>{topic.dislikes}</span>
-          </Button>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Button 
+              variant="ghost" 
+              className="flex items-center space-x-2 text-white/60 hover:text-primary transition-colors"
+            >
+              <ThumbsUp className="h-4 w-4" />
+              <span>{topic.likes}</span>
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Button 
+              variant="ghost" 
+              className="flex items-center space-x-2 text-white/60 hover:text-red-500 transition-colors"
+            >
+              <ThumbsDown className="h-4 w-4" />
+              <span>{topic.dislikes}</span>
+            </Button>
+          </motion.div>
         </div>
-        <div className="flex items-center space-x-2 text-gray-500">
+        <div className="flex items-center space-x-2 text-white/60">
           <MessageCircle className="h-4 w-4" />
-          <span>{topic.participants}/100 participanți</span>
+          <span>{topic.participants}/500 participanți</span>
         </div>
       </div>
     </motion.div>
