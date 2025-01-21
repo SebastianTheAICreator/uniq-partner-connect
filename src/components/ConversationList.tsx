@@ -71,7 +71,7 @@ const ConversationList = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl"
+        className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-[#0f0f1a]/95 via-[#1a1a2e]/95 to-[#0f0f1a]/95 backdrop-blur-xl"
       >
         <div className="max-w-4xl mx-auto space-y-8 mt-8">
           <AnimatePresence mode="wait">
