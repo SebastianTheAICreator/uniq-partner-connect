@@ -67,7 +67,12 @@ const ConversationList = () => {
     <div className="flex min-h-[calc(100vh-4rem)]">
       <Sidebar conversations={conversations} />
 
-      <div className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl"
+      >
         <div className="max-w-4xl mx-auto space-y-8 mt-8">
           <AnimatePresence mode="wait">
             {selectedTopic ? (
@@ -97,18 +102,24 @@ const ConversationList = () => {
                 className="space-y-6"
               >
                 <CreateDiscussion onDiscussionCreated={handleNewDiscussion} />
-                {conversations.map((conv) => (
-                  <TopicCard
+                {conversations.map((conv, index) => (
+                  <motion.div
                     key={conv.id}
-                    topic={conv}
-                    onTopicClick={handleTopicClick}
-                  />
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <TopicCard
+                      topic={conv}
+                      onTopicClick={handleTopicClick}
+                    />
+                  </motion.div>
                 ))}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
