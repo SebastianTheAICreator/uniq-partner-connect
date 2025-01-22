@@ -32,30 +32,33 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
   };
 
   return (
-    <div className="mb-12 mt-8">
-      <AnimatePresence>
+    <div className="mb-16 mt-12">
+      <AnimatePresence mode="wait">
         {!isOpen ? (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
             className="relative"
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="group relative w-full h-16 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-500"
+              className="group relative w-full h-20 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500"
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10"
+                className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-pink-500/5"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               />
               <motion.div
-                className="relative z-10 flex items-center justify-center space-x-3 text-xl font-medium text-white"
+                className="relative z-10 flex items-center justify-center space-x-3 text-xl font-medium"
                 whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
               >
                 <MessageSquarePlus className="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
-                <span className="bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent font-bold">
                   Creează o discuție nouă
                 </span>
                 <Sparkles className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors animate-pulse" />
@@ -67,7 +70,8 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="relative space-y-6 p-8 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            className="relative space-y-6 p-8 bg-gradient-to-br from-indigo-900/40 via-purple-900/40 to-pink-900/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
             onSubmit={handleSubmit}
           >
             <motion.div
@@ -79,7 +83,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
             <div className="relative z-10 space-y-6">
               <div className="flex justify-between items-center">
                 <motion.h3 
-                  className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-text-shine"
+                  className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
