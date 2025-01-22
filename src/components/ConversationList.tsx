@@ -63,25 +63,61 @@ const ConversationList = () => {
 
   const selectedTopicData = conversations.find(conv => conv.id === selectedTopic);
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.6, -0.05, 0.01, 0.99]
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -20,
+      transition: {
+        duration: 0.4
+      }
+    }
+  };
+
+  const staggerChildren = {
+    visible: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
       <Sidebar conversations={conversations} />
 
       <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ 
+          duration: 0.8,
+          ease: [0.6, -0.05, 0.01, 0.99]
+        }}
         className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-[#1A1F2C] via-[#222222] to-[#1A1F2C] backdrop-blur-xl"
       >
-        <div className="max-w-4xl mx-auto space-y-8 mt-8">
+        <motion.div 
+          className="max-w-4xl mx-auto space-y-8 mt-8"
+          variants={staggerChildren}
+          initial="hidden"
+          animate="visible"
+        >
           <AnimatePresence mode="wait">
             {selectedTopic ? (
               <motion.div
                 key="topic-posts"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="w-full"
               >
                 <TopicPosts
                   topicId={selectedTopic}
@@ -95,19 +131,27 @@ const ConversationList = () => {
             ) : (
               <motion.div
                 key="topic-list"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
                 className="space-y-6"
               >
                 <CreateDiscussion onDiscussionCreated={handleNewDiscussion} />
                 {conversations.map((conv, index) => (
                   <motion.div
                     key={conv.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { 
+                        opacity: 1, 
+                        y: 0,
+                        transition: {
+                          duration: 0.6,
+                          ease: [0.6, -0.05, 0.01, 0.99]
+                        }
+                      }
+                    }}
                   >
                     <TopicCard
                       topic={conv}
@@ -118,7 +162,7 @@ const ConversationList = () => {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
