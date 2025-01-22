@@ -32,30 +32,33 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-12 mt-8">
       <AnimatePresence>
         {!isOpen ? (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
+            className="relative"
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="group relative w-full h-14 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-indigo-500/20 hover:shadow-indigo-500/10 transition-all duration-300"
+              className="group relative w-full h-16 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-500"
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20"
+                className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               />
               <motion.div
-                className="relative z-10 flex items-center justify-center space-x-2 text-lg font-medium text-white"
+                className="relative z-10 flex items-center justify-center space-x-3 text-xl font-medium text-white"
                 whileHover={{ scale: 1.02 }}
               >
-                <MessageSquarePlus className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
-                <span>Creează o discuție nouă</span>
-                <Sparkles className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <MessageSquarePlus className="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
+                <span className="bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent">
+                  Creează o discuție nouă
+                </span>
+                <Sparkles className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors animate-pulse" />
               </motion.div>
             </Button>
           </motion.div>
@@ -75,9 +78,13 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
 
             <div className="relative z-10 space-y-6">
               <div className="flex justify-between items-center">
-                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                <motion.h3 
+                  className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-text-shine"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
                   Creează o discuție nouă
-                </h3>
+                </motion.h3>
                 <Button
                   type="button"
                   variant="ghost"
@@ -90,25 +97,38 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
               </div>
 
               <div className="space-y-4">
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
                   <Input
                     placeholder="Titlul discuției"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full h-12 text-lg font-medium bg-white/5 border-white/10 focus:border-indigo-500/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 hover:bg-white/10"
                   />
-                </div>
-                <div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
                   <Textarea
                     placeholder="Descrie despre ce vrei să discuți..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="w-full min-h-[150px] text-base bg-white/5 border-white/10 focus:border-indigo-500/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 hover:bg-white/10"
                   />
-                </div>
+                </motion.div>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-4">
+              <motion.div 
+                className="flex justify-end space-x-3 pt-4"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
                 <Button
                   type="button"
                   variant="ghost"
@@ -140,7 +160,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                     <Sparkles className="ml-2 h-4 w-4" />
                   </span>
                 </Button>
-              </div>
+              </motion.div>
             </div>
           </motion.form>
         )}
