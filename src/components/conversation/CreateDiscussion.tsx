@@ -32,7 +32,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-12">
       <AnimatePresence>
         {!isOpen ? (
           <motion.div
