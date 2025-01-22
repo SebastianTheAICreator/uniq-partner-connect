@@ -4,7 +4,7 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Sparkles, MessageSquarePlus } from 'lucide-react';
+import { Plus, X, Sparkles, MessageSquarePlus, PenLine, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CreateDiscussionProps {
@@ -80,10 +80,14 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
               className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 rounded-2xl"
             />
 
-            <div className="relative z-10 space-y-6">
-              <div className="flex justify-between items-center">
+            <div className="relative z-10 space-y-8">
+              <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-between items-center"
+              >
                 <motion.h3 
-                  className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400"
+                  className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
@@ -98,40 +102,53 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                 >
                   <X className="h-5 w-5 text-gray-400" />
                 </Button>
-              </div>
+              </motion.div>
 
-              <div className="space-y-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <Input
-                    placeholder="Titlul discuției"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full h-12 text-lg font-medium bg-white/5 border-white/10 focus:border-indigo-500/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 hover:bg-white/10"
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="space-y-6"
+              >
+                <div className="relative group">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl blur opacity-30 group-hover:opacity-75 transition duration-1000"
                   />
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
+                  <div className="relative flex items-center">
+                    <PenLine className="absolute left-4 text-indigo-400 h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                    <Input
+                      placeholder="Titlul discuției tale..."
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-full h-14 pl-12 text-lg bg-black/50 border-2 border-white/10 focus:border-white/20 rounded-xl backdrop-blur-xl transition-all duration-300 focus:ring-2 focus:ring-indigo-500/20"
+                    />
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur opacity-30 group-hover:opacity-75 transition duration-1000"
+                  />
                   <Textarea
                     placeholder="Descrie despre ce vrei să discuți..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full min-h-[150px] text-base bg-white/5 border-white/10 focus:border-indigo-500/20 rounded-xl text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 hover:bg-white/10"
+                    className="relative min-h-[200px] text-lg bg-black/50 border-2 border-white/10 focus:border-white/20 rounded-xl backdrop-blur-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20 p-6"
                   />
-                </motion.div>
-              </div>
+                </div>
+              </motion.div>
 
               <motion.div 
-                className="flex justify-end space-x-3 pt-4"
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.4 }}
+                className="flex justify-end space-x-4"
               >
                 <Button
                   type="button"
@@ -144,7 +161,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                 <Button
                   type="submit"
                   className={cn(
-                    "relative overflow-hidden px-6 h-12 rounded-xl",
+                    "relative group overflow-hidden px-6 h-12 rounded-xl",
                     "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
                     "hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600",
                     "text-white font-medium",
@@ -161,7 +178,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                   />
                   <span className="relative z-10 flex items-center">
                     Creează discuția
-                    <Sparkles className="ml-2 h-4 w-4" />
+                    <Send className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Button>
               </motion.div>
