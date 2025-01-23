@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
 import { useNotifications } from '@/contexts/NotificationContext';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 interface TopicCardProps {
   topic: {
@@ -17,17 +18,24 @@ interface TopicCardProps {
 
 const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
   const { addNotification } = useNotifications();
+  const [participantCount, setParticipantCount] = useState(topic.participants);
+  const [hasJoined, setHasJoined] = useState(false);
 
   const handleJoinTopic = () => {
-    onTopicClick(topic.id);
+    if (!hasJoined) {
+      setParticipantCount(prev => prev + 1);
+      setHasJoined(true);
+      
+      // Add notification when joining topic
+      addNotification(
+        "NEW_DISCUSSION",
+        "Te-ai alăturat unui nou topic!",
+        `Ai intrat în topicul "${topic.title}". Explorează conversația și conectează-te cu alți participanți.`,
+        { discussionId: topic.id }
+      );
+    }
     
-    // Add notification when joining topic
-    addNotification(
-      "NEW_DISCUSSION",
-      "Te-ai alăturat unui nou topic!",
-      `Ai intrat în topicul "${topic.title}". Explorează conversația și conectează-te cu alți participanți.`,
-      { discussionId: topic.id }
-    );
+    onTopicClick(topic.id);
   };
 
   return (
@@ -46,12 +54,12 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center space-x-2 text-white/60">
           <MessageCircle className="h-4 w-4" />
-          <span>{topic.participants} participanți</span>
+          <span>{participantCount} participanți</span>
         </div>
 
         <motion.div
-          whileHover={{ scale: 1.05, rotate: 360 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3 }}
         >
           <Button
             onClick={handleJoinTopic}
@@ -63,18 +71,10 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
             )}
           >
             <span className="relative z-10 flex items-center gap-2">
-              Intră în Topic
+              {hasJoined ? 'Intră în Topic' : 'Alătură-te'}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20"
                 style={{ mixBlendMode: 'overlay' }}
-                animate={{
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
               />
             </span>
           </Button>
