@@ -7,9 +7,10 @@ interface SidebarProps {
     id: string;
     title: string;
   }>;
+  onConversationClick?: (id: string) => void;
 }
 
-const Sidebar = ({ conversations }: SidebarProps) => {
+const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
   return (
     <motion.div 
       initial={{ opacity: 0, x: -40 }}
@@ -32,7 +33,7 @@ const Sidebar = ({ conversations }: SidebarProps) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
-        <SidebarContent conversations={conversations} />
+        <SidebarContent conversations={conversations} onConversationClick={onConversationClick} />
       </motion.div>
     </motion.div>
   );
