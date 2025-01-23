@@ -24,6 +24,8 @@ export interface Topic {
   description: string;
   participants: number;
   createdAt: Date;
+  lastMessage?: string;
+  timestamp?: string;
 }
 
 export class AppDatabase extends Dexie {
@@ -104,7 +106,9 @@ export const addTopic = async (topic: Omit<Topic, 'id' | 'createdAt'>): Promise<
   try {
     const id = await db.topics.add({
       ...topic,
-      createdAt: new Date()
+      createdAt: new Date(),
+      timestamp: new Date().toISOString(),
+      lastMessage: topic.description
     });
     
     // Update conversation count for the community
@@ -131,7 +135,11 @@ export const getTopicsByCommunity = async (communityId: number): Promise<Topic[]
       .equals(communityId)
       .toArray();
     console.log('Retrieved topics:', topics);
-    return topics;
+    return topics.map(topic => ({
+      ...topic,
+      timestamp: topic.timestamp || topic.createdAt.toISOString(),
+      lastMessage: topic.lastMessage || topic.description
+    }));
   } catch (error) {
     console.error('Error fetching topics:', error);
     throw error;
@@ -149,6 +157,21 @@ export const updateTopicParticipants = async (topicId: number, increment: boolea
     }
   } catch (error) {
     console.error('Error updating topic participants:', error);
+    throw error;
+  }
+};
+
+export const updateCommunityMemberCount = async (communityId: number): Promise<void> => {
+  console.log('Updating member count for community:', communityId);
+  try {
+    const community = await db.communities.get(communityId);
+    if (community) {
+      await db.communities.update(communityId, {
+        memberCount: (community.memberCount || 0) + 1
+      });
+    }
+  } catch (error) {
+    console.error('Error updating community member count:', error);
     throw error;
   }
 };

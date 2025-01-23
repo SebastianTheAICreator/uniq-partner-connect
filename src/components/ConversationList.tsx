@@ -46,6 +46,11 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
 
   const selectedTopicData = conversations.find(conv => conv.id?.toString() === selectedTopic);
 
+  const sidebarTopics = conversations.map(conv => ({
+    id: conv.id?.toString() || '',
+    title: conv.title
+  }));
+
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
@@ -75,7 +80,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
-      <Sidebar conversations={conversations} />
+      <Sidebar conversations={sidebarTopics} />
 
       <motion.div 
         initial={{ opacity: 0, x: 20 }}
@@ -137,7 +142,13 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                     }}
                   >
                     <TopicCard
-                      topic={conv}
+                      topic={{
+                        id: conv.id?.toString() || '',
+                        title: conv.title,
+                        lastMessage: conv.lastMessage || conv.description,
+                        participants: conv.participants,
+                        timestamp: conv.timestamp || conv.createdAt.toISOString()
+                      }}
                       onTopicClick={() => handleTopicClick(conv.id?.toString() || '')}
                     />
                   </motion.div>
