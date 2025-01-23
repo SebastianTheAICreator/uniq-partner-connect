@@ -9,9 +9,10 @@ interface SidebarContentProps {
     id: string;
     title: string;
   }>;
+  onConversationClick?: (id: string) => void;
 }
 
-const SidebarContent = ({ conversations }: SidebarContentProps) => {
+const SidebarContent = ({ conversations, onConversationClick }: SidebarContentProps) => {
   const menuItems = [
     { icon: Clock, label: 'Recente', badge: '3' },
     { icon: TrendingUp, label: 'Trending', badge: '5' },
@@ -88,6 +89,7 @@ const SidebarContent = ({ conversations }: SidebarContentProps) => {
                   transition={{ delay: 0.6 + index * 0.1 }}
                 >
                   <div
+                    onClick={() => onConversationClick?.(conv.id)}
                     className="flex items-center space-x-3 px-3 py-2 hover:bg-white/5 rounded-lg cursor-pointer transition-all duration-300 group"
                   >
                     <Clock className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />

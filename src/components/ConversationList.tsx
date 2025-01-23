@@ -12,7 +12,12 @@ interface ConversationListProps {
 }
 
 const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(() => {
+    // Încercăm să restaurăm topicul selectat din localStorage
+    const savedTopic = localStorage.getItem('selectedTopic');
+    return savedTopic || null;
+  });
+  
   const [conversations, setConversations] = useState<Topic[]>([]);
 
   useEffect(() => {
@@ -24,6 +29,15 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
     };
     loadTopics();
   }, [communityId]);
+
+  // Salvăm topicul selectat în localStorage de fiecare dată când se schimbă
+  useEffect(() => {
+    if (selectedTopic) {
+      localStorage.setItem('selectedTopic', selectedTopic);
+    } else {
+      localStorage.removeItem('selectedTopic');
+    }
+  }, [selectedTopic]);
 
   const handleTopicClick = (topicId: string) => {
     setSelectedTopic(topicId);
@@ -80,7 +94,10 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
-      <Sidebar conversations={sidebarTopics} />
+      <Sidebar 
+        conversations={sidebarTopics} 
+        onConversationClick={handleTopicClick}
+      />
 
       <motion.div 
         initial={{ opacity: 0, x: 20 }}
