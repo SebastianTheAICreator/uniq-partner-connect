@@ -17,16 +17,27 @@ export interface Community {
   maxConversations: number;
 }
 
+export interface Topic {
+  id?: number;
+  communityId: number;
+  title: string;
+  description: string;
+  participants: number;
+  createdAt: Date;
+}
+
 export class AppDatabase extends Dexie {
   customInterests!: Table<CustomInterest>;
   communities!: Table<Community>;
+  topics!: Table<Topic>;
 
   constructor() {
     super('communityApp');
     
-    this.version(1).stores({
+    this.version(2).stores({
       customInterests: '++id, name, createdAt',
-      communities: '++id, name, createdAt'
+      communities: '++id, name, createdAt',
+      topics: '++id, communityId, title, createdAt'
     });
   }
 }
@@ -79,38 +90,65 @@ export const getAllCommunities = async (): Promise<Community[]> => {
   console.log('Fetching all communities');
   try {
     const communities = await db.communities.toArray();
-    // Update maxConversations to 500 for all existing communities
-    const updatedCommunities = await Promise.all(
-      communities.map(async (community) => {
-        if (community.maxConversations !== 500) {
-          await db.communities.update(community.id!, {
-            maxConversations: 500
-          });
-          return { ...community, maxConversations: 500 };
-        }
-        return community;
-      })
-    );
-    console.log('Retrieved communities:', updatedCommunities);
-    return updatedCommunities;
+    console.log('Retrieved communities:', communities);
+    return communities;
   } catch (error) {
     console.error('Error fetching communities:', error);
     throw error;
   }
 };
 
-export const updateCommunityMemberCount = async (communityId: number): Promise<void> => {
-  console.log('Updating member count for community:', communityId);
+// Helper functions pentru topics
+export const addTopic = async (topic: Omit<Topic, 'id' | 'createdAt'>): Promise<number> => {
+  console.log('Attempting to add topic:', topic);
   try {
-    const community = await db.communities.get(communityId);
+    const id = await db.topics.add({
+      ...topic,
+      createdAt: new Date()
+    });
+    
+    // Update conversation count for the community
+    const community = await db.communities.get(topic.communityId);
     if (community) {
-      await db.communities.update(communityId, {
-        memberCount: 1
+      await db.communities.update(topic.communityId, {
+        conversationCount: (community.conversationCount || 0) + 1
       });
-      console.log('Successfully updated member count for community:', communityId);
+    }
+    
+    console.log('Successfully added topic:', topic.title);
+    return id;
+  } catch (error) {
+    console.error('Error adding topic:', error);
+    throw error;
+  }
+};
+
+export const getTopicsByCommunity = async (communityId: number): Promise<Topic[]> => {
+  console.log('Fetching topics for community:', communityId);
+  try {
+    const topics = await db.topics
+      .where('communityId')
+      .equals(communityId)
+      .toArray();
+    console.log('Retrieved topics:', topics);
+    return topics;
+  } catch (error) {
+    console.error('Error fetching topics:', error);
+    throw error;
+  }
+};
+
+export const updateTopicParticipants = async (topicId: number, increment: boolean = true): Promise<void> => {
+  console.log(`${increment ? 'Incrementing' : 'Decrementing'} participants for topic:`, topicId);
+  try {
+    const topic = await db.topics.get(topicId);
+    if (topic) {
+      await db.topics.update(topicId, {
+        participants: (topic.participants || 0) + (increment ? 1 : -1)
+      });
     }
   } catch (error) {
-    console.error('Error updating community member count:', error);
+    console.error('Error updating topic participants:', error);
     throw error;
   }
 };

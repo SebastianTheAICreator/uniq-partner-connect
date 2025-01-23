@@ -1,67 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
 import TopicCard from './conversation/TopicCard';
 import TopicPosts from './conversation/TopicPosts';
 import CreateDiscussion from './conversation/CreateDiscussion';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Topic, addTopic, getTopicsByCommunity } from '@/db/database';
 
-interface Conversation {
-  id: string;
-  title: string;
-  lastMessage: string;
-  participants: number;
-  timestamp: string;
-  likes: number;
-  dislikes: number;
+interface ConversationListProps {
+  communityId?: number;
 }
 
-const mockConversations: Conversation[] = [
-  {
-    id: '1',
-    title: 'Discuție despre artă contemporană',
-    lastMessage: 'Ce părere aveți despre ultima expoziție de la MoMA?',
-    participants: 45,
-    timestamp: '2 min ago',
-    likes: 123,
-    dislikes: 12
-  },
-  {
-    id: '2',
-    title: 'Gaming & eSports',
-    lastMessage: 'Cine se alătură pentru un turneu amical?',
-    participants: 78,
-    timestamp: '5 min ago',
-    likes: 89,
-    dislikes: 5
-  },
-];
-
-const ConversationList = () => {
+const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [conversations, setConversations] = useState<Conversation[]>(mockConversations);
+  const [conversations, setConversations] = useState<Topic[]>([]);
+
+  useEffect(() => {
+    const loadTopics = async () => {
+      if (communityId) {
+        const topics = await getTopicsByCommunity(communityId);
+        setConversations(topics);
+      }
+    };
+    loadTopics();
+  }, [communityId]);
 
   const handleTopicClick = (topicId: string) => {
     setSelectedTopic(topicId);
     console.log('Selected topic:', topicId);
   };
 
-  const handleNewDiscussion = (discussion: { title: string; description: string }) => {
-    const newDiscussion: Conversation = {
-      id: Date.now().toString(),
+  const handleNewDiscussion = async (discussion: { title: string; description: string }) => {
+    const newTopic = {
+      communityId,
       title: discussion.title,
-      lastMessage: discussion.description,
-      participants: 1,
-      timestamp: 'acum',
-      likes: 0,
-      dislikes: 0
+      description: discussion.description,
+      participants: 0
     };
     
-    setConversations(prev => [newDiscussion, ...prev]);
-    setSelectedTopic(newDiscussion.id);
+    const topicId = await addTopic(newTopic);
+    const topics = await getTopicsByCommunity(communityId);
+    setConversations(topics);
+    setSelectedTopic(topicId.toString());
   };
 
-  const selectedTopicData = conversations.find(conv => conv.id === selectedTopic);
+  const selectedTopicData = conversations.find(conv => conv.id?.toString() === selectedTopic);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -123,7 +106,7 @@ const ConversationList = () => {
                   topicId={selectedTopic}
                   topic={{
                     title: selectedTopicData?.title || '',
-                    description: selectedTopicData?.lastMessage || ''
+                    description: selectedTopicData?.description || ''
                   }}
                   onBack={() => setSelectedTopic(null)}
                 />
@@ -155,7 +138,7 @@ const ConversationList = () => {
                   >
                     <TopicCard
                       topic={conv}
-                      onTopicClick={handleTopicClick}
+                      onTopicClick={() => handleTopicClick(conv.id?.toString() || '')}
                     />
                   </motion.div>
                 ))}
