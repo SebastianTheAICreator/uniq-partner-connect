@@ -214,7 +214,6 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     });
   };
 
-  // Add the missing handlePostCreated function
   const handlePostCreated = ({ content, files }: { content: string; files: FilePreview[] }) => {
     const newPost: Post = {
       id: Date.now().toString(),
@@ -234,7 +233,6 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     });
   };
 
-  // Add the missing handleFileClick function
   const handleFileClick = (file: FilePreview) => {
     setSelectedFile({
       type: file.type,
@@ -380,13 +378,14 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                         value={replyContent}
                         onChange={(e) => setReplyContent(e.target.value)}
                         placeholder="Scrie un răspuns..."
-                        className="w-full p-4 rounded-xl bg-gradient-to-br from-white/5 to-white/10 
-                                 backdrop-blur-lg border border-white/10 
-                                 focus:border-primary/30 focus:ring-2 focus:ring-primary/20 
-                                 transition-all duration-300 
-                                 text-white/90 placeholder:text-white/40
-                                 shadow-[0_8px_32px_rgba(0,0,0,0.12)]
-                                 hover:border-primary/20 hover:shadow-primary/5"
+                        className="w-full p-4 rounded-xl 
+                                  bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50
+                                  backdrop-blur-lg border border-primary/20
+                                  focus:border-primary/40 focus:ring-2 focus:ring-primary/30
+                                  transition-all duration-300
+                                  text-white/90 placeholder:text-white/40
+                                  shadow-[0_8px_32px_rgba(124,58,237,0.15)]
+                                  hover:border-primary/30 hover:shadow-primary/10"
                         rows={3}
                       />
                       
