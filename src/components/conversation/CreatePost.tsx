@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '../ui/textarea';
 import { cn } from '@/lib/utils';
@@ -13,8 +13,28 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FilePreview[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+
+  // Transform values for scroll animations
+  const scale = useTransform(scrollY, [0, 100], [1, 0.95]);
+  const opacity = useTransform(scrollY, [0, 100], [1, 0.8]);
+  const translateY = useTransform(scrollY, [0, 100], [0, -10]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const scrolled = window.scrollY > 50;
+        setIsScrolled(scrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleFileSelect = (type: 'image' | 'video' | 'document') => {
     if (fileInputRef.current) {
@@ -111,6 +131,12 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
 
   return (
     <motion.div 
+      ref={containerRef}
+      style={{ 
+        scale,
+        opacity,
+        y: translateY
+      }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
@@ -119,12 +145,17 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         "shadow-[0_8px_32px_rgba(0,0,0,0.12)]",
         "transition-all duration-500 ease-in-out",
         isExpanded ? "p-6" : "p-4",
+        isScrolled ? "scale-95 opacity-90" : "scale-100 opacity-100",
         "hover:border-indigo-500/20 hover:shadow-indigo-500/10",
         "group"
       )}
     >
       <motion.h2 
-        className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4"
+        className={cn(
+          "text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400",
+          "bg-clip-text text-transparent mb-4",
+          "animate-text-shine"
+        )}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -135,29 +166,47 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       <div
         className={cn(
           "relative rounded-xl transition-all duration-300",
-          isDragging && "ring-2 ring-indigo-500/20"
+          isDragging && "ring-2 ring-indigo-500/20",
+          isScrolled && "transform-gpu"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => setIsExpanded(true)}
       >
-        <Textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Ce gânduri vrei să împărtășești?"
-          className={cn(
-            "min-h-[120px] bg-white/5 border-white/10 text-white/90 placeholder:text-white/40",
-            "focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300",
-            "backdrop-blur-sm resize-none rounded-xl",
-            "hover:bg-white/10",
-            isExpanded ? "min-h-[200px]" : "min-h-[120px]"
-          )}
-        />
+        <motion.div
+          initial={false}
+          animate={{
+            height: isExpanded ? "auto" : "120px",
+            scale: isScrolled ? 0.98 : 1
+          }}
+          transition={{ duration: 0.3 }}
+        >
+          <Textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Ce gânduri vrei să împărtășești?"
+            className={cn(
+              "min-h-[120px] bg-white/5 border-white/10 text-white/90 placeholder:text-white/40",
+              "focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300",
+              "backdrop-blur-sm resize-none rounded-xl",
+              "hover:bg-white/10",
+              isExpanded ? "min-h-[200px]" : "min-h-[120px]",
+              "transform-gpu transition-transform duration-300",
+              isScrolled && "scale-95"
+            )}
+          />
+        </motion.div>
+
         {isDragging && (
-          <div className="absolute inset-0 bg-indigo-500/5 rounded-xl flex items-center justify-center backdrop-blur-sm">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-indigo-500/5 rounded-xl flex items-center justify-center backdrop-blur-sm"
+          >
             <p className="text-indigo-400 font-medium">Trage fișierele aici pentru a le atașa</p>
-          </div>
+          </motion.div>
         )}
       </div>
       
@@ -168,6 +217,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
               className="mt-4"
             >
               <FilePreviewList files={selectedFiles} onRemove={removeFile} />
@@ -177,6 +227,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
               className="mt-4"
             >
               <input
