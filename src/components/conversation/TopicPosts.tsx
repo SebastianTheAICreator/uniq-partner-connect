@@ -95,6 +95,89 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   const [replyFiles, setReplyFiles] = useState<FilePreview[]>([]);
   const replyFileInputRef = useRef<HTMLInputElement>(null);
 
+  const handlePostCreated = (post: { content: string; files: FilePreview[] }) => {
+    console.log('Creating new post:', post);
+    const newPost: Post = {
+      id: Date.now().toString(),
+      content: post.content,
+      author: 'CurrentUser',
+      timestamp: 'acum',
+      likes: 0,
+      dislikes: 0,
+      replies: [],
+      attachments: post.files
+    };
+
+    setPosts(prevPosts => [newPost, ...prevPosts]);
+    toast({
+      title: "Postare creată!",
+      description: "Postarea ta a fost publicată cu succes.",
+    });
+  };
+
+  const handleFileClick = (file: FilePreview) => {
+    console.log('Opening file preview:', file);
+    setSelectedFile({
+      type: file.type,
+      preview: file.preview,
+      file: file.file
+    });
+  };
+
+  const handleReplyFileSelect = (type: 'image' | 'video' | 'document') => {
+    console.log('Selecting file of type:', type);
+    if (replyFileInputRef.current) {
+      replyFileInputRef.current.accept = type === 'image' 
+        ? 'image/*' 
+        : type === 'video' 
+          ? 'video/*' 
+          : '.pdf,.doc,.docx,.txt';
+      replyFileInputRef.current.click();
+    }
+  };
+
+  const handleReplyFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      const fileType = file.type.startsWith('image/') 
+        ? 'image' 
+        : file.type.startsWith('video/') 
+          ? 'video' 
+          : 'document';
+
+      const filePreview: FilePreview = {
+        id: Date.now().toString(),
+        file,
+        type: fileType,
+      };
+
+      if (fileType === 'image') {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setReplyFiles(prev => [...prev, {
+            ...filePreview,
+            preview: reader.result as string
+          }]);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setReplyFiles(prev => [...prev, filePreview]);
+      }
+    });
+
+    // Reset input
+    if (event.target) {
+      event.target.value = '';
+    }
+  };
+
+  const removeReplyFile = (fileId: string) => {
+    console.log('Removing file:', fileId);
+    setReplyFiles(prev => prev.filter(file => file.id !== fileId));
+  };
+
   const handleLike = (postId: string) => {
     setPosts(prevPosts => 
       prevPosts.map(post => {
@@ -180,7 +263,6 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         animate={{ opacity: 1, y: 0 }}
         className={`ml-8 mt-4 relative ${reply.depth && reply.depth > 0 ? 'pl-4' : ''}`}
       >
-        {/* Linia verticală pentru ierarhie */}
         <div 
           className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/20 via-secondary/20 to-accent/20"
           style={{
@@ -190,7 +272,6 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
           }}
         />
         
-        {/* Linia orizontală pentru conectare */}
         <div 
           className="absolute w-4 h-0.5 bg-gradient-to-r from-primary/20 to-secondary/20"
           style={{
