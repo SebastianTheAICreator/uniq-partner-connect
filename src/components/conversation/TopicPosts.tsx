@@ -221,21 +221,21 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 space-y-4"
+                className="glass-card rounded-xl p-6 space-y-4 hover:shadow-[0_8px_32px_rgba(139,92,246,0.15)] transition-all duration-300 border-glow"
               >
                 <div className="flex justify-between items-start">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center text-white font-bold shadow-lg">
                       {post.author[0]}
                     </div>
                     <div>
-                      <span className="font-medium text-gray-800">{post.author}</span>
-                      <p className="text-sm text-gray-500">{post.timestamp}</p>
+                      <span className="font-medium text-white/90">{post.author}</span>
+                      <p className="text-sm text-white/60">{post.timestamp}</p>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-700 text-lg">{post.content}</p>
+                <p className="text-white/80 text-lg leading-relaxed">{post.content}</p>
 
                 {post.attachments && post.attachments.length > 0 && (
                   <div className="flex flex-wrap gap-4 mt-4">
@@ -245,11 +245,11 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                         className="relative group cursor-pointer hover:scale-105 transition-transform"
                         onClick={() => handleFileClick(file)}
                       >
-                        <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                        <div className="w-24 h-24 rounded-lg overflow-hidden glass-gradient flex items-center justify-center border border-white/10 hover:border-white/20 transition-colors">
                           {file.preview ? (
                             <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
                           ) : (
-                            <div className="text-gray-400">
+                            <div className="text-white/60">
                               {file.type === 'video' && <FileVideo className="w-8 h-8" />}
                               {file.type === 'document' && <Paperclip className="w-8 h-8" />}
                             </div>
@@ -260,14 +260,14 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                   </div>
                 )}
 
-                <div className="flex items-center space-x-6 pt-4 border-t">
+                <div className="flex items-center space-x-6 pt-4 border-t border-white/10">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleLike(post.id)}
                     className={cn(
-                      "flex items-center space-x-2",
-                      post.hasLiked && "text-primary"
+                      "flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10",
+                      post.hasLiked && "text-primary hover:text-primary/90"
                     )}
                   >
                     <ThumbsUp className="h-5 w-5" />
@@ -279,8 +279,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                     size="sm"
                     onClick={() => handleDislike(post.id)}
                     className={cn(
-                      "flex items-center space-x-2",
-                      post.hasDisliked && "text-red-500"
+                      "flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10",
+                      post.hasDisliked && "text-red-500 hover:text-red-400"
                     )}
                   >
                     <ThumbsDown className="h-5 w-5" />
@@ -291,7 +291,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setReplyingTo(post.id)}
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10"
                   >
                     <MessageCircle className="h-5 w-5" />
                     <span>{post.replies.length}</span>
@@ -301,7 +301,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleShare(post.id)}
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10"
                   >
                     <Share2 className="h-5 w-5" />
                   </Button>
@@ -309,7 +309,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="flex items-center space-x-2 text-primary"
+                    className="flex items-center space-x-2 text-primary hover:text-primary/90 hover:bg-white/10"
                   >
                     <Heart className="h-5 w-5" />
                   </Button>
@@ -326,13 +326,14 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                       value={replyContent}
                       onChange={(e) => setReplyContent(e.target.value)}
                       placeholder="Scrie un răspuns..."
-                      className="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                      className="w-full p-3 rounded-lg glass-gradient border border-white/10 focus:border-white/20 focus:ring-2 focus:ring-primary/20 transition-colors text-white/90 placeholder:text-white/50"
                       rows={3}
                     />
                     <div className="flex justify-end space-x-3">
                       <Button
                         variant="ghost"
                         onClick={() => setReplyingTo(null)}
+                        className="text-white/70 hover:text-white hover:bg-white/10"
                       >
                         Anulează
                       </Button>
@@ -347,29 +348,29 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                 )}
 
                 {post.replies.length > 0 && (
-                  <div className="mt-4 space-y-4 pl-6 border-l-2 border-gray-100">
+                  <div className="mt-4 space-y-4 pl-6 border-l border-white/10">
                     {post.replies.map((reply) => (
                       <motion.div
                         key={reply.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="bg-gray-50 rounded-lg p-4"
+                        className="glass-gradient rounded-lg p-4"
                       >
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent via-primary to-secondary flex items-center justify-center text-white text-sm font-bold shadow-lg">
                               {reply.author[0]}
                             </div>
-                            <span className="font-medium text-gray-800">{reply.author}</span>
+                            <span className="font-medium text-white/90">{reply.author}</span>
                           </div>
-                          <span className="text-sm text-gray-500">{reply.timestamp}</span>
+                          <span className="text-sm text-white/60">{reply.timestamp}</span>
                         </div>
-                        <p className="text-gray-700">{reply.content}</p>
+                        <p className="text-white/80">{reply.content}</p>
                         <div className="flex items-center space-x-4 mt-2">
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="flex items-center space-x-1 text-sm"
+                            className="flex items-center space-x-1 text-sm text-white/70 hover:text-white hover:bg-white/10"
                           >
                             <ThumbsUp className="h-4 w-4" />
                             <span>{reply.likes}</span>
@@ -377,7 +378,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="flex items-center space-x-1 text-sm"
+                            className="flex items-center space-x-1 text-sm text-white/70 hover:text-white hover:bg-white/10"
                           >
                             <MessageCircle className="h-4 w-4" />
                             <span>Răspunde</span>
