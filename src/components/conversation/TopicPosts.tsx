@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
-import { ArrowLeft, MessageCircle, Heart, Share2, ThumbsUp, ThumbsDown, FileVideo, Paperclip } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Heart, Share2, ThumbsUp, ThumbsDown, FileVideo, Paperclip, X, ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CreatePost from './CreatePost';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +27,7 @@ interface Reply {
   author: string;
   timestamp: string;
   likes: number;
+  attachments?: FilePreview[];
 }
 
 interface TopicPostsProps {
@@ -86,6 +87,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     preview?: string;
     file: File;
   } | null>(null);
+  const [replyFiles, setReplyFiles] = useState<FilePreview[]>([]);
+  const replyFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLike = (postId: string) => {
     setPosts(prevPosts => 
@@ -133,7 +136,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   };
 
   const handleReply = (postId: string) => {
-    if (replyContent.trim()) {
+    if (replyContent.trim() || replyFiles.length > 0) {
       setPosts(prevPosts =>
         prevPosts.map(post => {
           if (post.id === postId) {
@@ -144,7 +147,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                 content: replyContent,
                 author: 'CurrentUser',
                 timestamp: 'acum',
-                likes: 0
+                likes: 0,
+                attachments: replyFiles
               }]
             };
           }
@@ -152,6 +156,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         })
       );
       setReplyContent('');
+      setReplyFiles([]);
       setReplyingTo(null);
       toast({
         title: "Răspuns adăugat!",
@@ -160,33 +165,52 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     }
   };
 
-  const handlePostCreated = (newPost: { content: string, files: FilePreview[] }) => {
-    console.log('New post created:', newPost);
-    const post: Post = {
-      id: Date.now().toString(),
-      content: newPost.content,
-      author: 'CurrentUser',
-      timestamp: 'acum',
-      likes: 0,
-      dislikes: 0,
-      replies: [],
-      attachments: newPost.files
-    };
-
-    setPosts(prevPosts => [post, ...prevPosts]);
-    
-    toast({
-      title: "Postare adăugată cu succes! 🎉",
-      description: `Mesajul tău ${newPost.files.length > 0 ? 'și atașamentele' : ''} au fost publicate.`,
-    });
+  const handleReplyFileSelect = (type: 'image' | 'video' | 'document') => {
+    if (replyFileInputRef.current) {
+      replyFileInputRef.current.accept = {
+        image: 'image/*',
+        video: 'video/*',
+        document: '.pdf,.doc,.docx,.txt'
+      }[type];
+      replyFileInputRef.current.click();
+    }
   };
 
-  const handleFileClick = (file: FilePreview) => {
-    console.log('Opening file:', file);
-    setSelectedFile({
-      type: file.type,
-      preview: file.preview,
-      file: file.file
+  const handleReplyFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    
+    files.forEach(file => {
+      const fileType = file.type.startsWith('image/') 
+        ? 'image' 
+        : file.type.startsWith('video/') 
+          ? 'video' 
+          : 'document';
+
+      const preview = fileType === 'image' ? URL.createObjectURL(file) : undefined;
+
+      setReplyFiles(prev => [...prev, {
+        id: Math.random().toString(36).substr(2, 9),
+        file,
+        type: fileType,
+        preview
+      }]);
+    });
+
+    if (files.length > 0) {
+      toast({
+        title: "Fișiere atașate",
+        description: `${files.length} fișier${files.length > 1 ? 'e' : ''} ${files.length > 1 ? 'au' : 'a'} fost atașat${files.length > 1 ? 'e' : ''} cu succes!`,
+      });
+    }
+  };
+
+  const removeReplyFile = (id: string) => {
+    setReplyFiles(prev => {
+      const fileToRemove = prev.find(f => f.id === id);
+      if (fileToRemove?.preview) {
+        URL.revokeObjectURL(fileToRemove.preview);
+      }
+      return prev.filter(f => f.id !== id);
     });
   };
 
@@ -322,72 +346,110 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-4 space-y-4"
                   >
-                    <textarea
-                      value={replyContent}
-                      onChange={(e) => setReplyContent(e.target.value)}
-                      placeholder="Scrie un răspuns..."
-                      className="w-full p-3 rounded-lg glass-gradient border border-white/10 focus:border-white/20 focus:ring-2 focus:ring-primary/20 transition-colors text-white/90 placeholder:text-white/50"
-                      rows={3}
-                    />
-                    <div className="flex justify-end space-x-3">
-                      <Button
-                        variant="ghost"
-                        onClick={() => setReplyingTo(null)}
-                        className="text-white/70 hover:text-white hover:bg-white/10"
-                      >
-                        Anulează
-                      </Button>
-                      <Button
-                        onClick={() => handleReply(post.id)}
-                        className="bg-primary hover:bg-primary/90"
-                      >
-                        Răspunde
-                      </Button>
+                    <div className="relative">
+                      <textarea
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        placeholder="Scrie un răspuns..."
+                        className="w-full p-4 rounded-xl bg-gradient-to-br from-white/5 to-white/10 
+                                 backdrop-blur-lg border border-white/10 
+                                 focus:border-primary/30 focus:ring-2 focus:ring-primary/20 
+                                 transition-all duration-300 
+                                 text-white/90 placeholder:text-white/40
+                                 shadow-[0_8px_32px_rgba(0,0,0,0.12)]
+                                 hover:border-primary/20 hover:shadow-primary/5"
+                        rows={3}
+                      />
+                      
+                      {replyFiles.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {replyFiles.map((file) => (
+                            <div key={file.id} className="relative group">
+                              <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm 
+                                           flex items-center justify-center border border-white/10">
+                                {file.preview ? (
+                                  <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
+                                ) : (
+                                  <div className="text-white/60">
+                                    {file.type === 'video' && <FileVideo className="w-6 h-6" />}
+                                    {file.type === 'document' && <Paperclip className="w-6 h-6" />}
+                                  </div>
+                                )}
+                              </div>
+                              <button
+                                onClick={() => removeReplyFile(file.id)}
+                                className="absolute -top-1 -right-1 bg-black/50 backdrop-blur-sm rounded-full p-1
+                                         opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                              >
+                                <X className="w-3 h-3 text-white" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
+
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleReplyFileSelect('image')}
+                          className="text-white/70 hover:text-white hover:bg-white/10"
+                        >
+                          <ImageIcon className="w-4 h-4 mr-1" />
+                          Imagine
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleReplyFileSelect('video')}
+                          className="text-white/70 hover:text-white hover:bg-white/10"
+                        >
+                          <FileVideo className="w-4 h-4 mr-1" />
+                          Video
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleReplyFileSelect('document')}
+                          className="text-white/70 hover:text-white hover:bg-white/10"
+                        >
+                          <Paperclip className="w-4 h-4 mr-1" />
+                          Document
+                        </Button>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          onClick={() => setReplyingTo(null)}
+                          className="text-white/70 hover:text-white hover:bg-white/10"
+                        >
+                          Anulează
+                        </Button>
+                        <Button
+                          onClick={() => handleReply(post.id)}
+                          className="bg-gradient-to-r from-primary via-secondary to-accent 
+                                   hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90
+                                   text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                          disabled={!replyContent.trim() && replyFiles.length === 0}
+                        >
+                          Răspunde
+                        </Button>
+                      </div>
+                    </div>
+
+                    <input
+                      type="file"
+                      ref={replyFileInputRef}
+                      onChange={handleReplyFileChange}
+                      className="hidden"
+                      multiple
+                    />
                   </motion.div>
                 )}
 
-                {post.replies.length > 0 && (
-                  <div className="mt-4 space-y-4 pl-6 border-l border-white/10">
-                    {post.replies.map((reply) => (
-                      <motion.div
-                        key={reply.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="glass-gradient rounded-lg p-4"
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent via-primary to-secondary flex items-center justify-center text-white text-sm font-bold shadow-lg">
-                              {reply.author[0]}
-                            </div>
-                            <span className="font-medium text-white/90">{reply.author}</span>
-                          </div>
-                          <span className="text-sm text-white/60">{reply.timestamp}</span>
-                        </div>
-                        <p className="text-white/80">{reply.content}</p>
-                        <div className="flex items-center space-x-4 mt-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="flex items-center space-x-1 text-sm text-white/70 hover:text-white hover:bg-white/10"
-                          >
-                            <ThumbsUp className="h-4 w-4" />
-                            <span>{reply.likes}</span>
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="flex items-center space-x-1 text-sm text-white/70 hover:text-white hover:bg-white/10"
-                          >
-                            <MessageCircle className="h-4 w-4" />
-                            <span>Răspunde</span>
-                          </Button>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
               </motion.div>
             ))}
           </AnimatePresence>
