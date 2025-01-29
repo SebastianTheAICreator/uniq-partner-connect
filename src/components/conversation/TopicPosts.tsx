@@ -214,6 +214,35 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     });
   };
 
+  // Add the missing handlePostCreated function
+  const handlePostCreated = ({ content, files }: { content: string; files: FilePreview[] }) => {
+    const newPost: Post = {
+      id: Date.now().toString(),
+      content,
+      author: 'CurrentUser',
+      timestamp: 'acum',
+      likes: 0,
+      dislikes: 0,
+      replies: [],
+      attachments: files
+    };
+    
+    setPosts(prev => [newPost, ...prev]);
+    toast({
+      title: "Postare creată!",
+      description: "Postarea ta a fost publicată cu succes.",
+    });
+  };
+
+  // Add the missing handleFileClick function
+  const handleFileClick = (file: FilePreview) => {
+    setSelectedFile({
+      type: file.type,
+      preview: file.preview,
+      file: file.file
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
