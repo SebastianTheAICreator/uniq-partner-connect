@@ -19,11 +19,12 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
 
-  // Transform values for scroll animations
-  const scale = useTransform(scrollY, [0, 100], [1, 0.95]);
-  const opacity = useTransform(scrollY, [0, 100], [1, 0.8]);
-  const translateY = useTransform(scrollY, [0, 100], [0, -10]);
-  const blur = useTransform(scrollY, [0, 100], [0, 4]);
+  // Transform values for premium scroll animations
+  const scale = useTransform(scrollY, [0, 200], [1, 0.85]);
+  const opacity = useTransform(scrollY, [0, 200], [1, 0.95]);
+  const translateY = useTransform(scrollY, [0, 200], [0, -40]);
+  const blur = useTransform(scrollY, [0, 200], [0, 8]);
+  const borderOpacity = useTransform(scrollY, [0, 200], [0.1, 0.05]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -140,30 +141,40 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.6,
+        ease: [0.6, 0.05, -0.01, 0.9]
+      }}
       className={cn(
         "relative overflow-hidden",
-        "bg-gradient-to-br from-[#1a1a2e]/90 via-[#16213e]/90 to-[#1a1a2e]/90",
-        "backdrop-blur-xl rounded-2xl border border-white/10",
-        "shadow-[0_8px_32px_rgba(0,0,0,0.12)]",
+        "bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/95 to-[#1a1a2e]/95",
+        "backdrop-blur-xl rounded-3xl border border-white/10",
+        "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
         "transition-all duration-500 ease-out",
         isExpanded ? "p-8" : "p-6",
-        isScrolled ? "scale-95 opacity-90 translate-y-2" : "scale-100 opacity-100",
-        "hover:border-primary/30 hover:shadow-primary/10",
+        isScrolled ? "translate-y-2" : "translate-y-0",
+        "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
         "group cursor-pointer"
       )}
     >
-      {/* Premium gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 pointer-events-none" />
+      {/* Premium gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.02] to-transparent pointer-events-none" />
+      
+      <motion.div 
+        className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+        style={{ opacity: borderOpacity }}
+      />
 
       <motion.h2 
         className={cn(
-          "text-2xl font-bold",
+          "relative text-2xl font-bold",
           "bg-gradient-to-r from-primary via-secondary to-accent",
           "bg-clip-text text-transparent mb-6",
           "animate-text-shine"
         )}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
         Creează o postare nouă
@@ -171,7 +182,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
 
       <div
         className={cn(
-          "relative rounded-xl transition-all duration-300",
+          "relative rounded-2xl transition-all duration-300",
           isDragging && "ring-2 ring-primary/20",
           isScrolled && "transform-gpu"
         )}
@@ -186,7 +197,10 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
             height: isExpanded ? "auto" : "120px",
             scale: isScrolled ? 0.98 : 1
           }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ 
+            duration: 0.4,
+            ease: [0.6, 0.05, -0.01, 0.9]
+          }}
         >
           <Textarea
             value={content}
@@ -194,11 +208,11 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
             placeholder="Ce gânduri vrei să împărtășești?"
             className={cn(
               "min-h-[120px] w-full",
-              "bg-white/5 border-white/10 text-white/90 placeholder:text-white/40",
+              "bg-white/[0.03] border-white/10 text-white/90 placeholder:text-white/40",
               "focus:ring-2 focus:ring-primary/20 focus:border-primary/30",
               "transition-all duration-300 ease-out",
               "backdrop-blur-sm resize-none rounded-xl",
-              "hover:bg-white/10",
+              "hover:bg-white/[0.05]",
               isExpanded ? "min-h-[200px]" : "min-h-[120px]",
               "transform-gpu transition-transform duration-300",
               isScrolled && "scale-95"
@@ -206,18 +220,28 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
           />
         </motion.div>
 
-        {isDragging && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-primary/5 rounded-xl flex items-center justify-center backdrop-blur-sm"
-          >
-            <p className="text-primary font-medium">
-              Trage fișierele aici pentru a le atașa
-            </p>
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {isDragging && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-primary/5 rounded-xl flex items-center justify-center backdrop-blur-sm"
+            >
+              <motion.p 
+                initial={{ scale: 0.95 }}
+                animate={{ scale: 1 }}
+                className="text-primary font-medium flex items-center gap-2"
+              >
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                </span>
+                Trage fișierele aici pentru a le atașa
+              </motion.p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       
       <AnimatePresence>
@@ -227,7 +251,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4 }}
               className="mt-4"
             >
               <FilePreviewList files={selectedFiles} onRemove={removeFile} />
@@ -237,7 +261,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4 }}
               className="mt-6"
             >
               <input
