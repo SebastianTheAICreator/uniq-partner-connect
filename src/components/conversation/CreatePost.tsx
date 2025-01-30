@@ -147,16 +147,15 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         ease: [0.6, 0.05, -0.01, 0.9]
       }}
       className={cn(
-        "relative overflow-hidden",
+        "relative overflow-hidden z-50",
         "bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/95 to-[#1a1a2e]/95",
         "backdrop-blur-xl rounded-3xl border border-white/10",
         "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
         "transition-all duration-500 ease-out",
         isExpanded ? "p-8" : "p-6",
-        isScrolled ? "translate-y-2" : "translate-y-0",
+        isScrolled ? "fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl" : "w-full",
         "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
-        "group cursor-pointer",
-        isScrolled && "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl"
+        "group cursor-pointer"
       )}
     >
       {/* Premium gradient overlays */}
