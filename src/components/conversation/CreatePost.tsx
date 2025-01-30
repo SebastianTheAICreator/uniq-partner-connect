@@ -31,6 +31,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       if (containerRef.current) {
         const scrolled = window.scrollY > 50;
         setIsScrolled(scrolled);
+        console.log('Scroll position:', window.scrollY, 'Is scrolled:', scrolled);
       }
     };
 
