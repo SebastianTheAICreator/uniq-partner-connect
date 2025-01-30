@@ -154,7 +154,8 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         isExpanded ? "p-8" : "p-6",
         isScrolled ? "translate-y-2" : "translate-y-0",
         "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
-        "group cursor-pointer"
+        "group cursor-pointer",
+        isScrolled && "fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl"
       )}
     >
       {/* Premium gradient overlays */}
