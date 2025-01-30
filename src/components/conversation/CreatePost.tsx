@@ -23,6 +23,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const scale = useTransform(scrollY, [0, 100], [1, 0.95]);
   const opacity = useTransform(scrollY, [0, 100], [1, 0.8]);
   const translateY = useTransform(scrollY, [0, 100], [0, -10]);
+  const blur = useTransform(scrollY, [0, 100], [0, 4]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -135,25 +136,30 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       style={{ 
         scale,
         opacity,
-        y: translateY
+        y: translateY,
       }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
+        "relative overflow-hidden",
         "bg-gradient-to-br from-[#1a1a2e]/90 via-[#16213e]/90 to-[#1a1a2e]/90",
-        "backdrop-blur-xl rounded-xl border border-white/10",
+        "backdrop-blur-xl rounded-2xl border border-white/10",
         "shadow-[0_8px_32px_rgba(0,0,0,0.12)]",
-        "transition-all duration-500 ease-in-out",
-        isExpanded ? "p-6" : "p-4",
-        isScrolled ? "scale-95 opacity-90" : "scale-100 opacity-100",
-        "hover:border-indigo-500/20 hover:shadow-indigo-500/10",
-        "group"
+        "transition-all duration-500 ease-out",
+        isExpanded ? "p-8" : "p-6",
+        isScrolled ? "scale-95 opacity-90 translate-y-2" : "scale-100 opacity-100",
+        "hover:border-primary/30 hover:shadow-primary/10",
+        "group cursor-pointer"
       )}
     >
+      {/* Premium gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 pointer-events-none" />
+
       <motion.h2 
         className={cn(
-          "text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400",
-          "bg-clip-text text-transparent mb-4",
+          "text-2xl font-bold",
+          "bg-gradient-to-r from-primary via-secondary to-accent",
+          "bg-clip-text text-transparent mb-6",
           "animate-text-shine"
         )}
         initial={{ opacity: 0 }}
@@ -166,7 +172,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       <div
         className={cn(
           "relative rounded-xl transition-all duration-300",
-          isDragging && "ring-2 ring-indigo-500/20",
+          isDragging && "ring-2 ring-primary/20",
           isScrolled && "transform-gpu"
         )}
         onDragOver={handleDragOver}
@@ -180,15 +186,17 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
             height: isExpanded ? "auto" : "120px",
             scale: isScrolled ? 0.98 : 1
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Ce gânduri vrei să împărtășești?"
             className={cn(
-              "min-h-[120px] bg-white/5 border-white/10 text-white/90 placeholder:text-white/40",
-              "focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300",
+              "min-h-[120px] w-full",
+              "bg-white/5 border-white/10 text-white/90 placeholder:text-white/40",
+              "focus:ring-2 focus:ring-primary/20 focus:border-primary/30",
+              "transition-all duration-300 ease-out",
               "backdrop-blur-sm resize-none rounded-xl",
               "hover:bg-white/10",
               isExpanded ? "min-h-[200px]" : "min-h-[120px]",
@@ -203,9 +211,11 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-indigo-500/5 rounded-xl flex items-center justify-center backdrop-blur-sm"
+            className="absolute inset-0 bg-primary/5 rounded-xl flex items-center justify-center backdrop-blur-sm"
           >
-            <p className="text-indigo-400 font-medium">Trage fișierele aici pentru a le atașa</p>
+            <p className="text-primary font-medium">
+              Trage fișierele aici pentru a le atașa
+            </p>
           </motion.div>
         )}
       </div>
@@ -228,7 +238,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="mt-4"
+              className="mt-6"
             >
               <input
                 type="file"
