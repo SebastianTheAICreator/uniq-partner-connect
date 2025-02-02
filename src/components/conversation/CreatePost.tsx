@@ -21,8 +21,6 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
 
-  // Transform values for premium scroll animations
-  const scale = useTransform(scrollY, [0, 200], [1, 0.5]);
   const opacity = useTransform(scrollY, [0, 200], [1, 0.95]);
 
   useEffect(() => {
@@ -145,10 +143,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   return (
     <motion.div 
       ref={containerRef}
-      style={{ 
-        scale: forceMinimize || isScrolled ? 0.5 : 1,
-        opacity,
-      }}
+      style={{ opacity }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -189,7 +184,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         </button>
       )}
 
-      {(!isScrolled && !forceMinimize) && (
+      {(!forceMinimize) && (
         <motion.h2 
           className={cn(
             "relative text-2xl font-bold",
@@ -208,8 +203,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       <div
         className={cn(
           "relative rounded-2xl transition-all duration-300",
-          isDragging && "ring-2 ring-primary/20",
-          isScrolled && "transform-gpu"
+          isDragging && "ring-2 ring-primary/20"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -218,10 +212,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       >
         <motion.div
           initial={false}
-          animate={{
-            height: isExpanded ? "auto" : "120px",
-            scale: isScrolled ? 0.98 : 1
-          }}
+          animate={{ height: "auto" }}
           transition={{ 
             duration: 0.4,
             ease: [0.6, 0.05, -0.01, 0.9]
@@ -238,9 +229,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
               "transition-all duration-300 ease-out",
               "backdrop-blur-sm resize-none rounded-xl",
               "hover:bg-white/[0.05]",
-              isExpanded ? "min-h-[200px]" : "min-h-[120px]",
-              "transform-gpu transition-transform duration-300",
-              isScrolled && "scale-95"
+              isExpanded ? "min-h-[200px]" : "min-h-[120px]"
             )}
           />
         </motion.div>
