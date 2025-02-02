@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { FilePreviewList } from './post/FilePreviewList';
 import { ActionButtons } from './post/ActionButtons';
 import { CreatePostProps, FilePreview } from './post/types';
+import { ArrowLeft } from 'lucide-react';
 
 const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const { toast } = useToast();
@@ -14,17 +15,15 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [forceMinimize, setForceMinimize] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
 
   // Transform values for premium scroll animations
-  const scale = useTransform(scrollY, [0, 200], [1, 0.85]);
+  const scale = useTransform(scrollY, [0, 200], [1, 0.5]);
   const opacity = useTransform(scrollY, [0, 200], [1, 0.95]);
-  const translateY = useTransform(scrollY, [0, 200], [0, -40]);
-  const blur = useTransform(scrollY, [0, 200], [0, 8]);
-  const borderOpacity = useTransform(scrollY, [0, 200], [0.1, 0.05]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -129,16 +128,26 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       setContent('');
       setSelectedFiles([]);
       setIsExpanded(false);
+      setForceMinimize(true);
     }
+  };
+
+  const handleMinimize = () => {
+    setIsExpanded(false);
+    setForceMinimize(true);
+  };
+
+  const handleExpand = () => {
+    setIsExpanded(true);
+    setForceMinimize(false);
   };
 
   return (
     <motion.div 
       ref={containerRef}
       style={{ 
-        scale,
+        scale: forceMinimize || isScrolled ? 0.5 : 1,
         opacity,
-        y: translateY,
       }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -153,10 +162,11 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
         "transition-all duration-500 ease-out",
         isExpanded ? "p-8" : "p-6",
-        isScrolled ? "fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl" : "w-full",
+        isScrolled || forceMinimize ? "fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl" : "w-full",
         "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
         "group cursor-pointer"
       )}
+      onClick={() => !isExpanded && handleExpand()}
     >
       {/* Premium gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-50 pointer-events-none" />
@@ -164,8 +174,20 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       
       <motion.div 
         className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
-        style={{ opacity: borderOpacity }}
+        style={{ opacity }}
       />
+
+      {isExpanded && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleMinimize();
+          }}
+          className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 text-white/70" />
+        </button>
+      )}
 
       <motion.h2 
         className={cn(
