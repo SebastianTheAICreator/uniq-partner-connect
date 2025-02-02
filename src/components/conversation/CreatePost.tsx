@@ -157,7 +157,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
         "transition-all duration-500 ease-out",
         isExpanded ? "p-8" : "p-6",
-        isScrolled || forceMinimize ? "sticky top-4 w-[calc(100%-2rem)] max-w-4xl mx-auto" : "w-full",
+        "sticky top-4 w-[calc(100%-2rem)] max-w-4xl mx-auto",
         "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
         "group cursor-pointer"
       )}
@@ -223,13 +223,13 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
             onChange={(e) => setContent(e.target.value)}
             placeholder="Ce gânduri vrei să împărtășești?"
             className={cn(
-              "min-h-[120px] w-full",
+              "w-full",
               "bg-white/[0.03] border-white/10 text-white/90 placeholder:text-white/40",
               "focus:ring-2 focus:ring-primary/20 focus:border-primary/30",
               "transition-all duration-300 ease-out",
               "backdrop-blur-sm resize-none rounded-xl",
               "hover:bg-white/[0.05]",
-              isExpanded ? "min-h-[200px]" : "min-h-[120px]"
+              forceMinimize ? "min-h-[50px] max-h-[50px]" : "min-h-[200px]"
             )}
           />
         </motion.div>
