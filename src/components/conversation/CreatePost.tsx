@@ -148,7 +148,6 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       style={{ 
         scale: forceMinimize || isScrolled ? 0.5 : 1,
         opacity,
-        transformOrigin: 'center center'
       }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -163,7 +162,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
         "transition-all duration-500 ease-out",
         isExpanded ? "p-8" : "p-6",
-        isScrolled || forceMinimize ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-4xl" : "w-full",
+        isScrolled || forceMinimize ? "sticky top-4 w-[calc(100%-2rem)] max-w-4xl mx-auto" : "w-full",
         "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
         "group cursor-pointer"
       )}
@@ -190,19 +189,21 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         </button>
       )}
 
-      <motion.h2 
-        className={cn(
-          "relative text-2xl font-bold",
-          "bg-gradient-to-r from-primary via-secondary to-accent",
-          "bg-clip-text text-transparent mb-6",
-          "animate-text-shine"
-        )}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        Creează o postare nouă
-      </motion.h2>
+      {(!isScrolled && !forceMinimize) && (
+        <motion.h2 
+          className={cn(
+            "relative text-2xl font-bold",
+            "bg-gradient-to-r from-primary via-secondary to-accent",
+            "bg-clip-text text-transparent mb-6",
+            "animate-text-shine"
+          )}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          Creează o postare nouă
+        </motion.h2>
+      )}
 
       <div
         className={cn(
