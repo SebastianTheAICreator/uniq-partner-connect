@@ -148,6 +148,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       style={{ 
         scale: forceMinimize || isScrolled ? 0.5 : 1,
         opacity,
+        transformOrigin: 'center center'
       }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -162,7 +163,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
         "transition-all duration-500 ease-out",
         isExpanded ? "p-8" : "p-6",
-        isScrolled || forceMinimize ? "fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-4xl" : "w-full",
+        isScrolled || forceMinimize ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-4xl" : "w-full",
         "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
         "group cursor-pointer"
       )}
