@@ -422,7 +422,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
 
       <CreatePost topicId={topicId} onPostCreated={handlePostCreated} />
 
-      <ScrollArea className="h-[calc(100vh-24rem)]">
+      <ScrollArea className="h-[calc(100vh-12rem)]">
         <div className="space-y-6">
           <AnimatePresence>
             {posts.map((post) => (

@@ -15,7 +15,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [forceMinimize, setForceMinimize] = useState(false);
+  const [forceMinimize, setForceMinimize] = useState(true); // Changed to true by default
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
