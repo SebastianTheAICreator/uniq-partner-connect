@@ -404,9 +404,9 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-6"
+      className="space-y-8" // increased from space-y-6
     >
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 mt-6"> {/* Added mt-6 for top margin */}
         <Button
           variant="ghost"
           onClick={onBack}
@@ -420,10 +420,12 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
 
-      <CreatePost topicId={topicId} onPostCreated={handlePostCreated} />
+      <div className="mt-8"> {/* Added mt-8 for more spacing */}
+        <CreatePost topicId={topicId} onPostCreated={handlePostCreated} />
+      </div>
 
-      <ScrollArea className="h-[calc(100vh-12rem)]">
-        <div className="space-y-6">
+      <ScrollArea className="h-[calc(100vh-16rem)]"> {/* Adjusted height calculation */}
+        <div className="space-y-8 pb-8"> {/* Added pb-8 for bottom padding */}
           <AnimatePresence>
             {posts.map((post) => (
               <motion.div
