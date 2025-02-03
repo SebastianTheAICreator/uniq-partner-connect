@@ -21,7 +21,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
     { icon: Users, label: 'Comuniti', badge: '24' },
     { icon: Banknote, label: 'UniBanking', badge: '4' },
     { icon: Heart, label: 'Matches', badge: '7' },
-    { icon: MessageSquare, label: 'Freds', badge: '9' },
+    { icon: MessageSquare, label: 'Friends', badge: '9' },
     { icon: MessageSquare, label: 'Messages', badge: '2' },
     { icon: MessageCircle, label: 'Ol-yAIChat', badge: '1' },
     { 
