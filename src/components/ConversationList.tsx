@@ -109,7 +109,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
         className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-[#1A1F2C] via-[#222222] to-[#1A1F2C] backdrop-blur-xl"
       >
         <motion.div 
-          className="max-w-4xl mx-auto space-y-8 mt-8"
+          className="max-w-4xl mx-auto space-y-8 mt-16" // Increased from mt-8 to mt-16
           variants={staggerChildren}
           initial="hidden"
           animate="visible"
@@ -122,7 +122,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="w-full"
+                className="w-full mt-8" // Added mt-8 for extra top margin
               >
                 <TopicPosts
                   topicId={selectedTopic}
@@ -140,7 +140,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="space-y-6"
+                className="space-y-8 mt-8" // Added mt-8 and increased space-y-6 to space-y-8
               >
                 <CreateDiscussion onDiscussionCreated={handleNewDiscussion} />
                 {conversations.map((conv, index) => (
