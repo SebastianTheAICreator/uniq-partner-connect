@@ -99,7 +99,7 @@ const CommunityPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4A90E2] via-white to-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#64D2FF]/5">
       <Navbar />
       
       {!selectedCategory ? (
