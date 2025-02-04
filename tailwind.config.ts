@@ -25,17 +25,25 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#7C3AED",
-          hover: "#6D28D9",
+          DEFAULT: "#4A90E2",
+          hover: "#357ABD",
         },
         secondary: {
-          DEFAULT: "#D946EF",
-          hover: "#C026D3",
+          DEFAULT: "#64D2FF",
+          hover: "#4BBAED",
         },
         accent: {
-          DEFAULT: "#0EA5E9",
-          hover: "#0284C7",
+          DEFAULT: "#42E695",
+          hover: "#2DCC7D",
         },
+        interactive: {
+          DEFAULT: "#FF9ECD",
+          hover: "#FF85BE",
+        }
+      },
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
       },
       keyframes: {
         "fade-up": {

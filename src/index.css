@@ -4,17 +4,17 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#1a1a2e] min-h-screen text-white;
+    @apply bg-gradient-to-br from-primary/5 via-white to-secondary/5 text-gray-900;
     background-attachment: fixed;
   }
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent animate-text-shine;
 }
 
 .glass-card {
-  @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)];
+  @apply bg-white/50 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.06)];
 }
 
 .hover-lift {
@@ -45,7 +45,7 @@
 }
 
 .sidebar-shadow {
-  box-shadow: 4px 0 15px rgba(139, 92, 246, 0.1);
+  box-shadow: 4px 0 15px rgba(74, 144, 226, 0.1);
 }
 
 .glass-gradient {
@@ -61,9 +61,9 @@
 }
 
 .text-glow {
-  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  text-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
 }
 
 .border-glow {
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.2);
 }
