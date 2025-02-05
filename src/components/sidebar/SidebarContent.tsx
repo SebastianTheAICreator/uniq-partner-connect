@@ -1,5 +1,4 @@
-
-import { Rss, TrendingUp, Video, Newspaper, Users, Banknote, Heart, MessageSquare, MessageCircle, Building, Sparkles } from 'lucide-react';
+import { Rss, TrendingUp, Video, Newspaper, Users, Banknote, Heart, MessageSquare, MessageCircle, Building } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
 import { Separator } from '../ui/separator';
@@ -29,7 +28,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
       icon: Building, 
       label: 'UniQ Enterprise', 
       badge: 'PRO',
-      className: 'bg-gradient-to-r from-blue-400 to-emerald-400 hover:from-blue-500 hover:to-emerald-500'
+      className: 'bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 hover:from-primary/20 hover:via-secondary/20 hover:to-accent/20'
     },
   ];
 
@@ -58,7 +57,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
             animate="show"
             className="space-y-2"
           >
-            <h2 className="px-3 text-lg font-semibold font-poppins text-white">
+            <h2 className="px-3 text-lg font-semibold gradient-text">
               Meniu Principal
             </h2>
             
@@ -66,14 +65,14 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
               <motion.div key={item.label} variants={itemVariants}>
                 <Button 
                   variant="ghost" 
-                  className={`w-full justify-between group hover:bg-blue-500/10 transition-all duration-300 ${item.className || ''}`}
+                  className={`w-full justify-between group hover:bg-white/5 transition-all duration-300 ${item.className || ''}`}
                 >
                   <span className="flex items-center gap-3">
-                    <item.icon className={`h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors ${
-                      item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : ''
+                    <item.icon className={`h-4 w-4 text-gray-400 group-hover:text-primary transition-colors ${
+                      item.label === 'UniQ Enterprise' ? 'text-primary animate-pulse' : ''
                     }`} />
-                    <span className={`text-sm font-medium text-gray-300 group-hover:text-white font-inter ${
-                      item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : ''
+                    <span className={`text-sm font-medium text-gray-300 group-hover:text-white ${
+                      item.label === 'UniQ Enterprise' ? 'gradient-text font-semibold' : ''
                     }`}>
                       {item.label}
                     </span>
@@ -81,8 +80,8 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
                   {item.badge && (
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                       item.label === 'UniQ Enterprise'
-                        ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white'
-                        : 'bg-gradient-to-r from-blue-500 to-emerald-500 text-white'
+                        ? 'bg-gradient-to-r from-primary via-secondary to-accent text-white'
+                        : 'bg-primary/10 text-primary'
                     }`}>
                       {item.badge}
                     </span>
@@ -92,7 +91,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
             ))}
           </motion.div>
 
-          <Separator className="mx-2 bg-white/5" />
+          <Separator className="mx-2 bg-white/10" />
 
           <motion.div 
             initial={{ opacity: 0 }}
@@ -100,7 +99,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
             transition={{ delay: 0.5 }}
             className="space-y-3"
           >
-            <h3 className="px-3 font-medium text-sm text-gray-400 font-inter">Conversații Recente</h3>
+            <h3 className="px-3 font-medium text-sm text-gray-400">Conversații Recente</h3>
             <div className="space-y-1">
               {conversations.map((conv, index) => (
                 <motion.div
@@ -111,10 +110,10 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
                 >
                   <div
                     onClick={() => onConversationClick?.(conv.id)}
-                    className="flex items-center space-x-3 px-3 py-2 hover:bg-blue-500/10 rounded-lg cursor-pointer transition-all duration-300 group"
+                    className="flex items-center space-x-3 px-3 py-2 hover:bg-white/5 rounded-lg cursor-pointer transition-all duration-300 group"
                   >
-                    <MessageSquare className="h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors" />
-                    <span className="text-sm text-gray-400 group-hover:text-white transition-colors truncate font-inter">
+                    <MessageSquare className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
+                    <span className="text-sm text-gray-400 group-hover:text-white transition-colors truncate">
                       {conv.title}
                     </span>
                   </div>
@@ -129,19 +128,19 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="mt-auto p-3 space-y-2 border-t border-white/5 bg-blue-500/5 backdrop-blur-sm"
+        className="mt-auto p-3 space-y-2 border-t border-white/10 bg-white/5 backdrop-blur-sm"
       >
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 hover:bg-blue-500/10 text-gray-300 hover:text-white transition-all duration-300 font-inter"
+          className="w-full justify-start gap-3 hover:bg-white/5 text-gray-300 hover:text-white transition-all duration-300"
           onClick={() => console.log('Profile clicked')}
         >
-          <Users className="h-4 w-4 text-blue-400" />
+          <Users className="h-4 w-4" />
           <span className="text-sm font-medium">Profil</span>
         </Button>
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 hover:bg-blue-500/10 text-red-400 hover:text-red-500 transition-all duration-300 font-inter"
+          className="w-full justify-start gap-3 hover:bg-destructive/5 text-destructive hover:text-destructive/80 transition-all duration-300"
           onClick={() => console.log('Logout clicked')}
         >
           <Heart className="h-4 w-4" />

@@ -1,4 +1,3 @@
-
 import { cn } from '@/lib/utils';
 import SidebarContent from './SidebarContent';
 import { motion } from 'framer-motion';
@@ -23,11 +22,9 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
       }}
       className={cn(
         "fixed left-0 top-[4rem] h-[calc(100vh-4rem)]",
-        "w-[240px] bg-gradient-to-b from-gray-900 via-blue-900/80 to-gray-900",
-        "backdrop-blur-md border-r border-white/5",
-        "shadow-[4px_0_15px_rgba(59,130,246,0.1)] z-40",
-        "lg:translate-x-0 transition-transform duration-300",
-        "-translate-x-full"  // Hidden by default on mobile
+        "w-[240px] bg-gradient-to-b from-[#1a1a2e]/95 via-[#16213e]/95 to-[#1a1a2e]/95",
+        "backdrop-blur-md border-r border-white/10",
+        "shadow-[4px_0_15px_rgba(139,92,246,0.1)] z-40"
       )}
     >
       <motion.div 
