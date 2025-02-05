@@ -57,7 +57,7 @@
 }
 
 .button-gradient {
-  @apply bg-gradient-to-r from-[#4A90E2] via-[#64D2FF] to-[#42E695] hover:from-[#4A90E2]/90 hover:via-[#64D2FF]/90 hover:to-[#42E695]/90;
+  @apply bg-gradient-to-r from-[#42E695] via-[#4A90E2] to-[#3BB2B8] hover:from-[#42E695]/90 hover:via-[#4A90E2]/90 hover:to-[#3BB2B8]/90;
 }
 
 .text-glow {
@@ -66,6 +66,33 @@
 
 .border-glow {
   box-shadow: 0 0 15px rgba(74, 144, 226, 0.1);
+}
+
+.community-card {
+  @apply bg-gradient-to-br from-[#F0F7FF] to-white 
+         shadow-[0_8px_30px_rgba(0,0,0,0.08)] 
+         hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]
+         rounded-2xl transition-all duration-300;
+}
+
+.feature-card {
+  @apply bg-gradient-to-br from-[#ECF5FF] to-[#F8FBFF]
+         shadow-[0_4px_20px_rgba(0,0,0,0.06)]
+         hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+         rounded-[24px] transition-all duration-300;
+}
+
+.adventure-button {
+  @apply bg-gradient-to-r from-[#42E695] to-[#4A90E2]
+         hover:from-[#42E695]/90 hover:to-[#4A90E2]/90
+         shadow-[0_4px_15px_rgba(66,230,149,0.2)]
+         hover:shadow-[0_8px_25px_rgba(66,230,149,0.3)]
+         rounded-xl transition-all duration-300;
+}
+
+.icon-gradient {
+  @apply bg-gradient-to-r from-[#42E695] to-[#3BB2B8] 
+         bg-clip-text text-transparent;
 }
 
 @font-face {
@@ -84,4 +111,24 @@
 
 .font-inter {
   font-family: 'Inter', sans-serif;
+}
+
+/* Abstract shapes in background */
+.bg-shapes {
+  position: relative;
+}
+
+.bg-shapes::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(100, 210, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(66, 230, 149, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
