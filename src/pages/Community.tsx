@@ -99,11 +99,11 @@ const CommunityPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#64D2FF]/5">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#1a1a2e]">
       <Navbar />
       
       {!selectedCategory ? (
-        <div className="container mx-auto px-4 py-32">
+        <div className="container mx-auto px-4 py-24">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -115,7 +115,7 @@ const CommunityPage = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="text-5xl md:text-6xl font-bold text-[#2D3748] font-poppins"
+                className="text-5xl md:text-6xl font-bold gradient-text text-glow"
               >
                 Descoperă-ți Locul Tău
               </motion.h1>
@@ -123,7 +123,7 @@ const CommunityPage = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="text-xl text-[#4A5568] font-inter max-w-2xl mx-auto"
+                className="text-xl text-gray-300 max-w-2xl mx-auto"
               >
                 Aici vei găsi persoane care te înțeleg, te acceptă și împărtășesc aceleași pasiuni ca tine.
               </motion.p>
@@ -138,11 +138,11 @@ const CommunityPage = () => {
               <Input
                 type="search"
                 placeholder="Caută comunități după interese..."
-                className="w-full pl-12 py-6 text-lg bg-white shadow-lg rounded-xl text-[#4A5568] placeholder:text-[#718096] focus:ring-2 focus:ring-[#4A90E2]/20 border-none transition-all duration-300 font-inter"
+                className="w-full pl-12 py-6 text-lg glass-card text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4A90E2] h-5 w-5" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary h-5 w-5" />
             </motion.div>
 
             <motion.div 
@@ -164,19 +164,19 @@ const CommunityPage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-gradient-to-br from-white to-[#F7FAFC] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    className="glass-card rounded-xl overflow-hidden card-hover border-glow"
                   >
                     <div className="p-6 space-y-4">
                       <div className="flex items-center justify-between">
-                        <Users className="w-8 h-8 text-[#64D2FF] animate-float" />
-                        <span className="text-sm text-[#4A5568] font-inter">
+                        <Users className="w-8 h-8 text-primary animate-float" />
+                        <span className="text-sm text-gray-400">
                           {community.memberCount} membri
                         </span>
                       </div>
                       
-                      <h3 className="text-xl font-semibold text-[#2D3748] font-poppins">{community.name}</h3>
+                      <h3 className="text-xl font-semibold gradient-text">{community.name}</h3>
                       
-                      <div className="flex items-center space-x-2 text-[#64D2FF] text-sm font-inter">
+                      <div className="flex items-center space-x-2 text-gray-300 text-sm">
                         <MessageCircle className="h-4 w-4" />
                         <span>{community.conversationCount}/{community.maxConversations} conversații active</span>
                       </div>
@@ -185,7 +185,7 @@ const CommunityPage = () => {
                         {community.interests.map((interest, i) => (
                           <span 
                             key={i}
-                            className="text-xs px-3 py-1 rounded-full bg-gradient-to-r from-[#4A90E2]/10 to-[#64D2FF]/10 text-[#4A5568] font-inter"
+                            className="text-xs px-3 py-1 rounded-full glass-gradient text-white/80"
                           >
                             {interest}
                           </span>
@@ -194,9 +194,9 @@ const CommunityPage = () => {
 
                       <ActionButton
                         onClick={() => handleJoinCommunity(community.id!, community.name)}
-                        className="w-full group flex items-center justify-center space-x-2 bg-gradient-to-r from-[#42E695] to-[#3BB2B8] text-white font-inter rounded-xl py-3 hover:shadow-lg transition-all duration-300"
+                        className="w-full group flex items-center justify-center space-x-2 button-gradient text-white"
                       >
-                        <Heart className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                        <Heart className="h-5 w-5 group-hover:text-pink-300 transition-colors" />
                         <span>Alătură-te</span>
                       </ActionButton>
                     </div>
