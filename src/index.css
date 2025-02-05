@@ -4,13 +4,13 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-primary/5 via-white to-secondary/5 text-gray-900;
+    @apply bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#64D2FF]/5;
     background-attachment: fixed;
   }
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent animate-text-shine;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#4A90E2] via-[#64D2FF] to-[#42E695] animate-text-shine;
 }
 
 .glass-card {
@@ -49,7 +49,7 @@
 }
 
 .glass-gradient {
-  @apply bg-gradient-to-br from-white/10 to-white/5;
+  @apply bg-gradient-to-br from-white/80 to-white/60;
 }
 
 .card-hover {
@@ -57,13 +57,31 @@
 }
 
 .button-gradient {
-  @apply bg-gradient-to-r from-primary via-secondary to-accent hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90;
+  @apply bg-gradient-to-r from-[#4A90E2] via-[#64D2FF] to-[#42E695] hover:from-[#4A90E2]/90 hover:via-[#64D2FF]/90 hover:to-[#42E695]/90;
 }
 
 .text-glow {
-  text-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+  text-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
 }
 
 .border-glow {
-  box-shadow: 0 0 15px rgba(74, 144, 226, 0.2);
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.1);
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+}
+
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
 }
