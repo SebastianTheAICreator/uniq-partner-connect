@@ -1,18 +1,39 @@
+
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Sparkles, MessageSquarePlus, PenLine, Send } from 'lucide-react';
+import { 
+  Plus, 
+  X, 
+  Sparkles, 
+  MessageSquarePlus, 
+  PenLine, 
+  Send,
+  Video,
+  BarChart2,
+  Calendar,
+  HelpCircle,
+  Trophy,
+  Mic,
+  Bot,
+  Image,
+  FileType
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CreateDiscussionProps {
   onDiscussionCreated: (discussion: { title: string; description: string }) => void;
 }
 
+type PostType = 'text' | 'media' | 'poll' | 'event' | 'question' | 'challenge';
+
 const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showQuickMenu, setShowQuickMenu] = useState(false);
+  const [selectedType, setSelectedType] = useState<PostType>('text');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const { toast } = useToast();
@@ -31,6 +52,22 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
     }
   };
 
+  const postTypes = [
+    { type: 'text', icon: PenLine, label: 'Text Post', description: 'Creează un post text cu editor rich' },
+    { type: 'media', icon: Video, label: 'Media Share', description: 'Împărtășește conținut media' },
+    { type: 'poll', icon: BarChart2, label: 'Poll/Survey', description: 'Creează un sondaj interactiv' },
+    { type: 'event', icon: Calendar, label: 'Event', description: 'Organizează un eveniment' },
+    { type: 'question', icon: HelpCircle, label: 'Question', description: 'Pune o întrebare comunității' },
+    { type: 'challenge', icon: Trophy, label: 'Challenge', description: 'Inițiază o provocare' }
+  ];
+
+  const quickFeatures = [
+    { icon: Image, label: 'Drag & Drop Media' },
+    { icon: FileType, label: 'Clipboard Integration' },
+    { icon: Mic, label: 'Voice Input' },
+    { icon: Bot, label: 'AI Assistant' }
+  ];
+
   return (
     <div className="mb-16 mt-12">
       <AnimatePresence mode="wait">
@@ -39,31 +76,94 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ duration: 0.3 }}
             className="relative"
+            onMouseEnter={() => setShowQuickMenu(true)}
+            onMouseLeave={() => setShowQuickMenu(false)}
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="group relative w-full h-20 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500"
+              className={cn(
+                "group relative w-full h-24 rounded-2xl overflow-hidden transition-all duration-500",
+                "bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-violet-500/20",
+                "hover:from-blue-500/30 hover:via-cyan-500/30 hover:to-violet-500/30",
+                "border border-white/10 hover:border-white/20",
+                "shadow-lg hover:shadow-xl hover:shadow-blue-500/20",
+                "backdrop-blur-xl"
+              )}
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-pink-500/5"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-cyan-500/10 to-violet-500/10"
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
               />
+              
               <motion.div
                 className="relative z-10 flex items-center justify-center space-x-3 text-xl font-medium"
                 whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
               >
-                <MessageSquarePlus className="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
-                <span className="bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent font-bold">
+                <motion.div
+                  whileHover={{ rotate: 180 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MessageSquarePlus className="w-6 h-6 text-blue-400 group-hover:text-blue-300" />
+                </motion.div>
+                <span className="bg-gradient-to-r from-white via-blue-200 to-violet-200 bg-clip-text text-transparent font-bold text-2xl">
                   Creează o discuție nouă
                 </span>
-                <Sparkles className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors animate-pulse" />
+                <Sparkles className="w-5 h-5 text-violet-400 group-hover:text-violet-300 animate-pulse" />
               </motion.div>
             </Button>
+
+            <AnimatePresence>
+              {showQuickMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute top-full left-0 right-0 mt-2 p-4 rounded-xl backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-xl"
+                >
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    {postTypes.map(({ type, icon: Icon, label, description }) => (
+                      <motion.button
+                        key={type}
+                        whileHover={{ scale: 1.02 }}
+                        className="flex items-center p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all"
+                        onClick={() => {
+                          setSelectedType(type as PostType);
+                          setIsOpen(true);
+                        }}
+                      >
+                        <Icon className="w-5 h-5 text-blue-400 mr-3" />
+                        <div className="text-left">
+                          <div className="font-semibold text-white">{label}</div>
+                          <div className="text-sm text-white/60">{description}</div>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                  
+                  <div className="flex justify-between items-center pt-3 border-t border-white/10">
+                    {quickFeatures.map(({ icon: Icon, label }) => (
+                      <motion.button
+                        key={label}
+                        whileHover={{ scale: 1.05 }}
+                        className="flex flex-col items-center p-2 rounded-lg hover:bg-white/5"
+                      >
+                        <Icon className="w-4 h-4 text-blue-400 mb-1" />
+                        <span className="text-xs text-white/70">{label}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         ) : (
           <motion.form
