@@ -1,7 +1,7 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Users, Globe, Rocket, Hash, Wand2 } from 'lucide-react';
+import { Sparkles, Users, Globe, Rocket, Hash, Wand2, Shield, Brain, Video, Heart, Settings, Tag, Tags, Lock, UserPlus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import {
   Dialog,
@@ -23,20 +23,34 @@ interface CreateCommunityDialogProps {
   }) => void;
 }
 
+const dynamicSubtitles = [
+  "Hub pentru Pasiunile Tale",
+  "Spațiu pentru Ideile Tale",
+  "Locul Tău în UniQ",
+  "Comunitatea Ta, Regulile Tale"
+];
+
 const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProps) => {
   const { toast } = useToast();
   const [step, setStep] = useState(1);
+  const [currentSubtitle, setCurrentSubtitle] = useState(0);
   const [newCommunityData, setNewCommunityData] = useState({
     name: "",
     description: "",
-    interests: [] as string[]
+    interests: [] as string[],
+    type: "social",
+    privacy: "public",
+    ageRestriction: "general",
+    monetization: "free",
+    contentFocus: "discussion"
   });
 
-  const interests = [
-    "Artă", "Muzică", "Gaming", "Sport", "Tehnologie",
-    "Filme", "Cărți", "Călătorii", "Fotografie", "Modă",
-    "Dans", "Gătit", "Fitness", "Yoga", "Meditație"
-  ];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSubtitle((prev) => (prev + 1) % dynamicSubtitles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleCreateCommunity = () => {
     if (newCommunityData.name && newCommunityData.description && newCommunityData.interests.length > 0) {
@@ -46,7 +60,16 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         description: `"${newCommunityData.name}" este acum live și gata să primească membri.`,
         className: "bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-none"
       });
-      setNewCommunityData({ name: "", description: "", interests: [] });
+      setNewCommunityData({ 
+        name: "", 
+        description: "", 
+        interests: [],
+        type: "social",
+        privacy: "public",
+        ageRestriction: "general",
+        monetization: "free",
+        contentFocus: "discussion"
+      });
       setStep(1);
     } else {
       toast({
@@ -63,13 +86,13 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         <motion.div
           whileHover={{ scale: 1.02, y: -5 }}
           whileTap={{ scale: 0.98 }}
-          className="relative overflow-hidden text-center space-y-6 max-w-2xl mx-auto rounded-[20px] p-8 cursor-pointer bg-gradient-to-br from-white to-[#F7FAFC] shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.12)] transition-all duration-500"
+          className="relative overflow-hidden text-center space-y-8 max-w-4xl mx-auto rounded-[32px] p-12 cursor-pointer bg-gradient-to-br from-[#4A90E2]/10 via-[#42E695]/10 to-[#4A90E2]/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(74,144,226,0.2)] hover:shadow-[0_16px_48px_rgba(74,144,226,0.3)] transition-all duration-500"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-0 bg-gradient-to-br from-[#4A90E2]/5 to-[#42E695]/5 opacity-50"
+            className="absolute inset-0 bg-gradient-to-br from-[#4A90E2]/5 via-[#42E695]/5 to-[#4A90E2]/5 opacity-50"
           />
           
           <motion.div 
@@ -82,40 +105,78 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               <motion.div
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.5 }}
-                className="p-4 rounded-full bg-gradient-to-r from-[#4A90E2]/10 to-[#42E695]/10 backdrop-blur-lg"
+                className="p-6 rounded-full bg-gradient-to-r from-[#4A90E2]/10 to-[#42E695]/10 backdrop-blur-lg group"
               >
-                <Wand2 className="w-8 h-8 text-[#4A90E2]" />
+                <Wand2 className="w-12 h-12 text-[#4A90E2] group-hover:text-[#42E695] transition-colors duration-300" />
               </motion.div>
-              <h2 className="text-4xl font-bold text-[#4A90E2] font-poppins">
-                Creează-ți Propria Comunitate
-              </h2>
+              <div className="space-y-2 text-center">
+                <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#4A90E2] to-[#42E695] font-poppins">
+                  Creează-ți Propria Comunitate
+                </h2>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={currentSubtitle}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="text-xl text-gray-400 font-inter"
+                  >
+                    {dynamicSubtitles[currentSubtitle]}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
             </div>
-            
-            <p className="text-[#4A5568] text-lg leading-relaxed max-w-xl mx-auto font-inter">
-              Transformă-ți pasiunea într-o comunitate vibrantă și conectează-te cu persoane care împărtășesc aceleași interese.
-            </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#42E695]/5 shadow-lg"
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-sm border border-white/10 shadow-lg"
               >
-                <Users className="w-6 h-6 text-[#42E695] stroke-[1.5]" />
-                <span className="text-[#4A5568] font-medium font-inter">Comunitate Personalizată</span>
+                <Settings className="w-8 h-8 text-[#4A90E2]" />
+                <h3 className="text-lg font-semibold text-white">Community Type</h3>
+                <p className="text-sm text-gray-400 text-center">Business, Social, Creative & Gaming</p>
               </motion.div>
+              
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#42E695]/5 shadow-lg"
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-sm border border-white/10 shadow-lg"
               >
-                <Globe className="w-6 h-6 text-[#42E695] stroke-[1.5]" />
-                <span className="text-[#4A5568] font-medium font-inter">Vizibilitate Globală</span>
+                <Lock className="w-8 h-8 text-[#42E695]" />
+                <h3 className="text-lg font-semibold text-white">Privacy Settings</h3>
+                <p className="text-sm text-gray-400 text-center">Public, Private & Invite-only</p>
               </motion.div>
+              
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-2 p-4 rounded-xl bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#42E695]/5 shadow-lg"
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-sm border border-white/10 shadow-lg"
               >
-                <Hash className="w-6 h-6 text-[#42E695] stroke-[1.5]" />
-                <span className="text-[#4A5568] font-medium font-inter">Hashtag-uri Personalizate</span>
+                <Shield className="w-8 h-8 text-[#4A90E2]" />
+                <h3 className="text-lg font-semibold text-white">Age Restriction</h3>
+                <p className="text-sm text-gray-400 text-center">General, 16+ & 18+</p>
+              </motion.div>
+            </div>
+
+            <div className="flex flex-wrap gap-4 justify-center">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+              >
+                <Tags className="w-4 h-4 inline-block mr-2" />
+                UniBanking Integration
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+              >
+                <Video className="w-4 h-4 inline-block mr-2" />
+                UniVideo Connect
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+              >
+                <Brain className="w-4 h-4 inline-block mr-2" />
+                Ol-y AI Support
               </motion.div>
             </div>
 
@@ -129,8 +190,8 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
                 transition={{ delay: 0.3 }}
                 className="relative z-10 flex items-center gap-2"
               >
-                Începe Aventura
-                <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                Lansează Comunitatea
+                <Rocket className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               </motion.span>
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </Button>
@@ -138,7 +199,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-3xl bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#42E695]/5 backdrop-blur-xl border border-[#4A90E2]/20 rounded-[20px] shadow-[0_8px_32px_rgba(74,144,226,0.1)]">
+      <DialogContent className="max-w-4xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-xl border border-[#4A90E2]/20 rounded-[24px] shadow-[0_8px_32px_rgba(74,144,226,0.1)]">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -164,7 +225,11 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             />
           ) : (
             <InterestsStep
-              interests={interests}
+              interests={[
+                "Artă", "Muzică", "Gaming", "Sport", "Tehnologie",
+                "Filme", "Cărți", "Călătorii", "Fotografie", "Modă",
+                "Dans", "Gătit", "Fitness", "Yoga", "Meditație"
+              ]}
               selectedInterests={newCommunityData.interests}
               onInterestToggle={(interest) => {
                 setNewCommunityData(prev => ({
@@ -200,7 +265,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               </>
             ) : (
               <>
-                Creează Comunitatea
+                Lansează Comunitatea
                 <Sparkles className="ml-2 h-5 w-5 animate-pulse" />
               </>
             )}
@@ -212,4 +277,3 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
 };
 
 export default CreateCommunityDialog;
-
