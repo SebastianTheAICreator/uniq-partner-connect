@@ -1,6 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, Users, MessageCircle, Heart, Shield } from "lucide-react";
+import { Search, Users, MessageCircle, Heart, Shield, TrendingUp, Zap, Link2, 
+  ShieldCheck, ChartBar, DollarSign, World, Bell, Filter, ArrowUpDown, 
+  Mic, Brain, Video, Building2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ActionButton from "@/components/ActionButton";
 import { useToast } from "@/hooks/use-toast";
@@ -17,7 +20,6 @@ const CommunityPage = () => {
   const [communities, setCommunities] = useState<Community[]>([]);
   const { addNotification } = useNotifications();
 
-  // Încarcă comunitățile la montarea componentei
   useEffect(() => {
     const loadCommunities = async () => {
       try {
@@ -45,14 +47,12 @@ const CommunityPage = () => {
       setCommunities(updatedCommunities);
       setSelectedCategory(communityName);
 
-      // Notificare toast
       toast({
-        title: "Bine ai venit în comunitate! 🎉",
+        title: "Welcome to the community! 🎉",
         description: `Te-ai alăturat comunității: ${communityName}`,
-        className: "bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 border-none shadow-xl",
+        className: "bg-gradient-to-r from-blue-500/20 via-emerald-500/20 to-blue-500/20 border-none shadow-xl",
       });
 
-      // Notificare în panoul de notificări
       addNotification(
         "GROUP_JOIN",
         "Te-ai alăturat unei noi comunități!",
@@ -84,22 +84,29 @@ const CommunityPage = () => {
       setCommunities(updatedCommunities);
       
       toast({
-        title: "Comunitate creată cu succes! 🎉",
-        description: `"${newCommunity.name}" este acum live și gata să primească membri.`,
-        className: "bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-none"
+        title: "Community created successfully! 🎉",
+        description: `"${newCommunity.name}" is now live and ready for members.`,
+        className: "bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border-none"
       });
     } catch (error) {
       console.error('Error creating community:', error);
       toast({
-        title: "Eroare",
-        description: "Nu am putut crea comunitatea. Te rugăm să încerci din nou.",
+        title: "Error",
+        description: "Could not create the community. Please try again.",
         variant: "destructive"
       });
     }
   };
 
+  const communityCategories = [
+    { name: "Gaming", icon: Video },
+    { name: "Business", icon: Building2 },
+    { name: "Creative", icon: Brain },
+    { name: "Tech", icon: TrendingUp },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4A90E2] via-white to-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900/10 to-emerald-900/10">
       <Navbar />
       
       {!selectedCategory ? (
@@ -114,18 +121,18 @@ const CommunityPage = () => {
               <motion.h1 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="text-5xl md:text-6xl font-bold text-[#2D3748] font-poppins"
+                transition={{ delay: 0.2 }}
+                className="text-5xl md:text-6xl font-bold text-white font-poppins"
               >
-                Descoperă-ți Locul Tău
+                UniQ Communities Hub
               </motion.h1>
               <motion.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="text-xl text-[#4A5568] font-inter max-w-2xl mx-auto"
+                className="text-xl text-gray-300 font-inter max-w-3xl mx-auto"
               >
-                Aici vei găsi persoane care te înțeleg, te acceptă și împărtășesc aceleași pasiuni ca tine.
+                Conectează-te cu comunități globale și creează experiențe unice împreună cu AI
               </motion.p>
             </div>
 
@@ -133,17 +140,57 @@ const CommunityPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="relative max-w-2xl mx-auto"
+              className="relative max-w-3xl mx-auto"
             >
-              <Input
-                type="search"
-                placeholder="Caută comunități după interese..."
-                className="w-full pl-12 py-6 text-lg bg-white shadow-lg rounded-xl text-[#4A5568] placeholder:text-[#718096] focus:ring-2 focus:ring-[#4A90E2]/20 border-none transition-all duration-300 font-inter"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4A90E2] h-5 w-5" />
+              <div className="flex items-center gap-4 bg-white/5 backdrop-blur-xl rounded-xl p-2">
+                <div className="flex-1 relative">
+                  <Input
+                    type="search"
+                    placeholder="Caută comunități după interese..."
+                    className="w-full pl-12 py-6 text-lg bg-transparent text-white placeholder:text-gray-400 border-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 font-inter"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                </div>
+                <ActionButton
+                  variant="ghost"
+                  className="p-3 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <Filter className="h-5 w-5 text-gray-400" />
+                </ActionButton>
+                <ActionButton
+                  variant="ghost"
+                  className="p-3 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <ArrowUpDown className="h-5 w-5 text-gray-400" />
+                </ActionButton>
+                <ActionButton
+                  variant="ghost"
+                  className="p-3 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <Mic className="h-5 w-5 text-gray-400" />
+                </ActionButton>
+              </div>
             </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {communityCategories.map((category, index) => (
+                <motion.button
+                  key={category.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                  className={`p-4 rounded-xl bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 ${
+                    selectedCategory === category.name ? 'ring-2 ring-blue-500' : ''
+                  }`}
+                  onClick={() => setSelectedCategory(category.name)}
+                >
+                  <category.icon className="h-6 w-6 text-blue-400 mb-2" />
+                  <span className="text-white font-medium">{category.name}</span>
+                </motion.button>
+              ))}
+            </div>
 
             <motion.div 
               initial={{ opacity: 0 }}
@@ -164,28 +211,30 @@ const CommunityPage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-gradient-to-br from-white to-[#F7FAFC] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    className="bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-800/50 rounded-xl border border-white/10 hover:border-blue-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
                   >
                     <div className="p-6 space-y-4">
                       <div className="flex items-center justify-between">
-                        <Users className="w-8 h-8 text-[#64D2FF] animate-float" />
-                        <span className="text-sm text-[#4A5568] font-inter">
+                        <Users className="w-8 h-8 text-blue-400 animate-float" />
+                        <span className="text-sm text-gray-400 font-inter">
                           {community.memberCount} membri
                         </span>
                       </div>
                       
-                      <h3 className="text-xl font-semibold text-[#2D3748] font-poppins">{community.name}</h3>
+                      <h3 className="text-xl font-semibold text-white font-poppins">
+                        {community.name}
+                      </h3>
                       
-                      <div className="flex items-center space-x-2 text-[#64D2FF] text-sm font-inter">
+                      <div className="flex items-center space-x-2 text-gray-400 text-sm font-inter">
                         <MessageCircle className="h-4 w-4" />
                         <span>{community.conversationCount}/{community.maxConversations} conversații active</span>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex flex-wrap gap-2">
                         {community.interests.map((interest, i) => (
                           <span 
                             key={i}
-                            className="text-xs px-3 py-1 rounded-full bg-gradient-to-r from-[#4A90E2]/10 to-[#64D2FF]/10 text-[#4A5568] font-inter"
+                            className="text-xs px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/10 to-emerald-500/10 text-gray-300 font-inter"
                           >
                             {interest}
                           </span>
@@ -194,10 +243,10 @@ const CommunityPage = () => {
 
                       <ActionButton
                         onClick={() => handleJoinCommunity(community.id!, community.name)}
-                        className="w-full group flex items-center justify-center space-x-2 bg-gradient-to-r from-[#42E695] to-[#3BB2B8] text-white font-inter rounded-xl py-3 hover:shadow-lg transition-all duration-300"
+                        className="w-full group flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-400 to-emerald-400 hover:from-blue-500 hover:to-emerald-500 text-white font-inter rounded-lg py-3 hover:shadow-lg transition-all duration-300"
                       >
                         <Heart className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                        <span>Alătură-te</span>
+                        <span>Join Community</span>
                       </ActionButton>
                     </div>
                   </motion.div>
@@ -215,3 +264,4 @@ const CommunityPage = () => {
 };
 
 export default CommunityPage;
+
