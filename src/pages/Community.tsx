@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, Users, MessageCircle, Heart, Shield, TrendingUp, Zap, Link2, 
-  ShieldCheck, ChartBar, DollarSign, World, Bell, Filter, ArrowUpDown, 
+  ShieldCheck, ChartBar, DollarSign, Globe, Bell, Filter, ArrowUpDown, 
   Mic, Brain, Video, Building2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ActionButton from "@/components/ActionButton";
@@ -154,19 +153,19 @@ const CommunityPage = () => {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
                 </div>
                 <ActionButton
-                  variant="ghost"
+                  variant="primary"
                   className="p-3 hover:bg-white/10 rounded-lg transition-colors"
                 >
                   <Filter className="h-5 w-5 text-gray-400" />
                 </ActionButton>
                 <ActionButton
-                  variant="ghost"
+                  variant="primary"
                   className="p-3 hover:bg-white/10 rounded-lg transition-colors"
                 >
                   <ArrowUpDown className="h-5 w-5 text-gray-400" />
                 </ActionButton>
                 <ActionButton
-                  variant="ghost"
+                  variant="primary"
                   className="p-3 hover:bg-white/10 rounded-lg transition-colors"
                 >
                   <Mic className="h-5 w-5 text-gray-400" />
@@ -264,4 +263,3 @@ const CommunityPage = () => {
 };
 
 export default CommunityPage;
-
