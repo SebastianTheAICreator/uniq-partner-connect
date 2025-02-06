@@ -1,3 +1,4 @@
+
 export type NotificationType = 
   | 'POST_LIKE' 
   | 'POST_COMMENT' 
@@ -5,7 +6,8 @@ export type NotificationType =
   | 'GROUP_JOIN'
   | 'NEW_DISCUSSION'
   | 'NEW_GROUP'
-  | 'MENTION';
+  | 'MENTION'
+  | 'BOOKMARK';
 
 export interface Notification {
   id: string;
