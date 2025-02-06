@@ -5,7 +5,7 @@ import ActionButton from "@/components/ActionButton";
 import { 
   ArrowRight, Users, Heart, Shield, TrendingUp, MessageCircle, 
   Activity, Wallet, Bot, Clock, Star, Sparkles, VideoIcon,
-  Bank, Brain, UserPlus, Building2, Lock, Smartphone, Code
+  Building2, Brain, UserPlus, Lock, Smartphone, Code
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ const Index = () => {
   const features = [
     { title: "Feed Unificat", icon: Activity, color: "from-blue-400 to-green-400" },
     { title: "UniVideo", icon: VideoIcon, color: "from-purple-400 to-pink-400" },
-    { title: "UniBanking", icon: Bank, color: "from-green-400 to-teal-400" },
+    { title: "UniBanking", icon: Building2, color: "from-green-400 to-teal-400" },
     { title: "Ol-yAIChat", icon: Brain, color: "from-blue-400 to-indigo-400" },
     { title: "Matches 16+", icon: UserPlus, color: "from-pink-400 to-rose-400" },
     { title: "UniQ EnterprisePRO", icon: Building2, color: "from-gray-400 to-slate-400" },
