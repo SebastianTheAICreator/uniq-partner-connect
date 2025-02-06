@@ -1,20 +1,21 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-[#4A90E2]/5 via-white to-[#64D2FF]/5;
+    @apply bg-gradient-to-br from-gray-900 via-blue-900/10 to-emerald-900/10;
     background-attachment: fixed;
   }
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#4A90E2] via-[#64D2FF] to-[#42E695] animate-text-shine;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-emerald-400 to-blue-400 animate-text-shine;
 }
 
 .glass-card {
-  @apply bg-white/50 backdrop-blur-md border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.06)];
+  @apply bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_32px_rgba(59,130,246,0.1)];
 }
 
 .hover-lift {
@@ -57,7 +58,7 @@
 }
 
 .button-gradient {
-  @apply bg-gradient-to-r from-[#4A90E2] via-[#64D2FF] to-[#42E695] hover:from-[#4A90E2]/90 hover:via-[#64D2FF]/90 hover:to-[#42E695]/90;
+  @apply bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600;
 }
 
 .text-glow {
@@ -66,6 +67,30 @@
 
 .border-glow {
   box-shadow: 0 0 15px rgba(74, 144, 226, 0.1);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes text-shine {
+  0% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  100% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+.animate-text-shine {
+  animation: text-shine 3s ease-in-out infinite;
 }
 
 @font-face {
