@@ -126,11 +126,7 @@ const CreateDiscussion = ({ onDiscussionCreated }: CreateDiscussionProps) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="fixed left-1/2 transform -translate-x-1/2 mt-2 p-4 rounded-xl backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-xl z-50 w-[calc(100vw-4rem)] max-w-4xl"
-                  style={{
-                    top: '50%',
-                    transform: 'translate(-50%, -50%)'
-                  }}
+                  className="absolute left-0 right-0 mt-2 p-4 rounded-xl backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-xl z-50"
                 >
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     {postTypes.map(({ type, icon: Icon, label, description }) => (
