@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
@@ -106,10 +107,10 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
           duration: 0.8,
           ease: [0.6, -0.05, 0.01, 0.99]
         }}
-        className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-[#1A1F2C] via-[#222222] to-[#1A1F2C] backdrop-blur-xl"
+        className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-[#1A1F2C] via-[#222222] to-[#1A1F2C] backdrop-blur-xl relative"
       >
         <motion.div 
-          className="max-w-4xl mx-auto space-y-8 mt-16" // Increased from mt-8 to mt-16
+          className="max-w-4xl mx-auto space-y-8 mt-16 pb-24" // Added pb-24 for footer spacing
           variants={staggerChildren}
           initial="hidden"
           animate="visible"
@@ -122,7 +123,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="w-full mt-8" // Added mt-8 for extra top margin
+                className="w-full mt-8"
               >
                 <TopicPosts
                   topicId={selectedTopic}
@@ -140,7 +141,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="space-y-8 mt-8" // Added mt-8 and increased space-y-6 to space-y-8
+                className="space-y-8 mt-8"
               >
                 <CreateDiscussion onDiscussionCreated={handleNewDiscussion} />
                 {conversations.map((conv, index) => (
@@ -174,6 +175,13 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* Footer with matching gradient */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-b from-gray-900 to-black border-t border-white/5 py-6">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-sm text-gray-400">© 2025 UniQ. Toate drepturile rezervate.</p>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
