@@ -110,7 +110,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
         className="flex-1 ml-[240px] p-6 bg-gradient-to-br from-[#1A1F2C] via-[#222222] to-[#1A1F2C] backdrop-blur-xl relative"
       >
         <motion.div 
-          className="max-w-4xl mx-auto space-y-8 mt-16 pb-24" // Added pb-24 for footer spacing
+          className="max-w-4xl mx-auto space-y-8 mt-16 pb-24"
           variants={staggerChildren}
           initial="hidden"
           animate="visible"
@@ -176,8 +176,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
           </AnimatePresence>
         </motion.div>
 
-        {/* Footer with matching gradient */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-b from-gray-900 to-black border-t border-white/5 py-6">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-br from-[#1A1F2C] via-[#222222] to-[#1A1F2C] border-t border-white/5 py-6">
           <div className="container mx-auto px-4 text-center">
             <p className="text-sm text-gray-400">© 2025 UniQ. Toate drepturile rezervate.</p>
           </div>
@@ -188,3 +187,4 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
 };
 
 export default ConversationList;
+
