@@ -1,5 +1,5 @@
 
-import { Heart, Code, Book, HelpCircle, Building2 } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
