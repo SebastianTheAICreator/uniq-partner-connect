@@ -1,19 +1,11 @@
-
+import React from 'react';
 import { Rss, TrendingUp, Video, Newspaper, Users, Banknote, Heart, MessageSquare, MessageCircle, Building, Sparkles } from 'lucide-react';
-import { Button } from '../ui/button';
-import { ScrollArea } from '../ui/scroll-area';
-import { Separator } from '../ui/separator';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import { motion } from 'framer-motion';
 
-interface SidebarContentProps {
-  conversations: Array<{
-    id: string;
-    title: string;
-  }>;
-  onConversationClick?: (id: string) => void;
-}
-
-const SidebarContent = ({ conversations, onConversationClick }: SidebarContentProps) => {
+const Sidebar = () => {
   const menuItems = [
     { icon: Rss, label: 'Feed', badge: '3' },
     { icon: TrendingUp, label: 'Trending', badge: '5' },
@@ -33,6 +25,11 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
     },
   ];
 
+  const conversations = [
+    { id: '1', title: 'AI' },
+    { id: '2', title: 'AGI' }
+  ];
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -49,7 +46,18 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)]">
+    <div className="flex flex-col h-screen bg-slate-900">
+      {/* Logo */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="p-4 mb-6"
+      >
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+          UniQ
+        </h1>
+      </motion.div>
+
       <ScrollArea className="flex-1 px-2 custom-scrollbar">
         <div className="space-y-8">
           <motion.div 
@@ -62,29 +70,29 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
               Meniu Principal
             </h2>
             
-            {menuItems.map((item) => (
-              <motion.div key={item.label} variants={itemVariants}>
+            {menuItems.map((Item) => (
+              <motion.div key={Item.label} variants={itemVariants}>
                 <Button 
                   variant="ghost" 
-                  className={`w-full justify-between group hover:bg-blue-500/10 transition-all duration-300 ${item.className || ''}`}
+                  className={`w-full justify-between group hover:bg-blue-500/10 transition-all duration-300 ${Item.className || ''}`}
                 >
                   <span className="flex items-center gap-3">
-                    <item.icon className={`h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors ${
-                      item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : ''
+                    <Item.icon className={`h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors ${
+                      Item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : ''
                     }`} />
                     <span className={`text-sm font-medium text-gray-300 group-hover:text-white font-inter ${
-                      item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : ''
+                      Item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : ''
                     }`}>
-                      {item.label}
+                      {Item.label}
                     </span>
                   </span>
-                  {item.badge && (
+                  {Item.badge && (
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      item.label === 'UniQ Enterprise'
+                      Item.label === 'UniQ Enterprise'
                         ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white'
                         : 'bg-gradient-to-r from-blue-500 to-emerald-500 text-white'
                     }`}>
-                      {item.badge}
+                      {Item.badge}
                     </span>
                   )}
                 </Button>
@@ -100,7 +108,9 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
             transition={{ delay: 0.5 }}
             className="space-y-3"
           >
-            <h3 className="px-3 font-medium text-sm text-gray-400 font-inter">Conversații Recente</h3>
+            <h3 className="px-3 font-medium text-sm text-gray-400 font-inter">
+              Conversații Recente
+            </h3>
             <div className="space-y-1">
               {conversations.map((conv, index) => (
                 <motion.div
@@ -109,10 +119,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.6 + index * 0.1 }}
                 >
-                  <div
-                    onClick={() => onConversationClick?.(conv.id)}
-                    className="flex items-center space-x-3 px-3 py-2 hover:bg-blue-500/10 rounded-lg cursor-pointer transition-all duration-300 group"
-                  >
+                  <div className="flex items-center space-x-3 px-3 py-2 hover:bg-blue-500/10 rounded-lg cursor-pointer transition-all duration-300 group">
                     <MessageSquare className="h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors" />
                     <span className="text-sm text-gray-400 group-hover:text-white transition-colors truncate font-inter">
                       {conv.title}
@@ -134,7 +141,6 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 hover:bg-blue-500/10 text-gray-300 hover:text-white transition-all duration-300 font-inter"
-          onClick={() => console.log('Profile clicked')}
         >
           <Users className="h-4 w-4 text-blue-400" />
           <span className="text-sm font-medium">Profil</span>
@@ -142,7 +148,6 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 hover:bg-blue-500/10 text-red-400 hover:text-red-500 transition-all duration-300 font-inter"
-          onClick={() => console.log('Logout clicked')}
         >
           <Heart className="h-4 w-4" />
           <span className="text-sm font-medium">Deconectare</span>
@@ -152,4 +157,4 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
   );
 };
 
-export default SidebarContent;
+export default Sidebar;
