@@ -5,7 +5,15 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { motion } from 'framer-motion';
 
-const Sidebar = () => {
+interface SidebarContentProps {
+  conversations: Array<{
+    id: string;
+    title: string;
+  }>;
+  onConversationClick?: (id: string) => void;
+}
+
+const SidebarContent = ({ conversations, onConversationClick }: SidebarContentProps) => {
   const menuItems = [
     { icon: Rss, label: 'Feed', badge: '3' },
     { icon: TrendingUp, label: 'Trending', badge: '5' },
@@ -25,11 +33,6 @@ const Sidebar = () => {
     },
   ];
 
-  const conversations = [
-    { id: '1', title: 'AI' },
-    { id: '2', title: 'AGI' }
-  ];
-
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -46,7 +49,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-[280px] min-h-screen bg-[#0d1117] border-r border-white/5">
+    <div className="flex flex-col h-full">
       {/* Logo Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -58,110 +61,109 @@ const Sidebar = () => {
         </h1>
       </motion.div>
 
-      <div className="flex flex-col h-[calc(100vh-60px)]">
-        <ScrollArea className="flex-1">
-          <div className="py-4 px-4 space-y-6">
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="show"
-              className="space-y-1"
-            >
-              <h2 className="text-base font-medium text-gray-400 mb-4 px-2">
-                Meniu Principal
-              </h2>
-              
-              {menuItems.map((Item) => (
-                <motion.div key={Item.label} variants={itemVariants}>
-                  <Button 
-                    variant="ghost" 
-                    className={`w-full justify-between h-11 px-4 hover:bg-blue-500/10 transition-colors ${Item.className || ''}`}
-                  >
-                    <span className="flex items-center gap-4">
-                      <Item.icon className={`h-5 w-5 text-blue-400 ${
-                        Item.label === 'UniQ Enterprise' ? 'text-white' : ''
-                      }`} />
-                      <span className={`text-[15px] text-gray-300 ${
-                        Item.label === 'UniQ Enterprise' ? 'text-white font-medium' : ''
-                      }`}>
-                        {Item.label}
-                      </span>
+      <ScrollArea className="flex-1">
+        <div className="py-4 px-4 space-y-6">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="space-y-1"
+          >
+            <h2 className="text-base font-medium text-gray-400 mb-4 px-2">
+              Meniu Principal
+            </h2>
+            
+            {menuItems.map((Item) => (
+              <motion.div key={Item.label} variants={itemVariants}>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-between h-11 px-4 hover:bg-blue-500/10 transition-colors ${Item.className || ''}`}
+                >
+                  <span className="flex items-center gap-4">
+                    <Item.icon className={`h-5 w-5 text-blue-400 ${
+                      Item.label === 'UniQ Enterprise' ? 'text-white' : ''
+                    }`} />
+                    <span className={`text-[15px] text-gray-300 ${
+                      Item.label === 'UniQ Enterprise' ? 'text-white font-medium' : ''
+                    }`}>
+                      {Item.label}
                     </span>
-                    {Item.badge && (
-                      <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
-                        Item.label === 'UniQ Enterprise'
-                          ? 'bg-white/20 text-white'
-                          : 'bg-blue-500 text-white'
-                      }`}>
-                        {Item.badge}
-                      </span>
-                    )}
+                  </span>
+                  {Item.badge && (
+                    <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
+                      Item.label === 'UniQ Enterprise'
+                        ? 'bg-white/20 text-white'
+                        : 'bg-blue-500 text-white'
+                    }`}>
+                      {Item.badge}
+                    </span>
+                  )}
+                </Button>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <Separator className="bg-white/5 my-4" />
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="space-y-3"
+          >
+            <h2 className="text-base font-medium text-gray-400 px-2">
+              Conversații Recente
+            </h2>
+            <div className="space-y-1">
+              {conversations.map((conv, index) => (
+                <motion.div
+                  key={conv.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                >
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
+                    onClick={() => onConversationClick?.(conv.id)}
+                  >
+                    <MessageSquare className="h-5 w-5 text-blue-400 mr-4" />
+                    <span className="text-[15px] text-gray-300">
+                      {conv.title}
+                    </span>
                   </Button>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </ScrollArea>
 
-            <Separator className="bg-white/5 my-4" />
-
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="space-y-3"
-            >
-              <h2 className="text-base font-medium text-gray-400 px-2">
-                Conversații Recente
-              </h2>
-              <div className="space-y-1">
-                {conversations.map((conv, index) => (
-                  <motion.div
-                    key={conv.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 + index * 0.1 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
-                    >
-                      <MessageSquare className="h-5 w-5 text-blue-400 mr-4" />
-                      <span className="text-[15px] text-gray-300">
-                        {conv.title}
-                      </span>
-                    </Button>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </ScrollArea>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="p-4 border-t border-white/5"
-        >
-          <div className="space-y-1">
-            <Button
-              variant="ghost"
-              className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
-            >
-              <Users className="h-5 w-5 text-blue-400 mr-4" />
-              <span className="text-[15px] text-gray-300">Profil</span>
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start h-11 px-4 hover:bg-blue-500/10 text-red-400 hover:text-red-400"
-            >
-              <LogOut className="h-5 w-5 mr-4" />
-              <span className="text-[15px]">Deconectare</span>
-            </Button>
-          </div>
-        </motion.div>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        className="p-4 border-t border-white/5"
+      >
+        <div className="space-y-1">
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
+          >
+            <Users className="h-5 w-5 text-blue-400 mr-4" />
+            <span className="text-[15px] text-gray-300">Profil</span>
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-11 px-4 hover:bg-blue-500/10 text-red-400 hover:text-red-400"
+          >
+            <LogOut className="h-5 w-5 mr-4" />
+            <span className="text-[15px]">Deconectare</span>
+          </Button>
+        </div>
+      </motion.div>
     </div>
   );
 };
 
-export default Sidebar;
+export default SidebarContent;
