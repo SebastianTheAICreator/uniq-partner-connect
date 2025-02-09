@@ -1,7 +1,8 @@
-import { Rss, TrendingUp, Video, Newspaper, Users, Banknote, Heart, MessageSquare, MessageCircle, Building } from 'lucide-react';
-import { Button } from '../ui/button';
-import { ScrollArea } from '../ui/scroll-area';
-import { Separator } from '../ui/separator';
+import React from 'react';
+import { Rss, TrendingUp, Video, Newspaper, Users, Banknote, Heart, MessageSquare, MessageCircle, Building, LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import { motion } from 'framer-motion';
 
 interface SidebarContentProps {
@@ -48,42 +49,53 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <ScrollArea className="flex-1 w-full px-2">
-        <div className="space-y-8 py-4">
+    <div className="flex flex-col h-full">
+      {/* Logo Header */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="h-[60px] px-4 flex items-center border-b border-white/5"
+      >
+        <h1 className="text-xl font-bold text-blue-400">
+          UniQ
+        </h1>
+      </motion.div>
+
+      <ScrollArea className="flex-1">
+        <div className="py-4 px-4 space-y-6">
           <motion.div 
             variants={containerVariants}
             initial="hidden"
             animate="show"
-            className="space-y-2"
+            className="space-y-1"
           >
-            <h2 className="px-3 text-lg font-semibold font-poppins text-white">
+            <h2 className="text-base font-medium text-gray-400 mb-4 px-2">
               Meniu Principal
             </h2>
             
-            {menuItems.map((item) => (
-              <motion.div key={item.label} variants={itemVariants}>
+            {menuItems.map((Item) => (
+              <motion.div key={Item.label} variants={itemVariants}>
                 <Button 
                   variant="ghost" 
-                  className={`w-full justify-between group hover:bg-blue-500/10 transition-all duration-300 ${item.className || ''}`}
+                  className={`w-full justify-between h-11 px-4 hover:bg-blue-500/10 transition-colors ${Item.className || ''}`}
                 >
-                  <span className="flex items-center gap-3">
-                    <item.icon className={`h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors ${
-                      item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : ''
+                  <span className="flex items-center gap-4">
+                    <Item.icon className={`h-5 w-5 text-blue-400 ${
+                      Item.label === 'UniQ Enterprise' ? 'text-white' : ''
                     }`} />
-                    <span className={`text-sm font-medium text-gray-300 group-hover:text-white font-inter ${
-                      item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : ''
+                    <span className={`text-[15px] text-gray-300 ${
+                      Item.label === 'UniQ Enterprise' ? 'text-white font-medium' : ''
                     }`}>
-                      {item.label}
+                      {Item.label}
                     </span>
                   </span>
-                  {item.badge && (
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      item.label === 'UniQ Enterprise'
-                        ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white'
-                        : 'bg-gradient-to-r from-blue-500 to-emerald-500 text-white'
+                  {Item.badge && (
+                    <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
+                      Item.label === 'UniQ Enterprise'
+                        ? 'bg-white/20 text-white'
+                        : 'bg-blue-500 text-white'
                     }`}>
-                      {item.badge}
+                      {Item.badge}
                     </span>
                   )}
                 </Button>
@@ -91,7 +103,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
             ))}
           </motion.div>
 
-          <Separator className="mx-2 bg-white/5" />
+          <Separator className="bg-white/5 my-4" />
 
           <motion.div 
             initial={{ opacity: 0 }}
@@ -99,7 +111,9 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
             transition={{ delay: 0.5 }}
             className="space-y-3"
           >
-            <h3 className="px-3 font-medium text-sm text-gray-400 font-inter">Conversații Recente</h3>
+            <h2 className="text-base font-medium text-gray-400 px-2">
+              Conversații Recente
+            </h2>
             <div className="space-y-1">
               {conversations.map((conv, index) => (
                 <motion.div
@@ -108,15 +122,16 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.6 + index * 0.1 }}
                 >
-                  <div
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
                     onClick={() => onConversationClick?.(conv.id)}
-                    className="flex items-center space-x-3 px-3 py-2 hover:bg-blue-500/10 rounded-lg cursor-pointer transition-all duration-300 group"
                   >
-                    <MessageSquare className="h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors" />
-                    <span className="text-sm text-gray-400 group-hover:text-white transition-colors truncate font-inter">
+                    <MessageSquare className="h-5 w-5 text-blue-400 mr-4" />
+                    <span className="text-[15px] text-gray-300">
                       {conv.title}
                     </span>
-                  </div>
+                  </Button>
                 </motion.div>
               ))}
             </div>
@@ -128,24 +143,24 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="mt-auto p-3 space-y-2 border-t border-white/5 bg-blue-500/5 backdrop-blur-sm"
+        className="p-4 border-t border-white/5"
       >
-        <Button
-          variant="ghost"
-          className="w-full justify-start gap-3 hover:bg-blue-500/10 text-gray-300 hover:text-white transition-all duration-300 font-inter"
-          onClick={() => console.log('Profile clicked')}
-        >
-          <Users className="h-4 w-4 text-blue-400" />
-          <span className="text-sm font-medium">Profil</span>
-        </Button>
-        <Button
-          variant="ghost"
-          className="w-full justify-start gap-3 hover:bg-blue-500/10 text-red-400 hover:text-red-500 transition-all duration-300 font-inter"
-          onClick={() => console.log('Logout clicked')}
-        >
-          <Heart className="h-4 w-4" />
-          <span className="text-sm font-medium">Deconectare</span>
-        </Button>
+        <div className="space-y-1">
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
+          >
+            <Users className="h-5 w-5 text-blue-400 mr-4" />
+            <span className="text-[15px] text-gray-300">Profil</span>
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start h-11 px-4 hover:bg-blue-500/10 text-red-400 hover:text-red-400"
+          >
+            <LogOut className="h-5 w-5 mr-4" />
+            <span className="text-[15px]">Deconectare</span>
+          </Button>
+        </div>
       </motion.div>
     </div>
   );
