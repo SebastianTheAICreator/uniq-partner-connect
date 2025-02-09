@@ -1,3 +1,4 @@
+
 import { Rss, TrendingUp, Video, Newspaper, Users, Banknote, Heart, MessageSquare, MessageCircle, Building, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
@@ -48,7 +49,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-black"> {/* Am setat fundalul la negru */}
+    <div className="flex flex-col h-[calc(100vh-6rem)]">
       <ScrollArea className="flex-1 px-2 custom-scrollbar">
         <div className="space-y-8">
           <motion.div 
