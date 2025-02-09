@@ -46,19 +46,19 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-80 h-screen bg-slate-900">
+    <div className="flex flex-col h-screen bg-slate-900">
       {/* Logo */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="p-6"
+        className="p-4 mb-6"
       >
         <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
           UniQ
         </h1>
       </motion.div>
 
-      <ScrollArea className="flex-1 w-full px-4">
+      <ScrollArea className="flex-1 px-2 custom-scrollbar">
         <div className="space-y-8">
           <motion.div 
             variants={containerVariants}
@@ -74,20 +74,20 @@ const Sidebar = () => {
               <motion.div key={Item.label} variants={itemVariants}>
                 <Button 
                   variant="ghost" 
-                  className={`w-full h-12 justify-between group hover:bg-blue-500/10 transition-all duration-300 ${Item.className || ''}`}
+                  className={`w-full justify-between group hover:bg-blue-500/10 transition-all duration-300 ${Item.className || ''}`}
                 >
-                  <span className="flex items-center gap-4">
-                    <Item.icon className={`h-5 w-5 text-blue-400 group-hover:text-blue-500 transition-colors ${
+                  <span className="flex items-center gap-3">
+                    <Item.icon className={`h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors ${
                       Item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : ''
                     }`} />
-                    <span className={`text-base font-medium text-gray-300 group-hover:text-white font-inter ${
+                    <span className={`text-sm font-medium text-gray-300 group-hover:text-white font-inter ${
                       Item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : ''
                     }`}>
                       {Item.label}
                     </span>
                   </span>
                   {Item.badge && (
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                       Item.label === 'UniQ Enterprise'
                         ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white'
                         : 'bg-gradient-to-r from-blue-500 to-emerald-500 text-white'
@@ -106,12 +106,12 @@ const Sidebar = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="space-y-4"
+            className="space-y-3"
           >
-            <h3 className="px-3 text-base font-medium text-gray-400 font-inter">
+            <h3 className="px-3 font-medium text-sm text-gray-400 font-inter">
               Conversații Recente
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-1">
               {conversations.map((conv, index) => (
                 <motion.div
                   key={conv.id}
@@ -119,9 +119,9 @@ const Sidebar = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.6 + index * 0.1 }}
                 >
-                  <div className="flex items-center space-x-4 px-4 py-3 hover:bg-blue-500/10 rounded-lg cursor-pointer transition-all duration-300 group">
-                    <MessageSquare className="h-5 w-5 text-blue-400 group-hover:text-blue-500 transition-colors" />
-                    <span className="text-base text-gray-400 group-hover:text-white transition-colors truncate font-inter">
+                  <div className="flex items-center space-x-3 px-3 py-2 hover:bg-blue-500/10 rounded-lg cursor-pointer transition-all duration-300 group">
+                    <MessageSquare className="h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors" />
+                    <span className="text-sm text-gray-400 group-hover:text-white transition-colors truncate font-inter">
                       {conv.title}
                     </span>
                   </div>
@@ -136,21 +136,21 @@ const Sidebar = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="mt-auto p-4 space-y-2 border-t border-white/5 bg-blue-500/5 backdrop-blur-sm"
+        className="mt-auto p-3 space-y-2 border-t border-white/5 bg-blue-500/5 backdrop-blur-sm"
       >
         <Button
           variant="ghost"
-          className="w-full h-12 justify-start gap-4 hover:bg-blue-500/10 text-gray-300 hover:text-white transition-all duration-300 font-inter"
+          className="w-full justify-start gap-3 hover:bg-blue-500/10 text-gray-300 hover:text-white transition-all duration-300 font-inter"
         >
-          <Users className="h-5 w-5 text-blue-400" />
-          <span className="text-base font-medium">Profil</span>
+          <Users className="h-4 w-4 text-blue-400" />
+          <span className="text-sm font-medium">Profil</span>
         </Button>
         <Button
           variant="ghost"
-          className="w-full h-12 justify-start gap-4 hover:bg-blue-500/10 text-red-400 hover:text-red-500 transition-all duration-300 font-inter"
+          className="w-full justify-start gap-3 hover:bg-blue-500/10 text-red-400 hover:text-red-500 transition-all duration-300 font-inter"
         >
-          <Heart className="h-5 w-5" />
-          <span className="text-base font-medium">Deconectare</span>
+          <Heart className="h-4 w-4" />
+          <span className="text-sm font-medium">Deconectare</span>
         </Button>
       </motion.div>
     </div>
