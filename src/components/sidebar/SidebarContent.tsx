@@ -46,28 +46,28 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 min-h-screen bg-[#1a1b1e] border-r border-white/5">
-      {/* Logo */}
+    <div className="w-[280px] min-h-screen bg-[#0d1117] border-r border-white/5">
+      {/* Logo Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="h-16 px-6 flex items-center border-b border-white/5"
+        className="h-[60px] px-4 flex items-center border-b border-white/5"
       >
         <h1 className="text-xl font-bold text-blue-400">
           UniQ
         </h1>
       </motion.div>
 
-      <div className="flex flex-col h-[calc(100vh-4rem)]">
+      <div className="flex flex-col h-[calc(100vh-60px)]">
         <ScrollArea className="flex-1">
-          <div className="p-6 space-y-6">
+          <div className="py-4 px-4 space-y-6">
             <motion.div 
               variants={containerVariants}
               initial="hidden"
               animate="show"
               className="space-y-1"
             >
-              <h2 className="text-sm font-medium text-gray-400 mb-3">
+              <h2 className="text-base font-medium text-gray-400 mb-4 px-2">
                 Meniu Principal
               </h2>
               
@@ -75,23 +75,23 @@ const Sidebar = () => {
                 <motion.div key={Item.label} variants={itemVariants}>
                   <Button 
                     variant="ghost" 
-                    className={`w-full justify-between h-10 px-3 hover:bg-blue-500/10 transition-colors ${Item.className || ''}`}
+                    className={`w-full justify-between h-11 px-4 hover:bg-blue-500/10 transition-colors ${Item.className || ''}`}
                   >
-                    <span className="flex items-center gap-3">
-                      <Item.icon className={`h-4 w-4 text-blue-400 ${
-                        Item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : ''
+                    <span className="flex items-center gap-4">
+                      <Item.icon className={`h-5 w-5 text-blue-400 ${
+                        Item.label === 'UniQ Enterprise' ? 'text-white' : ''
                       }`} />
-                      <span className={`text-sm text-gray-300 ${
+                      <span className={`text-[15px] text-gray-300 ${
                         Item.label === 'UniQ Enterprise' ? 'text-white font-medium' : ''
                       }`}>
                         {Item.label}
                       </span>
                     </span>
                     {Item.badge && (
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                      <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
                         Item.label === 'UniQ Enterprise'
                           ? 'bg-white/20 text-white'
-                          : 'bg-blue-500/20 text-blue-400'
+                          : 'bg-blue-500 text-white'
                       }`}>
                         {Item.badge}
                       </span>
@@ -101,7 +101,7 @@ const Sidebar = () => {
               ))}
             </motion.div>
 
-            <Separator className="bg-white/5" />
+            <Separator className="bg-white/5 my-4" />
 
             <motion.div 
               initial={{ opacity: 0 }}
@@ -109,7 +109,7 @@ const Sidebar = () => {
               transition={{ delay: 0.5 }}
               className="space-y-3"
             >
-              <h2 className="text-sm font-medium text-gray-400">
+              <h2 className="text-base font-medium text-gray-400 px-2">
                 Conversații Recente
               </h2>
               <div className="space-y-1">
@@ -122,10 +122,10 @@ const Sidebar = () => {
                   >
                     <Button
                       variant="ghost"
-                      className="w-full justify-start h-10 px-3 hover:bg-blue-500/10"
+                      className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
                     >
-                      <MessageSquare className="h-4 w-4 text-blue-400 mr-3" />
-                      <span className="text-sm text-gray-300">
+                      <MessageSquare className="h-5 w-5 text-blue-400 mr-4" />
+                      <span className="text-[15px] text-gray-300">
                         {conv.title}
                       </span>
                     </Button>
@@ -140,22 +140,22 @@ const Sidebar = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="p-6 border-t border-white/5"
+          className="p-4 border-t border-white/5"
         >
           <div className="space-y-1">
             <Button
               variant="ghost"
-              className="w-full justify-start h-10 px-3 hover:bg-blue-500/10"
+              className="w-full justify-start h-11 px-4 hover:bg-blue-500/10"
             >
-              <Users className="h-4 w-4 text-blue-400 mr-3" />
-              <span className="text-sm text-gray-300">Profil</span>
+              <Users className="h-5 w-5 text-blue-400 mr-4" />
+              <span className="text-[15px] text-gray-300">Profil</span>
             </Button>
             <Button
               variant="ghost"
-              className="w-full justify-start h-10 px-3 hover:bg-blue-500/10 text-red-400 hover:text-red-400"
+              className="w-full justify-start h-11 px-4 hover:bg-blue-500/10 text-red-400 hover:text-red-400"
             >
-              <LogOut className="h-4 w-4 mr-3" />
-              <span className="text-sm">Deconectare</span>
+              <LogOut className="h-5 w-5 mr-4" />
+              <span className="text-[15px]">Deconectare</span>
             </Button>
           </div>
         </motion.div>
