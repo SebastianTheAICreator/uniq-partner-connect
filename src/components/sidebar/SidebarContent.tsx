@@ -48,7 +48,7 @@ const SidebarContent = ({ conversations, onConversationClick }: SidebarContentPr
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-black">
+    <div className="flex flex-col h-[calc(100vh-6rem)] bg-black"> {/* Am setat fundalul la negru */}
       <ScrollArea className="flex-1 px-2 custom-scrollbar">
         <div className="space-y-8">
           <motion.div 
