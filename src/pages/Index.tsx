@@ -191,7 +191,7 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-center">
             {['ISO 27001', 'GDPR', 'PCI DSS', 'SOC 2'].map((cert, index) => <div key={cert} className="text-center">
                 <Shield className="w-12 h-12 mx-auto mb-4 text-emerald-400" />
-                <p className="text-gray-300 font-inter">{cert}</p>
+                <p className="font-inter text-gray-500">{cert}</p>
               </div>)}
           </div>
         </motion.div>
