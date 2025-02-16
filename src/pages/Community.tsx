@@ -98,7 +98,7 @@ const CommunityPage = () => {
     name: "Tech",
     icon: TrendingUp
   }];
-  return <div className="min-h-screen bg-gradient-to-br from-gray-900">
+  return <div className="min-h-screen bg-gradient-to-br from-gray-900 bg-zinc-900 hover:bg-zinc-800 mx-0">
       <Navbar />
       
       {!selectedCategory ? <div className="container mx-auto px-4 py-32 bg-[#272727]">
