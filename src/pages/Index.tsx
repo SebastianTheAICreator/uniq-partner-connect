@@ -76,7 +76,7 @@ const Index = () => {
   return <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900/10 to-emerald-900/10">
       <Navbar />
       
-      <main className="flex-grow container mx-auto px-4 pt-32 pb-16 space-y-24 bg-[#1f272e]">
+      <main className="flex-grow container mx-auto px-4 pt-32 pb-16 space-y-24 bg-[#1f272e]/[0.67]">
         <motion.div initial={{
         opacity: 0,
         y: 20
