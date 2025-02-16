@@ -82,7 +82,7 @@ const SidebarContent = ({
     }
   };
   return <div className="flex flex-col h-[calc(100vh-6rem)]">
-      <ScrollArea className="flex-1 px-2 custom-scrollbar bg-zinc-900 ">
+      <ScrollArea className="flex-1 px-2 custom-scrollbar bg-zinc-900 hover:bg-zinc-800">
         <div className="space-y-8">
           <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-2">
             <h2 className="px-3 text-lg font-semibold font-poppins text-white">
