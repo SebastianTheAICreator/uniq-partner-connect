@@ -189,7 +189,7 @@ const CommunityPage = () => {
           }} transition={{
             delay: index * 0.1
           }} className="bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-800/50 rounded-xl border border-white/10 hover:border-blue-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-                    <div className="p-6 space-y-4">
+                    <div className="p-6 space-y-4 bg-gray-900 hover:bg-gray-800">
                       <div className="flex items-center justify-between">
                         <Users className="w-8 h-8 text-blue-400 animate-float" />
                         <span className="text-sm text-gray-400 font-inter">
