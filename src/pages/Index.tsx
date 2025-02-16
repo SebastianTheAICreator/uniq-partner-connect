@@ -73,7 +73,7 @@ const Index = () => {
     icon: Building2,
     gradient: "from-gray-400 to-slate-400"
   }];
-  return <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900/10 to-emerald-900/10">
+  return <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-blue-900/10 to-emerald-900/10 bg-[#393939]">
       <Navbar />
       
       <main className="flex-grow container mx-auto px-4 pt-32 pb-16 space-y-24 bg-[#222222]">
