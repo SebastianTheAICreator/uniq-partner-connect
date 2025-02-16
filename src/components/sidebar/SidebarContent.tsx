@@ -82,7 +82,7 @@ const SidebarContent = ({
     }
   };
   return <div className="flex flex-col h-[calc(100vh-6rem)]">
-      <ScrollArea className="flex-1 px-2 custom-scrollbar bg-zinc-900 hover:bg-zinc-800">
+      <ScrollArea className="flex-1 px-2 custom-scrollbar bg-zinc-900 ">
         <div className="space-y-8">
           <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-2">
             <h2 className="px-3 text-lg font-semibold font-poppins text-white">
@@ -145,11 +145,11 @@ const SidebarContent = ({
     }} transition={{
       delay: 0.8
     }} className="mt-auto p-3 space-y-2 border-t border-white/5 bg-blue-500/5 backdrop-blur-sm">
-        <Button variant="ghost" className="w-full justify-start gap-3 hover:bg-blue-500/10 text-gray-300 hover:text-white transition-all duration-300 font-inter" onClick={() => console.log('Profile clicked')}>
+        <Button variant="ghost" onClick={() => console.log('Profile clicked')} className="w-full justify-start gap-3 text-gray-300 hover:text-white transition-all duration-300 font-inter bg-zinc-900 hover:bg-zinc-800">
           <Users className="h-4 w-4 text-blue-400" />
           <span className="text-sm font-medium">Profil</span>
         </Button>
-        <Button variant="ghost" className="w-full justify-start gap-3 hover:bg-blue-500/10 text-red-400 hover:text-red-500 transition-all duration-300 font-inter" onClick={() => console.log('Logout clicked')}>
+        <Button variant="ghost" onClick={() => console.log('Logout clicked')} className="w-full justify-start gap-3 text-red-400 hover:text-red-500 transition-all duration-300 font-inter bg-zinc-900 hover:bg-zinc-800">
           <Heart className="h-4 w-4" />
           <span className="text-sm font-medium">Deconectare</span>
         </Button>
