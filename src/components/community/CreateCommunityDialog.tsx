@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Users, Globe, Rocket, Hash, Wand2, Shield, Brain, Video, Heart, Settings, Tag, Tags, Lock, UserPlus } from 'lucide-react';
@@ -25,7 +24,7 @@ interface CreateCommunityDialogProps {
 
 const dynamicSubtitles = [
   "Hub pentru Pasiunile Tale",
-  "Spațiu pentru Ideile Tale",
+  "Spațiu pentru Ideile Tale", 
   "Locul Tău în UniQ",
   "Comunitatea Ta, Regulile Tale"
 ];
@@ -86,13 +85,13 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         <motion.div
           whileHover={{ scale: 1.02, y: -5 }}
           whileTap={{ scale: 0.98 }}
-          className="relative overflow-hidden text-center space-y-8 max-w-4xl mx-auto rounded-[32px] p-12 cursor-pointer bg-gradient-to-br from-[#4A90E2]/10 via-[#42E695]/10 to-[#4A90E2]/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(74,144,226,0.2)] hover:shadow-[0_16px_48px_rgba(74,144,226,0.3)] transition-all duration-500"
+          className="relative overflow-hidden text-center space-y-8 max-w-4xl mx-auto rounded-[32px] p-12 cursor-pointer bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(74,144,226,0.2)] hover:shadow-[0_16px_48px_rgba(74,144,226,0.3)] transition-all duration-500"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-0 bg-gradient-to-br from-[#4A90E2]/5 via-[#42E695]/5 to-[#4A90E2]/5 opacity-50"
+            className="absolute inset-0 bg-gradient-to-br from-[#222222]/5 via-[#333333]/5 to-[#222222]/5 opacity-50"
           />
           
           <motion.div 
@@ -105,7 +104,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               <motion.div
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.5 }}
-                className="p-6 rounded-full bg-gradient-to-r from-[#4A90E2]/10 to-[#42E695]/10 backdrop-blur-lg group"
+                className="p-6 rounded-full bg-gradient-to-r from-[#222222] to-[#333333] backdrop-blur-lg group"
               >
                 <Wand2 className="w-12 h-12 text-[#4A90E2] group-hover:text-[#42E695] transition-colors duration-300" />
               </motion.div>
@@ -130,7 +129,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-sm border border-white/10 shadow-lg"
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-sm border border-white/10 shadow-lg"
               >
                 <Settings className="w-8 h-8 text-[#4A90E2]" />
                 <h3 className="text-lg font-semibold text-white">Community Type</h3>
@@ -139,7 +138,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-sm border border-white/10 shadow-lg"
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-sm border border-white/10 shadow-lg"
               >
                 <Lock className="w-8 h-8 text-[#42E695]" />
                 <h3 className="text-lg font-semibold text-white">Privacy Settings</h3>
@@ -148,7 +147,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               
               <motion.div
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-sm border border-white/10 shadow-lg"
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-sm border border-white/10 shadow-lg"
               >
                 <Shield className="w-8 h-8 text-[#4A90E2]" />
                 <h3 className="text-lg font-semibold text-white">Age Restriction</h3>
@@ -159,21 +158,21 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             <div className="flex flex-wrap gap-4 justify-center">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+                className="px-4 py-2 rounded-full bg-[#333333] backdrop-blur-sm border border-white/10 text-sm text-gray-300"
               >
                 <Tags className="w-4 h-4 inline-block mr-2" />
                 UniBanking Integration
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+                className="px-4 py-2 rounded-full bg-[#333333] backdrop-blur-sm border border-white/10 text-sm text-gray-300"
               >
                 <Video className="w-4 h-4 inline-block mr-2" />
                 UniVideo Connect
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+                className="px-4 py-2 rounded-full bg-[#333333] backdrop-blur-sm border border-white/10 text-sm text-gray-300"
               >
                 <Brain className="w-4 h-4 inline-block mr-2" />
                 Ol-y AI Support
@@ -199,7 +198,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl bg-gradient-to-br from-[#4A90E2]/5 via-white/5 to-[#42E695]/5 backdrop-blur-xl border border-[#4A90E2]/20 rounded-[24px] shadow-[0_8px_32px_rgba(74,144,226,0.1)]">
+      <DialogContent className="max-w-4xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-xl border border-[#4A90E2]/20 rounded-[24px] shadow-[0_8px_32px_rgba(74,144,226,0.1)]">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
