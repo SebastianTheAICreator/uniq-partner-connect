@@ -161,7 +161,8 @@ const SidebarContent = ({
           <span className="text-sm font-medium">Deconectare</span>
         </Button>
       </motion.div>
-    </div>;
+    </div>
+  );
 };
 
 export default SidebarContent;
