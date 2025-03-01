@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,7 +14,7 @@
 }
 
 .glass-card {
-  @apply bg-white/5 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_32px_rgba(59,130,246,0.1)];
+  @apply bg-[#222222] hover:bg-[#333333] border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_32px_rgba(59,130,246,0.1)];
 }
 
 .hover-lift {
@@ -54,7 +53,7 @@
 }
 
 .card-hover {
-  @apply transition-all duration-300 hover:bg-white/10 hover:scale-[1.02] hover:shadow-lg;
+  @apply transition-all duration-300 hover:bg-[#333333] hover:scale-[1.02] hover:shadow-lg;
 }
 
 .button-gradient {
