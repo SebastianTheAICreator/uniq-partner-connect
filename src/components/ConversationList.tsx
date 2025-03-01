@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
@@ -14,7 +13,6 @@ interface ConversationListProps {
 
 const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(() => {
-    // Încercăm să restaurăm topicul selectat din localStorage
     const savedTopic = localStorage.getItem('selectedTopic');
     return savedTopic || null;
   });
@@ -31,7 +29,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
     loadTopics();
   }, [communityId]);
 
-  // Salvăm topicul selectat în localStorage de fiecare dată când se schimbă
   useEffect(() => {
     if (selectedTopic) {
       localStorage.setItem('selectedTopic', selectedTopic);
@@ -187,4 +184,3 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
 };
 
 export default ConversationList;
-

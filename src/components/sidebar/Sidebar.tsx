@@ -23,9 +23,9 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
       }}
       className={cn(
         "fixed left-0 top-[4rem] h-[calc(100vh-4rem)]",
-        "w-[240px] bg-gradient-to-b from-gray-900 via-blue-900/80 to-gray-900",
+        "w-[240px] bg-[#000000]", // Changed from blue gradient to pure black
         "backdrop-blur-md border-r border-white/5",
-        "shadow-[4px_0_15px_rgba(59,130,246,0.1)] z-40",
+        "shadow-[4px_0_15px_rgba(0,0,0,0.2)]", // Changed shadow color
         "lg:translate-x-0 transition-transform duration-300",
         "-translate-x-full"  // Hidden by default on mobile
       )}
