@@ -1,4 +1,3 @@
-
 import { Rss, TrendingUp, Video, Newspaper, Users, Banknote, Heart, MessageSquare, MessageCircle, Building, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
@@ -89,7 +88,7 @@ const SidebarContent = ({
 
   return (
     <div className="flex flex-col h-[calc(100vh-6rem)]">
-      <ScrollArea className="flex-1 px-2 custom-scrollbar bg-[#000000] hover:bg-[#111111]">
+      <ScrollArea className="flex-1 px-2 custom-scrollbar bg-[#222222] hover:bg-[#333333]">
         <div className="space-y-8">
           <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-2">
             <h2 className="px-3 text-lg font-semibold font-poppins text-white">
@@ -97,7 +96,7 @@ const SidebarContent = ({
             </h2>
             
             {menuItems.map(item => <motion.div key={item.label} variants={itemVariants}>
-                <Button variant="ghost" className={`w-full justify-between group hover:bg-[#111111] transition-all duration-300 ${item.className || ''}`}>
+                <Button variant="ghost" className={`w-full justify-between group hover:bg-[#333333] transition-all duration-300 ${item.className || ''}`}>
                   <span className="flex items-center gap-3">
                     <item.icon className={`h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors ${item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : ''}`} />
                     <span className={`text-sm font-medium text-gray-300 group-hover:text-white font-inter ${item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : ''}`}>
@@ -131,7 +130,7 @@ const SidebarContent = ({
             }} transition={{
               delay: 0.6 + index * 0.1
             }}>
-                  <div onClick={() => onConversationClick?.(conv.id)} className="flex items-center space-x-3 px-3 py-2 hover:bg-[#111111] rounded-lg cursor-pointer transition-all duration-300 group">
+                  <div onClick={() => onConversationClick?.(conv.id)} className="flex items-center space-x-3 px-3 py-2 hover:bg-[#333333] rounded-lg cursor-pointer transition-all duration-300 group">
                     <MessageSquare className="h-4 w-4 text-blue-400 group-hover:text-blue-500 transition-colors" />
                     <span className="text-sm text-gray-400 group-hover:text-white transition-colors truncate font-inter">
                       {conv.title}
@@ -151,12 +150,12 @@ const SidebarContent = ({
       y: 0
     }} transition={{
       delay: 0.8
-    }} className="mt-auto p-3 space-y-2 border-t border-white/5 bg-[#111111] backdrop-blur-sm">
-        <Button variant="ghost" onClick={() => console.log('Profile clicked')} className="w-full justify-start gap-3 text-gray-300 hover:text-white transition-all duration-300 font-inter bg-[#000000] hover:bg-[#111111]">
+    }} className="mt-auto p-3 space-y-2 border-t border-white/5 bg-[#222222] backdrop-blur-sm">
+        <Button variant="ghost" onClick={() => console.log('Profile clicked')} className="w-full justify-start gap-3 text-gray-300 hover:text-white transition-all duration-300 font-inter bg-[#222222] hover:bg-[#333333]">
           <Users className="h-4 w-4 text-blue-400" />
           <span className="text-sm font-medium">Profil</span>
         </Button>
-        <Button variant="ghost" onClick={() => console.log('Logout clicked')} className="w-full justify-start gap-3 text-red-400 hover:text-red-500 transition-all duration-300 font-inter bg-[#000000] hover:bg-[#111111]">
+        <Button variant="ghost" onClick={() => console.log('Logout clicked')} className="w-full justify-start gap-3 text-red-400 hover:text-red-500 transition-all duration-300 font-inter bg-[#222222] hover:bg-[#333333]">
           <Heart className="h-4 w-4" />
           <span className="text-sm font-medium">Deconectare</span>
         </Button>

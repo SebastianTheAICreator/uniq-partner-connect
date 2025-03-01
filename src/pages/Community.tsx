@@ -9,6 +9,7 @@ import ConversationList from "@/components/ConversationList";
 import CreateCommunityDialog from "@/components/community/CreateCommunityDialog";
 import { getAllCommunities, addCommunity, type Community, updateCommunityMemberCount } from "@/db/database";
 import { useNotifications } from "@/contexts/NotificationContext";
+
 const CommunityPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -19,6 +20,7 @@ const CommunityPage = () => {
   const {
     addNotification
   } = useNotifications();
+
   useEffect(() => {
     const loadCommunities = async () => {
       try {
@@ -37,6 +39,7 @@ const CommunityPage = () => {
     };
     loadCommunities();
   }, [toast]);
+
   const handleJoinCommunity = async (communityId: number, communityName: string) => {
     try {
       await updateCommunityMemberCount(communityId);
@@ -60,6 +63,7 @@ const CommunityPage = () => {
       });
     }
   };
+
   const handleCommunityCreated = async (newCommunity: Omit<Community, 'id' | 'createdAt'>) => {
     try {
       const communityWithDefaults = {
@@ -85,6 +89,7 @@ const CommunityPage = () => {
       });
     }
   };
+
   const communityCategories = [{
     name: "Gaming",
     icon: Video
@@ -98,10 +103,11 @@ const CommunityPage = () => {
     name: "Tech",
     icon: TrendingUp
   }];
-  return <div className="min-h-screen bg-gradient-to-br from-gray-900 bg-zinc-900 hover:bg-zinc-800 mx-0">
+
+  return <div className="min-h-screen bg-gradient-to-br from-gray-900 bg-[#222222] hover:bg-[#333333] mx-0">
       <Navbar />
       
-      {!selectedCategory ? <div className="container mx-auto px-4 py-32 bg-[#272727]">
+      {!selectedCategory ? <div className="container mx-auto px-4 py-32 bg-[#222222]">
           <motion.div initial={{
         opacity: 0
       }} animate={{
@@ -189,7 +195,7 @@ const CommunityPage = () => {
           }} transition={{
             delay: index * 0.1
           }} className="bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-800/50 rounded-xl border border-white/10 hover:border-blue-500/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-                    <div className="p-6 space-y-4 bg-gray-900 hover:bg-gray-800">
+                    <div className="p-6 space-y-4 bg-[#222222] hover:bg-[#333333]">
                       <div className="flex items-center justify-between">
                         <Users className="w-8 h-8 text-blue-400 animate-float" />
                         <span className="text-sm text-gray-400 font-inter">
@@ -225,4 +231,5 @@ const CommunityPage = () => {
         </div> : <ConversationList />}
     </div>;
 };
+
 export default CommunityPage;
