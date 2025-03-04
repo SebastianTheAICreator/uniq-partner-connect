@@ -6,6 +6,7 @@ import TopicPosts from './conversation/TopicPosts';
 import CreateDiscussion from './conversation/CreateDiscussion';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Topic, addTopic, getTopicsByCommunity } from '@/db/database';
+import Footer from './Footer';
 
 interface ConversationListProps {
   communityId?: number;
@@ -172,13 +173,9 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
             )}
           </AnimatePresence>
         </motion.div>
-
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-br from-[#1A1F2C] via-[#222222] to-[#1A1F2C] border-t border-white/5 py-6">
-          <div className="container mx-auto px-4 text-center">
-            <p className="text-sm text-gray-400">© 2025 UniQ. Toate drepturile rezervate.</p>
-          </div>
-        </div>
       </motion.div>
+
+      <Footer />
     </div>
   );
 };
