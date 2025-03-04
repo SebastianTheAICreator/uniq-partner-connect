@@ -6,7 +6,6 @@ import TopicPosts from './conversation/TopicPosts';
 import CreateDiscussion from './conversation/CreateDiscussion';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Topic, addTopic, getTopicsByCommunity } from '@/db/database';
-import Footer from './Footer';
 
 interface ConversationListProps {
   communityId?: number;
@@ -174,8 +173,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
           </AnimatePresence>
         </motion.div>
       </motion.div>
-
-      <Footer />
     </div>
   );
 };
