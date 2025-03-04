@@ -318,7 +318,7 @@ const CommunityPage = () => {
               duration: 0.8
             }} className="max-w-4xl mx-auto bg-gradient-to-br from-[#222222] to-[#1A1F2C] rounded-2xl overflow-hidden border border-white/10 hover:border-blue-500/20 shadow-lg hover:shadow-xl transition-all duration-500 group">
                     <div className="relative h-48 overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-emerald-900/40 z-10"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-emerald-900/40 z-10 bg-neutral-950"></div>
                       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20 group-hover:scale-105 transition-transform duration-700"></div>
                       <div className="absolute bottom-0 left-0 p-6 z-20">
                         <Badge className="mb-3 bg-blue-500/20 text-blue-400 backdrop-blur-md border-none">
