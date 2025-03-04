@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Users, Globe, Rocket, Hash, Wand2, Shield, Brain, Video, Heart, Settings, Tag, Tags, Lock, UserPlus } from 'lucide-react';
+import { Sparkles, Users, Globe, Rocket, Hash, Wand2, Shield, Brain, Video, Heart, Settings, Tag, Tags, Lock, UserPlus, Crown, Lightbulb, Zap, Award } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import {
   Dialog,
@@ -85,14 +86,37 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         <motion.div
           whileHover={{ scale: 1.02, y: -5 }}
           whileTap={{ scale: 0.98 }}
-          className="relative overflow-hidden text-center space-y-8 max-w-4xl mx-auto rounded-[32px] p-12 cursor-pointer bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(74,144,226,0.2)] hover:shadow-[0_16px_48px_rgba(74,144,226,0.3)] transition-all duration-500"
+          className="relative w-full overflow-hidden text-center space-y-8 max-w-4xl mx-auto rounded-[24px] p-8 sm:p-12 cursor-pointer bg-gradient-to-br from-[#1A1F2C] via-[#222232] to-[#1A1F2C] backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(74,144,226,0.15)] hover:shadow-[0_16px_48px_rgba(74,144,226,0.25)] transition-all duration-500"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 bg-gradient-to-br from-[#222222]/5 via-[#333333]/5 to-[#222222]/5 opacity-50"
-          />
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0.1 }}
+              animate={{ 
+                opacity: [0.05, 0.1, 0.05],
+                rotate: [0, 360]
+              }}
+              transition={{ 
+                duration: 60, 
+                repeat: Infinity,
+                ease: "linear" 
+              }}
+              className="absolute -top-[40%] -right-[40%] w-[80%] h-[80%] rounded-full bg-gradient-to-br from-primary/20 via-interactive/10 to-accent/20 blur-3xl"
+            />
+            <motion.div
+              initial={{ opacity: 0.1 }}
+              animate={{ 
+                opacity: [0.05, 0.15, 0.05],
+                rotate: [360, 0]
+              }}
+              transition={{ 
+                duration: 50, 
+                repeat: Infinity,
+                ease: "linear" 
+              }}
+              className="absolute -bottom-[40%] -left-[40%] w-[80%] h-[80%] rounded-full bg-gradient-to-br from-accent/20 via-secondary/10 to-primary/20 blur-3xl"
+            />
+          </div>
           
           <motion.div 
             className="relative z-10 space-y-8"
@@ -100,16 +124,18 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-col items-center space-y-6">
               <motion.div
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.5 }}
-                className="p-6 rounded-full bg-gradient-to-r from-[#222222] to-[#333333] backdrop-blur-lg group"
+                className="relative p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 backdrop-blur-lg group"
               >
-                <Wand2 className="w-12 h-12 text-[#4A90E2] group-hover:text-[#42E695] transition-colors duration-300" />
+                <div className="absolute inset-0 rounded-2xl bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <Crown className="w-12 h-12 text-primary group-hover:text-accent transition-colors duration-500" />
               </motion.div>
-              <div className="space-y-2 text-center">
-                <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#4A90E2] to-[#42E695] font-poppins">
+              
+              <div className="space-y-3 text-center max-w-xl mx-auto">
+                <h2 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent animate-text-shine font-poppins">
                   Creează-ți Propria Comunitate
                 </h2>
                 <AnimatePresence mode="wait">
@@ -118,7 +144,7 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="text-xl text-gray-400 font-inter"
+                    className="text-lg sm:text-xl text-white/70 font-inter"
                   >
                     {dynamicSubtitles[currentSubtitle]}
                   </motion.p>
@@ -126,89 +152,108 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-sm border border-white/10 shadow-lg"
+                whileHover={{ scale: 1.03, y: -5 }}
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#1A1F2C]/90 to-[#222232]/90 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-primary/10 transition-all duration-300"
               >
-                <Settings className="w-8 h-8 text-[#4A90E2]" />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
+                  <Settings className="w-6 h-6 text-primary" />
+                </div>
                 <h3 className="text-lg font-semibold text-white">Community Type</h3>
-                <p className="text-sm text-gray-400 text-center">Business, Social, Creative & Gaming</p>
+                <p className="text-sm text-white/60 text-center">Business, Social, Gaming & Creative</p>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-sm border border-white/10 shadow-lg"
+                whileHover={{ scale: 1.03, y: -5 }}
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#1A1F2C]/90 to-[#222232]/90 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-accent/10 transition-all duration-300"
               >
-                <Lock className="w-8 h-8 text-[#42E695]" />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-accent/20 to-accent/5">
+                  <Lock className="w-6 h-6 text-accent" />
+                </div>
                 <h3 className="text-lg font-semibold text-white">Privacy Settings</h3>
-                <p className="text-sm text-gray-400 text-center">Public, Private & Invite-only</p>
+                <p className="text-sm text-white/60 text-center">Public, Private & Invite-only</p>
               </motion.div>
               
               <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-sm border border-white/10 shadow-lg"
+                whileHover={{ scale: 1.03, y: -5 }}
+                className="flex flex-col items-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#1A1F2C]/90 to-[#222232]/90 backdrop-blur-sm border border-white/10 shadow-lg hover:shadow-secondary/10 transition-all duration-300 sm:col-span-2 lg:col-span-1"
               >
-                <Shield className="w-8 h-8 text-[#4A90E2]" />
-                <h3 className="text-lg font-semibold text-white">Age Restriction</h3>
-                <p className="text-sm text-gray-400 text-center">General, 16+ & 18+</p>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-secondary/20 to-secondary/5">
+                  <Shield className="w-6 h-6 text-secondary" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Content Controls</h3>
+                <p className="text-sm text-white/60 text-center">General, 16+ & 18+ Age Restrictions</p>
               </motion.div>
             </div>
 
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-wrap gap-3 justify-center">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-2 rounded-full bg-[#333333] backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+                className="px-4 py-2 rounded-full bg-[#1A1F2C] backdrop-blur-sm border border-white/10 text-sm text-white/70 flex items-center gap-2"
               >
-                <Tags className="w-4 h-4 inline-block mr-2" />
-                UniBanking Integration
+                <Tags className="w-4 h-4 text-primary/80" />
+                <span>Premium Features</span>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-2 rounded-full bg-[#333333] backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+                className="px-4 py-2 rounded-full bg-[#1A1F2C] backdrop-blur-sm border border-white/10 text-sm text-white/70 flex items-center gap-2"
               >
-                <Video className="w-4 h-4 inline-block mr-2" />
-                UniVideo Connect
+                <Video className="w-4 h-4 text-secondary/80" />
+                <span>Video Integration</span>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="px-4 py-2 rounded-full bg-[#333333] backdrop-blur-sm border border-white/10 text-sm text-gray-300"
+                className="px-4 py-2 rounded-full bg-[#1A1F2C] backdrop-blur-sm border border-white/10 text-sm text-white/70 flex items-center gap-2"
               >
-                <Brain className="w-4 h-4 inline-block mr-2" />
-                Ol-y AI Support
+                <Brain className="w-4 h-4 text-accent/80" />
+                <span>AI Support</span>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="px-4 py-2 rounded-full bg-[#1A1F2C] backdrop-blur-sm border border-white/10 text-sm text-white/70 flex items-center gap-2"
+              >
+                <Award className="w-4 h-4 text-interactive/80" />
+                <span>Rewards System</span>
               </motion.div>
             </div>
 
-            <Button
-              variant="ghost"
-              className="group relative overflow-hidden px-8 py-6 text-lg rounded-xl bg-gradient-to-r from-[#4A90E2] to-[#42E695] hover:from-[#4A90E2]/90 hover:to-[#42E695]/90 text-white shadow-lg hover:shadow-xl transition-all duration-500"
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-block mt-2"
             >
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="relative z-10 flex items-center gap-2"
+              <Button
+                variant="ghost"
+                className="group relative overflow-hidden px-8 py-6 text-lg rounded-xl bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-500 w-full sm:w-auto"
               >
-                Lansează Comunitatea
-                <Rocket className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-              </motion.span>
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </Button>
+                <motion.span
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="relative z-10 flex items-center gap-2 justify-center"
+                >
+                  <span>Lansează Comunitatea</span>
+                  <Rocket className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                </motion.span>
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </Button>
+            </motion.div>
           </motion.div>
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl bg-gradient-to-br from-[#222222] via-[#333333] to-[#222222] backdrop-blur-xl border border-[#4A90E2]/20 rounded-[24px] shadow-[0_8px_32px_rgba(74,144,226,0.1)]">
+      <DialogContent className="max-w-4xl bg-gradient-to-br from-[#1A1F2C] via-[#222232] to-[#1A1F2C] backdrop-blur-xl border border-white/10 rounded-[24px] shadow-[0_8px_32px_rgba(74,144,226,0.15)]">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-2"
           >
-            <DialogTitle className="text-3xl font-bold text-[#4A90E2]">
+            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent animate-text-shine">
               {step === 1 ? 'Începe o nouă aventură' : 'Personalizează-ți comunitatea'}
             </DialogTitle>
-            <DialogDescription className="text-lg text-[#4A5568]">
+            <DialogDescription className="text-lg text-white/70">
               {step === 1 ? 'Hai să-ți dăm viață comunității!' : 'Alege interesele care definesc comunitatea ta'}
             </DialogDescription>
           </motion.div>
@@ -227,7 +272,9 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
               interests={[
                 "Artă", "Muzică", "Gaming", "Sport", "Tehnologie",
                 "Filme", "Cărți", "Călătorii", "Fotografie", "Modă",
-                "Dans", "Gătit", "Fitness", "Yoga", "Meditație"
+                "Dans", "Gătit", "Fitness", "Yoga", "Meditație",
+                "Crypto", "NFTs", "Metaverse", "Inteligență Artificială", "Realitate Virtuală",
+                "Business", "Investiții", "Marketing", "Design", "Dezvoltare Personală"
               ]}
               selectedInterests={newCommunityData.interests}
               onInterestToggle={(interest) => {
@@ -242,12 +289,12 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
           )}
         </AnimatePresence>
 
-        <div className="flex justify-between gap-4 mt-6">
+        <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
           {step === 2 && (
             <Button
               variant="ghost"
               onClick={() => setStep(1)}
-              className="flex-1 h-14 text-lg rounded-xl bg-white/50 backdrop-blur-sm border border-[#4A90E2]/20 hover:bg-white/60 hover:border-[#4A90E2]/30 text-[#4A5568] hover:text-[#4A90E2] transition-all duration-300"
+              className="order-2 sm:order-1 flex-1 h-14 text-lg rounded-xl bg-[#1A1F2C]/80 backdrop-blur-sm border border-white/10 hover:bg-[#222232]/80 hover:border-primary/20 text-white/70 hover:text-white transition-all duration-300"
             >
               Înapoi
             </Button>
@@ -255,12 +302,12 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
           <Button
             onClick={step === 1 ? () => setStep(2) : handleCreateCommunity}
             disabled={step === 1 ? !newCommunityData.name || !newCommunityData.description : newCommunityData.interests.length === 0}
-            className="flex-1 h-14 text-lg rounded-xl bg-gradient-to-r from-[#4A90E2] to-[#42E695] hover:from-[#4A90E2]/90 hover:to-[#42E695]/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`order-1 sm:order-2 ${step === 1 ? 'w-full' : 'flex-1'} h-14 text-lg rounded-xl bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {step === 1 ? (
               <>
                 Continuă
-                <Rocket className="ml-2 h-5 w-5 animate-pulse" />
+                <Zap className="ml-2 h-5 w-5 animate-pulse" />
               </>
             ) : (
               <>
