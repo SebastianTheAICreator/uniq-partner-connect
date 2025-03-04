@@ -1,12 +1,23 @@
+
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { Textarea } from '../ui/textarea';
 import { cn } from '@/lib/utils';
-import { FilePreviewList } from './post/FilePreviewList';
-import { ActionButtons } from './post/ActionButtons';
 import { CreatePostProps, FilePreview } from './post/types';
-import { ArrowLeft } from 'lucide-react';
+import { AttachmentPreview } from './post/AttachmentPreview';
+import PremiumInput from './post/PremiumInput';
+import PremiumButton from './post/PremiumButton';
+import { 
+  ImageIcon, 
+  FileVideo, 
+  FileUp, 
+  Send, 
+  ChevronDown, 
+  Sparkles,
+  MicIcon,
+  Link2Icon,
+  SmileIcon
+} from 'lucide-react';
 
 const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const { toast } = useToast();
@@ -14,27 +25,10 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
   const [selectedFiles, setSelectedFiles] = useState<FilePreview[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [forceMinimize, setForceMinimize] = useState(true); // Changed to true by default
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-
-  const opacity = useTransform(scrollY, [0, 200], [1, 0.95]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const scrolled = window.scrollY > 50;
-        setIsScrolled(scrolled);
-        console.log('Scroll position:', window.scrollY, 'Is scrolled:', scrolled);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleFileSelect = (type: 'image' | 'video' | 'document') => {
     if (fileInputRef.current) {
@@ -68,6 +62,7 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
     });
 
     if (files.length > 0) {
+      setIsExpanded(true);
       toast({
         title: "Fișiere atașate",
         description: `${files.length} fișier${files.length > 1 ? 'e' : ''} ${files.length > 1 ? 'au' : 'a'} fost atașat${files.length > 1 ? 'e' : ''} cu succes!`,
@@ -115,6 +110,10 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
         preview
       }]);
     });
+    
+    if (files.length > 0) {
+      setIsExpanded(true);
+    }
   };
 
   const handlePostSubmit = () => {
@@ -126,175 +125,233 @@ const CreatePost = ({ topicId, onPostCreated }: CreatePostProps) => {
       setContent('');
       setSelectedFiles([]);
       setIsExpanded(false);
-      setForceMinimize(true);
     }
-  };
-
-  const handleMinimize = () => {
-    setIsExpanded(false);
-    setForceMinimize(true);
   };
 
   const handleExpand = () => {
     setIsExpanded(true);
-    setForceMinimize(false);
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100);
+  };
+
+  const handleMinimize = () => {
+    setIsExpanded(false);
+  };
+
+  // Premium card animations and effects
+  const baseVariants = {
+    collapsed: {
+      boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.1)",
+      y: 0
+    },
+    expanded: {
+      boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.2)",
+      y: 0
+    }
+  };
+
+  const haloVariants = {
+    initial: { opacity: 0 },
+    hover: { opacity: 0.5 },
+    tap: { opacity: 0.8, scale: 0.98 }
   };
 
   return (
     <motion.div 
       ref={containerRef}
-      style={{ opacity }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.6,
-        ease: [0.6, 0.05, -0.01, 0.9]
-      }}
-      className={cn(
-        "relative overflow-hidden z-50",
-        "bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/95 to-[#1a1a2e]/95",
-        "backdrop-blur-xl rounded-3xl border border-white/10",
-        "shadow-[0_8px_32px_rgba(0,0,0,0.15)]",
-        "transition-all duration-500 ease-out",
-        isExpanded ? "p-8" : "p-6",
-        "sticky top-4 w-[calc(100%-2rem)] max-w-4xl mx-auto",
-        "hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5",
-        "group cursor-pointer"
-      )}
+      initial="collapsed"
+      animate={isExpanded ? "expanded" : "collapsed"}
+      variants={baseVariants}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
       onClick={() => !isExpanded && handleExpand()}
+      className={cn(
+        "relative mx-auto w-full max-w-4xl",
+        "rounded-2xl overflow-hidden",
+        isExpanded ? "mb-8" : "mb-4",
+        "sticky top-4 z-50"
+      )}
     >
-      {/* Premium gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-50 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.02] to-transparent pointer-events-none" />
-      
-      <motion.div 
-        className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
-        style={{ opacity }}
+      {/* Premium halo effect */}
+      <motion.div
+        initial="initial"
+        whileHover="hover"
+        whileTap="tap"
+        variants={haloVariants}
+        className="absolute -inset-px rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 blur-sm"
       />
 
-      {isExpanded && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleMinimize();
-          }}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5 text-white/70" />
-        </button>
-      )}
-
-      {(!forceMinimize) && (
-        <motion.h2 
-          className={cn(
-            "relative text-2xl font-bold",
-            "bg-gradient-to-r from-primary via-secondary to-accent",
-            "bg-clip-text text-transparent mb-6",
-            "animate-text-shine"
-          )}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          Creează o postare nouă
-        </motion.h2>
-      )}
-
-      <div
+      {/* Main container */}
+      <motion.div
         className={cn(
-          "relative rounded-2xl transition-all duration-300",
-          isDragging && "ring-2 ring-primary/20"
+          "relative rounded-2xl p-5",
+          "bg-gradient-to-br from-[#191C2D] to-[#121525]",
+          "backdrop-blur-xl border border-[#3A4366]",
+          isDragging && "ring-2 ring-indigo-500/30",
+          isExpanded ? "p-6" : "p-4",
+          "cursor-pointer transition-all duration-300"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => setIsExpanded(true)}
       >
-        <motion.div
-          initial={false}
-          animate={{ height: "auto" }}
-          transition={{ 
-            duration: 0.4,
-            ease: [0.6, 0.05, -0.01, 0.9]
-          }}
-        >
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Ce gânduri vrei să împărtășești?"
-            className={cn(
-              "w-full",
-              "bg-white/[0.03] border-white/10 text-white/90 placeholder:text-white/40",
-              "focus:ring-2 focus:ring-primary/20 focus:border-primary/30",
-              "transition-all duration-300 ease-out",
-              "backdrop-blur-sm resize-none rounded-xl",
-              "hover:bg-white/[0.05]",
-              forceMinimize ? "min-h-[50px] max-h-[50px]" : "min-h-[200px]"
-            )}
-          />
-        </motion.div>
+        {/* Premium top edge light effect */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
 
-        <AnimatePresence>
-          {isDragging && (
-            <motion.div 
+        {isExpanded && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-between items-center mb-4"
+          >
+            <motion.h2 
+              className="text-xl font-semibold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-primary/5 rounded-xl flex items-center justify-center backdrop-blur-sm"
             >
-              <motion.p 
-                initial={{ scale: 0.95 }}
-                animate={{ scale: 1 }}
-                className="text-primary font-medium flex items-center gap-2"
+              Creează o postare nouă
+            </motion.h2>
+            
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMinimize();
+              }}
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+            >
+              <ChevronDown className="w-5 h-5 text-white/70" />
+            </motion.button>
+          </motion.div>
+        )}
+
+        {/* Input area */}
+        <div className={cn(
+          "relative rounded-xl transition-all duration-300",
+          "backdrop-blur-md",
+          isDragging && "ring-2 ring-primary/20"
+        )}>
+          <motion.div
+            initial={false}
+            animate={{ height: "auto" }}
+            transition={{ duration: 0.4 }}
+          >
+            <PremiumInput
+              ref={textareaRef}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Ce gânduri vrei să împărtășești?"
+              minimized={!isExpanded}
+            />
+          </motion.div>
+
+          <AnimatePresence>
+            {isDragging && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 rounded-xl flex items-center justify-center backdrop-blur-sm bg-gradient-to-r from-indigo-500/20 to-purple-500/20"
               >
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-                </span>
-                Trage fișierele aici pentru a le atașa
-              </motion.p>
-            </motion.div>
+                <motion.div
+                  className="flex items-center gap-2 bg-[#121525]/90 px-4 py-2 rounded-full border border-indigo-500/30"
+                  initial={{ scale: 0.95 }}
+                  animate={{ scale: 1 }}
+                >
+                  <Sparkles className="h-4 w-4 text-indigo-400" />
+                  <span className="text-indigo-300 font-medium text-sm">Trage fișierele aici pentru încărcare</span>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        
+        <AnimatePresence>
+          {isExpanded && (
+            <>
+              {/* File preview */}
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mt-5"
+              >
+                <AttachmentPreview files={selectedFiles} onRemove={removeFile} />
+              </motion.div>
+
+              {/* Action buttons */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="mt-5 flex flex-wrap gap-2 items-center justify-between"
+              >
+                <div className="flex flex-wrap gap-2 items-center">
+                  <PremiumButton 
+                    onClick={() => handleFileSelect('image')} 
+                    icon={<ImageIcon className="h-4 w-4 text-blue-400" />}
+                  >
+                    Imagine
+                  </PremiumButton>
+                  <PremiumButton 
+                    onClick={() => handleFileSelect('video')} 
+                    icon={<FileVideo className="h-4 w-4 text-purple-400" />}
+                  >
+                    Video
+                  </PremiumButton>
+                  <PremiumButton 
+                    onClick={() => handleFileSelect('document')} 
+                    icon={<FileUp className="h-4 w-4 text-pink-400" />}
+                  >
+                    Document
+                  </PremiumButton>
+                  
+                  {/* Additional premium options */}
+                  <PremiumButton 
+                    icon={<MicIcon className="h-4 w-4 text-red-400" />}
+                  >
+                    Audio
+                  </PremiumButton>
+                  <PremiumButton 
+                    icon={<Link2Icon className="h-4 w-4 text-green-400" />}
+                  >
+                    Link
+                  </PremiumButton>
+                  <PremiumButton 
+                    icon={<SmileIcon className="h-4 w-4 text-yellow-400" />}
+                  >
+                    Emoji
+                  </PremiumButton>
+                </div>
+
+                <PremiumButton 
+                  onClick={handlePostSubmit}
+                  variant="primary"
+                  icon={<Send className="h-4 w-4" />}
+                  disabled={!content.trim() && selectedFiles.length === 0}
+                  className={cn(
+                    "px-5 py-2 ml-auto",
+                    (!content.trim() && selectedFiles.length === 0) && "opacity-50 pointer-events-none"
+                  )}
+                >
+                  Publică
+                </PremiumButton>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
-      </div>
-      
-      <AnimatePresence>
-        {isExpanded && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4 }}
-              className="mt-4"
-            >
-              <FilePreviewList files={selectedFiles} onRemove={removeFile} />
-            </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.4 }}
-              className="mt-6"
-            >
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                multiple
-              />
-              
-              <ActionButtons 
-                onFileSelect={handleFileSelect}
-                onSubmit={handlePostSubmit}
-                isDisabled={!content.trim() && selectedFiles.length === 0}
-              />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+          multiple
+        />
+      </motion.div>
     </motion.div>
   );
 };
