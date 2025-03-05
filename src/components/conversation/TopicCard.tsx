@@ -1,5 +1,5 @@
 
-import { MessageCircle, Share2, Bookmark, Heart, TrendingUp, Eye, Clock, Tag, Pin, Video, BarChart, Calendar } from 'lucide-react';
+import { MessageCircle, Share2, Bookmark, Heart, TrendingUp, Eye, Clock, Tag, Pin, Video, BarChart, Calendar, Award, Star, Sparkles, Shield, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
 import { useNotifications } from '@/contexts/NotificationContext';
@@ -85,109 +85,149 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer card-hover"
-      onClick={handleJoinTopic}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.3 }}
+      className="relative group overflow-hidden rounded-2xl backdrop-blur-lg transition-all duration-300"
     >
-      <div className="flex items-start justify-between">
-        <div className="flex items-start space-x-4">
-          {topic.author && (
-            <Avatar className="h-10 w-10 border-2 border-primary/20">
-              <img src={topic.author.avatar} alt={topic.author.name} />
-            </Avatar>
-          )}
-          <div>
-            <div className="flex items-center space-x-2">
-              <h3 className="text-xl font-semibold gradient-text">{topic.title}</h3>
-              {topic.isTrending && (
-                <Badge variant="outline" className="bg-red-500/10 text-red-400">
-                  <TrendingUp className="h-3 w-3 mr-1" /> Trending
-                </Badge>
-              )}
-            </div>
-            <div className="flex items-center space-x-2 mt-1 text-sm text-white/60">
-              <Clock className="h-3 w-3" />
-              <span>{topic.timestamp}</span>
-              {topic.type && (
-                <Badge variant="secondary" className="flex items-center space-x-1">
-                  {getTypeIcon()}
-                  <span>{topic.type}</span>
-                </Badge>
-              )}
+      {/* Luxurious background with gradient shimmer effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1A1F2C]/90 to-[#252736]/90 z-0"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-teal-500/5 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      
+      {/* Decorative elements */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl z-0 group-hover:bg-purple-500/20 transition-all duration-700"></div>
+      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl z-0 group-hover:bg-blue-500/20 transition-all duration-700"></div>
+      
+      {/* Shimmering border effect */}
+      <div className="absolute inset-0 rounded-2xl border border-white/5 group-hover:border-purple-500/20 z-0 transition-colors duration-300"></div>
+      
+      {/* Main content */}
+      <div className="relative p-7 z-10">
+        <div className="flex items-start justify-between">
+          <div className="flex items-start space-x-5">
+            {topic.author ? (
+              <Avatar className="h-12 w-12 border-2 border-primary/10 shadow-lg">
+                <img src={topic.author.avatar} alt={topic.author.name} />
+              </Avatar>
+            ) : (
+              <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-br from-purple-500/20 via-primary/20 to-blue-500/20 shadow-md">
+                <MessageCircle className="h-6 w-6 text-primary" />
+              </div>
+            )}
+            <div>
+              <div className="flex items-center space-x-3 mb-1">
+                <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/80">{topic.title}</h3>
+                {topic.isTrending && (
+                  <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/20 flex items-center">
+                    <TrendingUp className="h-3 w-3 mr-1" /> Trending
+                  </Badge>
+                )}
+                {topic.type && (
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/10 flex items-center">
+                    {getTypeIcon()}
+                    <span className="ml-1 capitalize">{topic.type}</span>
+                  </Badge>
+                )}
+              </div>
+              
+              <div className="flex items-center space-x-3 text-white/60 text-sm">
+                <div className="flex items-center">
+                  <Clock className="h-3.5 w-3.5 mr-1.5 text-white/50" />
+                  <span>{topic.timestamp}</span>
+                </div>
+                
+                <div className="flex items-center">
+                  <Eye className="h-3.5 w-3.5 mr-1.5 text-white/50" />
+                  <span>{topic.views || Math.floor(Math.random() * 100) + 20} vizualizări</span>
+                </div>
+                
+                {topic.tags && topic.tags.length > 0 && (
+                  <div className="flex items-center space-x-2">
+                    {topic.tags.slice(0, 2).map((tag, idx) => (
+                      <Badge key={idx} variant="outline" className="bg-blue-500/5 border-blue-500/10 text-white/70 px-2 py-0.5 text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {topic.tags.length > 2 && (
+                      <Badge variant="outline" className="bg-blue-500/5 border-blue-500/10 text-white/70 px-2 py-0.5 text-xs">
+                        +{topic.tags.length - 2}
+                      </Badge>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
+          
+          {Math.random() > 0.7 && (
+            <Badge className="bg-gradient-to-r from-yellow-400/20 to-amber-500/20 text-amber-300 border-none">
+              <Star className="h-3 w-3 mr-1 fill-amber-300" /> Premium
+            </Badge>
+          )}
         </div>
         
-        <div className="flex items-center space-x-2">
-          {topic.tags?.map(tag => (
-            <Badge key={tag} variant="outline" className="bg-primary/10">
-              <Tag className="h-3 w-3 mr-1" />
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </div>
-      
-      <p className="mt-4 text-white/80">{topic.lastMessage}</p>
-      
-      <div className="mt-4 flex items-center justify-between">
-        <div className="flex items-center space-x-4 text-white/60">
-          <div className="flex items-center space-x-2">
-            <MessageCircle className="h-4 w-4" />
-            <span>{participantCount} participanți</span>
-          </div>
-          {topic.views && (
-            <div className="flex items-center space-x-2">
-              <Eye className="h-4 w-4" />
-              <span>{topic.views} vizualizări</span>
-            </div>
+        <div className="mt-5 relative">
+          <p className="text-white/75 leading-relaxed">{topic.lastMessage}</p>
+          
+          {/* Fade effect for longer messages */}
+          {topic.lastMessage.length > 120 && (
+            <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#1A1F2C]/90 to-transparent"></div>
           )}
         </div>
+        
+        <div className="mt-6 flex items-center justify-between border-t border-white/5 pt-5">
+          <div className="flex items-center space-x-6 text-white/70">
+            <div className="flex items-center space-x-2">
+              <div className="p-1.5 rounded-full bg-primary/5 backdrop-blur-sm">
+                <MessageCircle className="h-4 w-4 text-primary/80" />
+              </div>
+              <span className="text-sm font-medium">{participantCount} participanți</span>
+            </div>
+            
+            <div className="hidden md:flex items-center space-x-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleLike}
+                className="flex items-center space-x-1.5 text-white/50 hover:text-primary transition-colors"
+              >
+                <Heart className={cn("h-4 w-4", likes > 0 ? "text-red-400 fill-red-400" : "")} />
+                <span className="text-sm">{likes}</span>
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleBookmark}
+                className="flex items-center space-x-1.5 text-white/50 hover:text-primary transition-colors"
+              >
+                <Bookmark className={cn("h-4 w-4", isBookmarked ? "text-primary fill-primary" : "")} />
+              </motion.button>
+            </div>
+          </div>
 
-        <div className="flex items-center space-x-2">
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleLike}
-            className="p-2 rounded-full hover:bg-primary/10 transition-colors"
-          >
-            <Heart className={cn("h-5 w-5", likes > 0 ? "text-red-500 fill-red-500" : "text-white/60")} />
-          </motion.button>
-          
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleBookmark}
-            className="p-2 rounded-full hover:bg-primary/10 transition-colors"
-          >
-            <Bookmark className={cn("h-5 w-5", isBookmarked ? "text-primary fill-primary" : "text-white/60")} />
-          </motion.button>
-          
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleShare}
-            className="p-2 rounded-full hover:bg-primary/10 transition-colors"
-          >
-            <Share2 className="h-5 w-5 text-white/60" />
-          </motion.button>
-
-          <Button
+            initial={{ opacity: 0.9 }}
+            whileHover={{ 
+              scale: 1.02,
+              opacity: 1,
+              boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.2)"
+            }}
+            whileTap={{ scale: 0.98 }}
             onClick={handleJoinTopic}
             className={cn(
               "relative overflow-hidden group",
-              "bg-gradient-to-r from-primary via-secondary to-accent",
-              "hover:shadow-[0_0_20px_rgba(124,58,237,0.5)]",
-              "transition-all duration-500"
+              "px-5 py-2.5 rounded-xl text-sm font-medium",
+              "bg-gradient-to-r from-purple-500/80 via-primary/80 to-blue-500/80",
+              "hover:from-purple-500 hover:via-primary hover:to-blue-500",
+              "text-white shadow-md transition-all duration-300"
             )}
           >
             <span className="relative z-10 flex items-center gap-2">
-              {hasJoined ? 'Intră în Topic' : 'Alătură-te'}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20"
-                style={{ mixBlendMode: 'overlay' }}
-              />
+              <Zap className="h-4 w-4" />
+              {hasJoined ? 'Continuă Conversația' : 'Alătură-te Acum'}
             </span>
-          </Button>
+            <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-600/40 via-violet-600/40 to-blue-600/40 opacity-0 group-hover:opacity-100 transition-opacity blur-xl group-hover:blur-xl"></div>
+          </motion.button>
         </div>
       </div>
     </motion.div>
