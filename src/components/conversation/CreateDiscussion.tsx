@@ -4,8 +4,10 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Sparkles, MessageSquarePlus, PenLine, Send, Video, BarChart2, Calendar, HelpCircle, Trophy, Mic, Bot, Image, FileType } from 'lucide-react';
+import { Plus, X, Sparkles, MessageSquarePlus, PenLine, Send, Video, BarChart2, Calendar, HelpCircle, Trophy, Mic, Bot, Image, FileType, Star, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import PremiumButton from './post/PremiumButton';
+
 interface CreateDiscussionProps {
   onDiscussionCreated: (discussion: {
     title: string;
@@ -13,6 +15,7 @@ interface CreateDiscussionProps {
   }) => void;
 }
 type PostType = 'text' | 'media' | 'poll' | 'event' | 'question' | 'challenge';
+
 const CreateDiscussion = ({
   onDiscussionCreated
 }: CreateDiscussionProps) => {
@@ -24,6 +27,7 @@ const CreateDiscussion = ({
   const {
     toast
   } = useToast();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() && description.trim()) {
@@ -40,6 +44,7 @@ const CreateDiscussion = ({
       });
     }
   };
+
   const postTypes = [{
     type: 'text',
     icon: PenLine,
@@ -71,6 +76,7 @@ const CreateDiscussion = ({
     label: 'Challenge',
     description: 'Inițiază o provocare'
   }];
+
   const quickFeatures = [{
     icon: Image,
     label: 'Drag & Drop Media'
@@ -84,6 +90,7 @@ const CreateDiscussion = ({
     icon: Bot,
     label: 'AI Assistant'
   }];
+
   return <div className="relative mb-16 mt-12">
       <AnimatePresence mode="wait">
         {!isOpen ? <motion.div initial={{
@@ -98,30 +105,91 @@ const CreateDiscussion = ({
       }} transition={{
         duration: 0.3
       }} className="relative" onMouseEnter={() => setShowQuickMenu(true)} onMouseLeave={() => setShowQuickMenu(false)}>
-            <Button onClick={() => setIsOpen(true)} className={cn("group relative w-full h-24 rounded-2xl overflow-hidden transition-all duration-500", "bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-violet-500/20", "hover:from-blue-500/30 hover:via-cyan-500/30 hover:to-violet-500/30", "border border-white/10 hover:border-white/20", "shadow-lg hover:shadow-xl hover:shadow-blue-500/20", "backdrop-blur-xl")}>
-              <motion.div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-cyan-500/10 to-violet-500/10" animate={{
-            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-          }} transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "linear"
-          }} />
+            <Button onClick={() => setIsOpen(true)} className={cn(
+              "group relative w-full h-28 rounded-2xl overflow-hidden transition-all duration-500", 
+              "bg-gradient-to-r from-indigo-900/80 via-purple-900/80 to-fuchsia-900/80", 
+              "hover:from-indigo-800/90 hover:via-purple-800/90 hover:to-fuchsia-800/90", 
+              "border border-indigo-500/30 hover:border-indigo-400/50", 
+              "shadow-[0_0_30px_rgba(124,58,237,0.2)] hover:shadow-[0_0_50px_rgba(124,58,237,0.4)]", 
+              "backdrop-blur-xl"
+            )}>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500 opacity-80"></div>
               
-              <motion.div className="relative z-10 flex items-center justify-center space-x-3 text-xl font-medium" whileHover={{
-            scale: 1.02
-          }}>
-                <motion.div whileHover={{
-              rotate: 180
-            }} transition={{
-              duration: 0.3
-            }}>
-                  <MessageSquarePlus className="w-6 h-6 text-blue-400 group-hover:text-blue-300" />
-                </motion.div>
-                <span className="bg-gradient-to-r from-white via-blue-200 to-violet-200 bg-clip-text font-bold text-gray-300 text-3xl">
+              <div className="absolute inset-0 w-full h-full">
+                <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2064')] bg-cover bg-center mix-blend-overlay"></div>
+                <div className="absolute -top-36 -right-36 w-64 h-64 bg-purple-500 rounded-full filter blur-[120px] opacity-20 animate-pulse"></div>
+                <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500 rounded-full filter blur-[100px] opacity-20 animate-pulse" style={{ animationDelay: "1s" }}></div>
+              </div>
+              
+              <motion.div className="absolute inset-0" 
+                animate={{
+                  background: [
+                    "radial-gradient(circle at 30% 50%, rgba(139, 92, 246, 0.1) 0%, rgba(0,0,0,0) 50%)",
+                    "radial-gradient(circle at 70% 50%, rgba(139, 92, 246, 0.1) 0%, rgba(0,0,0,0) 50%)",
+                    "radial-gradient(circle at 30% 50%, rgba(139, 92, 246, 0.1) 0%, rgba(0,0,0,0) 50%)"
+                  ]
+                }} 
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear"
+                }} 
+              />
+              
+              <motion.div 
+                className="relative z-10 flex items-center justify-center gap-4 text-xl font-medium" 
+                whileHover={{ scale: 1.02 }}
+              >
+                <motion.span 
+                  className="flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl shadow-inner"
+                  whileHover={{ 
+                    rotate: 180,
+                    backgroundColor: "rgba(255,255,255,0.1)",
+                    borderColor: "rgba(139, 92, 246, 0.5)" 
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <MessageSquarePlus className="w-6 h-6 text-purple-300" />
+                </motion.span>
+                
+                <span className="bg-gradient-to-r from-white/90 via-purple-200 to-indigo-200 bg-clip-text font-bold text-transparent text-3xl">
                   Creează o discuție nouă
                 </span>
-                <Sparkles className="w-5 h-5 text-violet-400 group-hover:text-violet-300 animate-pulse" />
+                
+                <motion.span
+                  initial={{ opacity: 0.6 }}
+                  animate={{ 
+                    opacity: [0.6, 1, 0.6],
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, 0, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 5, 
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  <Wand2 className="w-6 h-6 text-fuchsia-300" />
+                </motion.span>
               </motion.div>
+              
+              <div className="absolute bottom-2 right-3 flex space-x-1">
+                {[1,2,3].map(i => (
+                  <motion.div 
+                    key={i}
+                    className="w-1 h-1 rounded-full bg-white/40"
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3],
+                      height: ["4px", "8px", "4px"]
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: i * 0.2
+                    }}
+                  />
+                ))}
+              </div>
             </Button>
 
             <AnimatePresence>
@@ -134,20 +202,23 @@ const CreateDiscussion = ({
           }} exit={{
             opacity: 0,
             y: 10
-          }} className="absolute left-0 right-0 mt-2 p-4 rounded-xl backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-xl z-50">
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+          }} className="absolute left-0 right-0 mt-3 p-5 rounded-xl backdrop-blur-xl bg-gradient-to-br from-indigo-950/80 to-purple-950/80 border border-indigo-500/20 shadow-[0_10px_50px_rgba(124,58,237,0.3)] z-50">
+                  <div className="grid grid-cols-2 gap-4 mb-5">
                     {postTypes.map(({
                 type,
                 icon: Icon,
                 label,
                 description
               }) => <motion.button key={type} whileHover={{
-                scale: 1.02
-              }} className="flex items-center p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all" onClick={() => {
+                scale: 1.02,
+                backgroundColor: "rgba(255,255,255,0.08)"
+              }} className="flex items-center p-3 rounded-lg bg-white/5 border border-white/5 hover:border-indigo-500/30 transition-all backdrop-blur-sm" onClick={() => {
                 setSelectedType(type as PostType);
                 setIsOpen(true);
               }}>
-                        <Icon className="w-5 h-5 text-blue-400 mr-3" />
+                        <div className="p-2 mr-3 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 backdrop-blur-md">
+                          <Icon className="w-5 h-5 text-indigo-300" />
+                        </div>
                         <div className="text-left">
                           <div className="font-semibold text-white">{label}</div>
                           <div className="text-sm text-white/60">{description}</div>
@@ -155,14 +226,17 @@ const CreateDiscussion = ({
                       </motion.button>)}
                   </div>
                   
-                  <div className="flex justify-between items-center pt-3 border-t border-white/10">
+                  <div className="flex justify-between items-center pt-3 border-t border-indigo-500/20">
                     {quickFeatures.map(({
                 icon: Icon,
                 label
               }) => <motion.button key={label} whileHover={{
-                scale: 1.05
-              }} className="flex flex-col items-center p-2 rounded-lg hover:bg-white/5">
-                        <Icon className="w-4 h-4 text-blue-400 mb-1" />
+                scale: 1.05,
+                backgroundColor: "rgba(255,255,255,0.05)"
+              }} className="flex flex-col items-center p-2 rounded-lg">
+                        <div className="p-1.5 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 mb-2">
+                          <Icon className="w-3.5 h-3.5 text-indigo-300" />
+                        </div>
                         <span className="text-xs text-white/70">{label}</span>
                       </motion.button>)}
                   </div>
@@ -258,17 +332,17 @@ const CreateDiscussion = ({
                 <Button type="button" variant="ghost" onClick={() => setIsOpen(false)} className="px-6 h-12 rounded-xl border border-white/10 hover:bg-white/5 text-gray-300 hover:text-white transition-all duration-300">
                   Anulează
                 </Button>
-                <Button type="submit" className={cn("relative group overflow-hidden px-6 h-12 rounded-xl", "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500", "hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600", "text-white font-medium", "border border-white/10 hover:border-white/20", "transition-all duration-300", "disabled:opacity-50 disabled:cursor-not-allowed")} disabled={!title.trim() || !description.trim()}>
-                  <motion.div className="absolute inset-0 bg-gradient-to-r from-indigo-400/20 to-pink-400/20" initial={{
-                opacity: 0
-              }} animate={{
-                opacity: 1
-              }} />
-                  <span className="relative z-10 flex items-center">
+                <PremiumButton 
+                  type="submit" 
+                  variant="primary"
+                  className="h-12 px-8"
+                  disabled={!title.trim() || !description.trim()}
+                >
+                  <span className="flex items-center">
                     Creează discuția
                     <Send className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </span>
-                </Button>
+                </PremiumButton>
               </motion.div>
             </div>
           </motion.form>}
