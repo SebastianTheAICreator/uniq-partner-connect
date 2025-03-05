@@ -141,30 +141,30 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                {/* Header section */}
-                <header className="px-8 pt-8 pb-6">
+                {/* Header section - Adjusted to move content down */}
+                <header className="px-8 pt-16 pb-10">
                   <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
                       <div>
                         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/80">
                           Conversații
                         </h1>
-                        <p className="text-white/60 mt-2">
+                        <p className="text-white/60 mt-3">
                           Participă la conversații existente sau inițiază o discuție nouă
                         </p>
                       </div>
                       
                       <Button
                         onClick={() => window.scrollTo({ top: document.getElementById('create-discussion')?.offsetTop, behavior: 'smooth' })}
-                        className="flex items-center gap-2 bg-gradient-to-r from-purple-500 via-violet-500 to-blue-500 hover:from-purple-600 hover:via-violet-600 hover:to-blue-600 text-white rounded-xl px-5 py-6 shadow-lg hover:shadow-xl transition-all duration-300 h-auto"
+                        className="flex items-center gap-2 bg-gradient-to-r from-purple-500 via-violet-500 to-blue-500 hover:from-purple-600 hover:via-violet-600 hover:to-blue-600 text-white rounded-xl px-5 py-6 shadow-lg hover:shadow-xl transition-all duration-300 h-auto mt-4 md:mt-0"
                       >
                         <PlusCircle className="h-5 w-5" />
                         <span className="font-medium">Creează o Discuție Nouă</span>
                       </Button>
                     </div>
                     
-                    {/* Search and filter bar */}
-                    <div className="mt-8 p-1.5 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 flex flex-col sm:flex-row items-center gap-3">
+                    {/* Search and filter bar - moved down */}
+                    <div className="mt-10 p-1.5 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 flex flex-col sm:flex-row items-center gap-3">
                       <div className="relative flex-1 w-full">
                         <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
                         <Input
@@ -281,7 +281,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                 </header>
 
                 {/* Stats bar */}
-                <div className="px-8 py-4 bg-white/5">
+                <div className="px-8 py-4 bg-white/5 backdrop-blur-sm">
                   <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-6">
                       <div className="flex items-center gap-2">
@@ -308,12 +308,12 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                   </div>
                 </div>
 
-                {/* Main content with grid of cards */}
-                <main className="px-8 py-10">
+                {/* Main content with grid of cards - Added more spacing */}
+                <main className="px-8 py-12">
                   <div className="max-w-7xl mx-auto">
                     {filteredConversations.length > 0 ? (
                       <div className={cn(
-                        "grid gap-6",
+                        "grid gap-8", // Increased gap from 6 to 8
                         viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
                       )}>
                         {filteredConversations.map((conv) => (
@@ -333,7 +333,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                               views: Math.floor(Math.random() * 200) + 50,
                               isTrending: sortBy === 'trending' && filteredConversations.indexOf(conv) < 3,
                               type: Math.random() > 0.7 ? 'video' : Math.random() > 0.5 ? 'poll' : 'discussion',
-                              tags: ['Design', 'UI/UX', 'Technology'].slice(0, Math.floor(Math.random() * 3) + 1)
+                              tags: ['Design', 'UI/UX', 'Technology', 'Web Dev'].slice(0, Math.floor(Math.random() * 3) + 1)
                             }}
                             onTopicClick={() => handleTopicClick(conv.id?.toString() || '')}
                           />
@@ -353,14 +353,14 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                   </div>
                 </main>
 
-                {/* Create discussion section */}
-                <div id="create-discussion" className="px-8 py-12 bg-gradient-to-br from-[#1E1D2D]/80 to-[#1A1F2C]/80 backdrop-blur-md border-t border-white/5">
+                {/* Create discussion section - Improved spacing and positioning */}
+                <div id="create-discussion" className="px-8 py-16 bg-gradient-to-br from-[#1E1D2D]/80 to-[#1A1F2C]/80 backdrop-blur-md border-t border-white/5">
                   <div className="max-w-3xl mx-auto">
-                    <div className="text-center mb-8">
-                      <Badge className="mb-3 bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border-none">
+                    <div className="text-center mb-10">
+                      <Badge className="mb-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border-none">
                         <Sparkles className="h-3.5 w-3.5 mr-1.5" /> Creează
                       </Badge>
-                      <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/80 mb-3">
+                      <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/80 mb-4">
                         Începe o nouă conversație
                       </h2>
                       <p className="text-white/60 max-w-md mx-auto">

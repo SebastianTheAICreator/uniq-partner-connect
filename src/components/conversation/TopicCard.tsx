@@ -139,21 +139,6 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
                   <Eye className="h-3.5 w-3.5 mr-1.5 text-white/50" />
                   <span>{topic.views || Math.floor(Math.random() * 100) + 20} vizualizări</span>
                 </div>
-                
-                {topic.tags && topic.tags.length > 0 && (
-                  <div className="flex items-center space-x-2">
-                    {topic.tags.slice(0, 2).map((tag, idx) => (
-                      <Badge key={idx} variant="outline" className="bg-blue-500/5 border-blue-500/10 text-white/70 px-2 py-0.5 text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {topic.tags.length > 2 && (
-                      <Badge variant="outline" className="bg-blue-500/5 border-blue-500/10 text-white/70 px-2 py-0.5 text-xs">
-                        +{topic.tags.length - 2}
-                      </Badge>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -173,6 +158,17 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
             <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#1A1F2C]/90 to-transparent"></div>
           )}
         </div>
+        
+        {/* Tags section - improved spacing */}
+        {topic.tags && topic.tags.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2.5">
+            {topic.tags.map((tag, idx) => (
+              <Badge key={idx} variant="outline" className="bg-blue-500/5 border-blue-500/10 text-white/70 px-3 py-1 text-xs">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
         
         <div className="mt-6 flex items-center justify-between border-t border-white/5 pt-5">
           <div className="flex items-center space-x-6 text-white/70">
