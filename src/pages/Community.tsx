@@ -16,6 +16,7 @@ import { getAllCommunities, addCommunity, type Community, updateCommunityMemberC
 import { useNotifications } from "@/contexts/NotificationContext";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const CommunityPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -89,7 +90,7 @@ const CommunityPage = () => {
       setCommunities(updatedCommunities);
       toast({
         title: "Community created successfully! 🎉",
-        description: `"${newCommunity.name}" is now live and ready for members.`,
+        description: `"${newCommunity.name}" is now live and ready for members.",
         className: "bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border-none"
       });
     } catch (error) {
@@ -401,7 +402,7 @@ const CommunityPage = () => {
                           <ActionButton 
                             className="flex-1 group flex items-center justify-center space-x-2 
                                      bg-white/5 hover:bg-white/10 text-white font-medium rounded-xl py-4 
-                                     transition-all duration-300 border border-white/10"
+                                     transition-all duration-300 border border-white/5"
                           >
                             <Bell className="h-5 w-5" />
                             <span>Follow Updates</span>
