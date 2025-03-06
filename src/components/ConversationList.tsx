@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
@@ -107,23 +106,13 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
     title: conv.title
   }));
 
-  // Create a custom sidebar component that reports its state changes
-  const SidebarWithStateReporting = () => {
-    const handleSidebarToggle = (collapsed: boolean) => {
-      setSidebarCollapsed(collapsed);
-    };
-
-    return (
+  return (
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-[#151822] via-[#1A1F2C] to-[#151822]">
       <Sidebar 
         conversations={sidebarTopics} 
         onConversationClick={handleTopicClick}
+        onCollapseChange={handleSidebarStateChange}
       />
-    );
-  };
-
-  return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-[#151822] via-[#1A1F2C] to-[#151822]">
-      <SidebarWithStateReporting />
 
       <div 
         className={cn(

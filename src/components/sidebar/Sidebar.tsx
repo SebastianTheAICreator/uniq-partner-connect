@@ -11,9 +11,10 @@ interface SidebarProps {
     title: string;
   }>;
   onConversationClick?: (id: string) => void;
+  onCollapseChange?: (collapsed: boolean) => void;
 }
 
-const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
+const Sidebar = ({ conversations, onConversationClick, onCollapseChange }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -29,6 +30,20 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // Notify parent component when collapse state changes
+  useEffect(() => {
+    if (onCollapseChange) {
+      onCollapseChange(collapsed);
+    }
+  }, [collapsed, onCollapseChange]);
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+    if (onCollapseChange) {
+      onCollapseChange(!collapsed);
+    }
+  };
 
   return (
     <>
@@ -58,7 +73,7 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
               "shadow-lg cursor-pointer z-50 border border-white/10 hover:scale-110 transition-transform",
               "hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"
             )}
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={toggleCollapsed}
           >
             {collapsed ? 
               <ChevronRight className="h-4 w-4 text-white" /> : 
@@ -83,7 +98,7 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
             "fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity",
             isMobile ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           )}
-          onClick={() => setCollapsed(true)}
+          onClick={() => toggleCollapsed()}
         />
       )}
     </>
