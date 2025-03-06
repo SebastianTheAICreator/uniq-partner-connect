@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
@@ -31,6 +32,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filterActive, setFilterActive] = useState(false);
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'trending'>('recent');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.innerWidth < 768);
 
   useEffect(() => {
     const loadTopics = async () => {
@@ -40,6 +42,13 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
       }
     };
     loadTopics();
+
+    const checkScreenSize = () => {
+      setSidebarCollapsed(window.innerWidth < 768);
+    };
+    
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, [communityId]);
 
   useEffect(() => {
@@ -53,6 +62,10 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
   const handleTopicClick = (topicId: string) => {
     setSelectedTopic(topicId);
     console.log('Selected topic:', topicId);
+  };
+
+  const handleSidebarStateChange = (collapsed: boolean) => {
+    setSidebarCollapsed(collapsed);
   };
 
   const handleNewDiscussion = async (discussion: { title: string; description: string }) => {
@@ -94,14 +107,31 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
     title: conv.title
   }));
 
-  return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-[#151822] via-[#1A1F2C] to-[#151822]">
+  // Create a custom sidebar component that reports its state changes
+  const SidebarWithStateReporting = () => {
+    const handleSidebarToggle = (collapsed: boolean) => {
+      setSidebarCollapsed(collapsed);
+    };
+
+    return (
       <Sidebar 
         conversations={sidebarTopics} 
         onConversationClick={handleTopicClick}
       />
+    );
+  };
 
-      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
+  return (
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-[#151822] via-[#1A1F2C] to-[#151822]">
+      <SidebarWithStateReporting />
+
+      <div 
+        className={cn(
+          "transition-all duration-500 ease-in-out",
+          sidebarCollapsed ? "ml-[80px]" : "ml-[280px]",
+          "sm:ml-[80px]"
+        )}
+      >
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -372,4 +402,3 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
 };
 
 export default ConversationList;
-
