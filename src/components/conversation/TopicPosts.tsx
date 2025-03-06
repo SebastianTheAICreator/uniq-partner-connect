@@ -124,6 +124,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   const [sortBy, setSortBy] = useState<'recent' | 'popular'>('recent');
   const [showFilters, setShowFilters] = useState(false);
   
+  // Scroll to the selected post when replying
   const replyContainerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -239,6 +240,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       attachments: files
     };
     
+    // Add the reply to the replies list
     setReplies(prev => {
       const updatedReplies = { ...prev };
       if (!updatedReplies[postId]) {
@@ -248,6 +250,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       return updatedReplies;
     });
     
+    // Update the post's reply count
     setPosts(prevPosts =>
       prevPosts.map(post => {
         if (post.id === postId) {
@@ -263,6 +266,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       })
     );
     
+    // Clear reply mode
     setReplyingTo(null);
     
     toast({
@@ -274,12 +278,14 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   const handleReplyToReply = (parentId: string, content: string, files: FilePreview[]) => {
     if (!content.trim() && files.length === 0) return;
     
+    // Find the post that contains this reply
     const postId = Object.keys(replies).find(postId => 
       replies[postId].some(reply => reply.id === parentId)
     );
     
     if (!postId) return;
     
+    // Find the depth of the parent reply
     const parentReply = replies[postId].find(reply => reply.id === parentId);
     const depth = parentReply ? (parentReply.depth || 1) + 1 : 2;
     
@@ -297,14 +303,17 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       attachments: files
     };
     
+    // Add the reply to the replies list
     setReplies(prev => {
       const updatedReplies = { ...prev };
       if (!updatedReplies[postId]) {
         updatedReplies[postId] = [];
       }
       
+      // Insert the new reply after the parent reply
       const parentIndex = updatedReplies[postId].findIndex(r => r.id === parentId);
       if (parentIndex !== -1) {
+        // Find the position to insert the new reply (after all children of the parent)
         let insertIndex = parentIndex + 1;
         const parentDepth = updatedReplies[postId][parentIndex].depth || 1;
         
@@ -327,6 +336,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       return updatedReplies;
     });
     
+    // Update the post's reply count
     setPosts(prevPosts =>
       prevPosts.map(post => {
         if (post.id === postId) {
@@ -352,6 +362,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     setReplies(prev => {
       const newReplies = { ...prev };
       
+      // Find which post contains this reply
       Object.keys(newReplies).forEach(postId => {
         newReplies[postId] = newReplies[postId].map(reply => {
           if (reply.id === replyId) {
@@ -381,8 +392,10 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     })
     .sort((a, b) => {
       if (sortBy === 'recent') {
+        // Simple sorting by timestamp (in a real app this would be a date comparison)
         return b.id.localeCompare(a.id);
       } else {
+        // Popular: sort by likes and replies
         const scoreA = a.stats.likes * 2 + a.stats.replies;
         const scoreB = b.stats.likes * 2 + b.stats.replies;
         return scoreB - scoreA;
@@ -395,6 +408,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       animate={{ opacity: 1 }}
       className="space-y-8"
     >
+      {/* Header */}
       <div className="sticky top-0 z-50 backdrop-blur-xl bg-[#1A1F2C]/80 border-b border-[#3A4366]/30 py-4">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
@@ -501,13 +515,15 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
-      <div className="container mx-auto px-4 transition-all duration-500 ease-in-out">
+      <div className="container mx-auto px-4">
+        {/* Post Creator */}
         <PremiumPostCreator 
           topicId={topicId} 
           onPostCreated={handlePostCreated} 
           className="mb-8"
         />
         
+        {/* Posts */}
         <ScrollArea className="h-[calc(100vh-15rem)]">
           <div className="space-y-6 pb-20">
             <AnimatePresence initial={false}>
@@ -522,7 +538,9 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                       onShareClick={handleShare}
                     />
                     
+                    {/* Replies */}
                     <div className="ml-8 space-y-4">
+                      {/* Reply input */}
                       <AnimatePresence>
                         {replyingTo === post.id && (
                           <motion.div
@@ -540,6 +558,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                         )}
                       </AnimatePresence>
                       
+                      {/* Existing replies */}
                       {replies[post.id]?.length > 0 && (
                         <div className="space-y-4 pt-2">
                           {replies[post.id].map((reply) => (
@@ -577,6 +596,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </ScrollArea>
       </div>
       
+      {/* Stats bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-[#1A1F2C]/90 backdrop-blur-xl border-t border-[#3A4366]/30 py-3 z-40">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">

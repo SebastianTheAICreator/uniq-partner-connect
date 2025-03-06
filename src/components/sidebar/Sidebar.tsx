@@ -11,10 +11,9 @@ interface SidebarProps {
     title: string;
   }>;
   onConversationClick?: (id: string) => void;
-  onCollapseChange?: (collapsed: boolean) => void;
 }
 
-const Sidebar = ({ conversations, onConversationClick, onCollapseChange }: SidebarProps) => {
+const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -31,20 +30,6 @@ const Sidebar = ({ conversations, onConversationClick, onCollapseChange }: Sideb
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Notify parent component when collapse state changes
-  useEffect(() => {
-    if (onCollapseChange) {
-      onCollapseChange(collapsed);
-    }
-  }, [collapsed, onCollapseChange]);
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-    if (onCollapseChange) {
-      onCollapseChange(!collapsed);
-    }
-  };
-
   return (
     <>
       <motion.div 
@@ -55,15 +40,13 @@ const Sidebar = ({ conversations, onConversationClick, onCollapseChange }: Sideb
           ease: [0.6, -0.05, 0.01, 0.99]
         }}
         className={cn(
-          "fixed left-0 top-[4rem] h-[calc(100vh-4rem)]",
+          "fixed left-0 top-[4rem] h-[calc(100vh-4rem)] z-30",
           "bg-gradient-to-br from-[#151822]/95 via-[#1A1F2C]/95 to-[#151822]/95",
           "backdrop-blur-lg border-r border-white/5",
           "shadow-[0_4px_30px_rgba(0,0,0,0.15)]",
           "transition-all duration-500 ease-in-out",
           collapsed ? "w-[80px]" : "w-[280px]",
-          isMobile ? "-translate-x-full sm:translate-x-0" : "translate-x-0",
-          // Increased z-index to make sure sidebar appears above other elements
-          "z-50"
+          isMobile ? "-translate-x-full sm:translate-x-0" : "translate-x-0"
         )}
       >
         <div className="h-full w-full relative flex flex-col">
@@ -73,7 +56,7 @@ const Sidebar = ({ conversations, onConversationClick, onCollapseChange }: Sideb
               "shadow-lg cursor-pointer z-50 border border-white/10 hover:scale-110 transition-transform",
               "hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"
             )}
-            onClick={toggleCollapsed}
+            onClick={() => setCollapsed(!collapsed)}
           >
             {collapsed ? 
               <ChevronRight className="h-4 w-4 text-white" /> : 
@@ -95,10 +78,10 @@ const Sidebar = ({ conversations, onConversationClick, onCollapseChange }: Sideb
       {isMobile && (
         <div 
           className={cn(
-            "fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity",
+            "fixed inset-0 bg-black/60 backdrop-blur-sm z-20 transition-opacity",
             isMobile ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           )}
-          onClick={() => toggleCollapsed()}
+          onClick={() => setCollapsed(true)}
         />
       )}
     </>
