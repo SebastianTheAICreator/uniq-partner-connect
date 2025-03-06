@@ -75,11 +75,12 @@ const PremiumPostCreator = ({ topicId, onPostCreated, className }: PremiumPostCr
     
     if (files.length > 0) {
       const newFiles = files.map(file => {
+        // Fix: Explicitly type the fileType to match the FilePreview interface
         const fileType = file.type.startsWith('image/') 
-          ? 'image' 
+          ? 'image' as const
           : file.type.startsWith('video/') 
-            ? 'video' 
-            : 'document';
+            ? 'video' as const
+            : 'document' as const;
   
         const preview = fileType === 'image' ? URL.createObjectURL(file) : undefined;
   
@@ -132,11 +133,12 @@ const PremiumPostCreator = ({ topicId, onPostCreated, className }: PremiumPostCr
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       const newFiles = files.map(file => {
+        // Fix: Explicitly type the fileType to match the FilePreview interface
         const fileType = file.type.startsWith('image/') 
-          ? 'image' 
+          ? 'image' as const
           : file.type.startsWith('video/') 
-            ? 'video' 
-            : 'document';
+            ? 'video' as const 
+            : 'document' as const;
   
         const preview = fileType === 'image' ? URL.createObjectURL(file) : undefined;
   
