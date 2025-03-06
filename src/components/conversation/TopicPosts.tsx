@@ -1,36 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
-import { ArrowLeft, MessageCircle, Heart, Share2, ThumbsUp, ThumbsDown, FileVideo, Paperclip, X, ImageIcon } from 'lucide-react';
+import { ArrowLeft, Filter, Search, TrendingUp, Clock, MessageCircle, SlidersHorizontal, Sparkles, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CreatePost from './CreatePost';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { FilePreview } from './post/types';
 import FileViewerModal from './FileViewerModal';
-
-interface Post {
-  id: string;
-  content: string;
-  author: string;
-  timestamp: string;
-  likes: number;
-  dislikes: number;
-  replies: Reply[];
-  hasLiked?: boolean;
-  hasDisliked?: boolean;
-  attachments?: FilePreview[];
-}
-
-interface Reply {
-  id: string;
-  content: string;
-  author: string;
-  timestamp: string;
-  likes: number;
-  parentId?: string;
-  depth?: number;
-  attachments?: FilePreview[];
-}
+import PremiumPostCreator from './post/PremiumPostCreator';
+import PremiumPost, { PostData } from './post/PremiumPost';
+import PremiumReply, { ReplyData } from './post/PremiumReply';
+import PremiumReplyInput from './post/PremiumReplyInput';
+import { Badge } from '../ui/badge';
+import { Input } from '../ui/input';
 
 interface TopicPostsProps {
   topicId: string;
@@ -41,141 +23,142 @@ interface TopicPostsProps {
   onBack: () => void;
 }
 
-interface FilePreview {
-  id: string;
-  file: File;
-  type: 'image' | 'video' | 'document';
-  preview?: string;
-}
-
-const mockPosts: Post[] = [
+const mockPosts: PostData[] = [
   {
     id: '1',
-    content: 'Aceasta este o postare de test în topic.',
-    author: 'User1',
-    timestamp: '2 min ago',
-    likes: 12,
-    dislikes: 2,
-    replies: [
-      {
-        id: '1',
-        content: 'Un răspuns la postare',
-        author: 'User2',
-        timestamp: '1 min ago',
-        likes: 3,
-        parentId: '1',
-        depth: 1,
-        attachments: []
-      }
-    ],
-    attachments: []
+    content: 'Aceasta este o postare de test în topic. În această postare voi discuta despre importanța designului în aplicațiile moderne și cum putem îmbunătăți experiența utilizatorilor folosind principii de UI/UX eficiente.\n\nCe părere aveți despre designul minimalist versus designul complex cu multe elemente grafice?',
+    author: {
+      id: 'user1',
+      name: 'Alexandra Popescu',
+      verified: true,
+      role: 'Product Designer'
+    },
+    timestamp: '2 ore în urmă',
+    stats: {
+      likes: 24,
+      dislikes: 2,
+      replies: 5,
+      shares: 3,
+      views: 127
+    },
+    tags: ['design', 'ux', 'minimalism'],
+    isPinned: true
   },
   {
     id: '2',
-    content: 'O altă postare interesantă despre acest subiect.',
-    author: 'User2',
-    timestamp: '5 min ago',
-    likes: 8,
-    dislikes: 1,
-    replies: [],
-    attachments: []
+    content: 'Am câteva întrebări despre integrarea inteligenței artificiale în fluxurile de lucru existente. Care sunt cele mai bune practici pentru a implementa AI fără a perturba experiența utilizatorilor?',
+    author: {
+      id: 'user2',
+      name: 'Mihai Ionescu',
+      role: 'Developer'
+    },
+    timestamp: '5 ore în urmă',
+    stats: {
+      likes: 15,
+      dislikes: 0,
+      replies: 8,
+      shares: 2,
+      views: 94
+    },
+    tags: ['ai', 'development', 'ux']
   }
 ];
 
+const mockReplies: Record<string, ReplyData[]> = {
+  '1': [
+    {
+      id: 'reply1',
+      content: 'Designul minimalist este mai eficient pentru platforma noastră deoarece pune accentul pe conținut și reduce încărcarea cognitivă a utilizatorilor.',
+      author: {
+        id: 'user3',
+        name: 'Andreea Dumitrescu',
+        verified: true
+      },
+      timestamp: '1 oră în urmă',
+      parentId: '1',
+      depth: 1,
+      likes: 7
+    },
+    {
+      id: 'reply2',
+      content: 'Sunt de acord cu Andreea. În plus, designul minimalist se încarcă mai rapid și consumă mai puține resurse, ceea ce este important pentru dispozitivele mobile.',
+      author: {
+        id: 'user4',
+        name: 'Dan Popescu'
+      },
+      timestamp: '45 min în urmă',
+      parentId: '1',
+      depth: 2,
+      likes: 3
+    }
+  ],
+  '2': [
+    {
+      id: 'reply3',
+      content: 'Pentru integrarea AI, recomand să începi cu funcționalități mici și să oferi utilizatorilor posibilitatea de a opta pentru funcționalitățile avansate. Este important să păstrezi transparența cu privire la momentele când AI-ul este utilizat.',
+      author: {
+        id: 'user5',
+        name: 'Laura Stanescu',
+        verified: true,
+        role: 'AI Engineer'
+      },
+      timestamp: '3 ore în urmă',
+      parentId: '2',
+      depth: 1,
+      likes: 12
+    }
+  ]
+};
+
 const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
-  const [posts, setPosts] = React.useState<Post[]>(mockPosts);
-  const [replyingTo, setReplyingTo] = React.useState<string | null>(null);
-  const [replyContent, setReplyContent] = React.useState('');
+  const [posts, setPosts] = useState<PostData[]>(mockPosts);
+  const [replies, setReplies] = useState<Record<string, ReplyData[]>>(mockReplies);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const { toast } = useToast();
   const [selectedFile, setSelectedFile] = useState<{
     type: 'image' | 'video' | 'document';
     preview?: string;
     file: File;
   } | null>(null);
-  const [replyFiles, setReplyFiles] = useState<FilePreview[]>([]);
-  const replyFileInputRef = useRef<HTMLInputElement>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'recent' | 'popular'>('recent');
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Scroll to the selected post when replying
+  const replyContainerRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (replyingTo && replyContainerRef.current) {
+      replyContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [replyingTo]);
 
   const handlePostCreated = (post: { content: string; files: FilePreview[] }) => {
-    console.log('Creating new post:', post);
-    const newPost: Post = {
+    const newPost: PostData = {
       id: Date.now().toString(),
       content: post.content,
-      author: 'CurrentUser',
+      author: {
+        id: 'currentUser',
+        name: 'Tu',
+        verified: true
+      },
       timestamp: 'acum',
-      likes: 0,
-      dislikes: 0,
-      replies: [],
+      stats: {
+        likes: 0,
+        dislikes: 0,
+        replies: 0,
+        shares: 0,
+        views: 1
+      },
       attachments: post.files
     };
 
     setPosts(prevPosts => [newPost, ...prevPosts]);
+    
     toast({
-      title: "Postare creată!",
+      title: "Postare publicată",
       description: "Postarea ta a fost publicată cu succes.",
     });
-  };
-
-  const handleFileClick = (file: FilePreview) => {
-    console.log('Opening file preview:', file);
-    setSelectedFile({
-      type: file.type,
-      preview: file.preview,
-      file: file.file
-    });
-  };
-
-  const handleReplyFileSelect = (type: 'image' | 'video' | 'document') => {
-    console.log('Selecting file of type:', type);
-    if (replyFileInputRef.current) {
-      replyFileInputRef.current.accept = type === 'image' 
-        ? 'image/*' 
-        : type === 'video' 
-          ? 'video/*' 
-          : '.pdf,.doc,.docx,.txt';
-      replyFileInputRef.current.click();
-    }
-  };
-
-  const handleReplyFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files) return;
-
-    Array.from(files).forEach(file => {
-      const fileType = file.type.startsWith('image/') 
-        ? 'image' 
-        : file.type.startsWith('video/') 
-          ? 'video' 
-          : 'document';
-
-      const filePreview: FilePreview = {
-        id: Date.now().toString(),
-        file,
-        type: fileType,
-      };
-
-      if (fileType === 'image') {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setReplyFiles(prev => [...prev, {
-            ...filePreview,
-            preview: reader.result as string
-          }]);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setReplyFiles(prev => [...prev, filePreview]);
-      }
-    });
-
-    // Reset input
-    if (event.target) {
-      event.target.value = '';
-    }
-  };
-
-  const removeReplyFile = (fileId: string) => {
-    console.log('Removing file:', fileId);
-    setReplyFiles(prev => prev.filter(file => file.id !== fileId));
   };
 
   const handleLike = (postId: string) => {
@@ -185,7 +168,10 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
           const hasLiked = post.hasLiked;
           return {
             ...post,
-            likes: hasLiked ? post.likes - 1 : post.likes + 1,
+            stats: {
+              ...post.stats,
+              likes: hasLiked ? post.stats.likes - 1 : post.stats.likes + 1
+            },
             hasLiked: !hasLiked,
             hasDisliked: false
           };
@@ -193,10 +179,6 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         return post;
       })
     );
-    toast({
-      title: "Mulțumim pentru feedback!",
-      description: "Aprecierea ta a fost înregistrată.",
-    });
   };
 
   const handleDislike = (postId: string) => {
@@ -206,7 +188,10 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
           const hasDisliked = post.hasDisliked;
           return {
             ...post,
-            dislikes: hasDisliked ? post.dislikes - 1 : post.dislikes + 1,
+            stats: {
+              ...post.stats,
+              dislikes: hasDisliked ? post.stats.dislikes - 1 : post.stats.dislikes + 1
+            },
             hasDisliked: !hasDisliked,
             hasLiked: false
           };
@@ -217,440 +202,426 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   };
 
   const handleShare = (postId: string) => {
+    setPosts(prevPosts => 
+      prevPosts.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            stats: {
+              ...post.stats,
+              shares: post.stats.shares + 1
+            }
+          };
+        }
+        return post;
+      })
+    );
+    
     toast({
-      title: "Link copiat!",
+      title: "Link copiat",
       description: "Linkul către postare a fost copiat în clipboard.",
     });
   };
 
-  const handleReply = (postId: string) => {
-    if (replyContent.trim() || replyFiles.length > 0) {
-      setPosts(prevPosts =>
-        prevPosts.map(post => {
-          if (post.id === postId) {
+  const handleReply = (postId: string, content: string, files: FilePreview[]) => {
+    if (!content.trim() && files.length === 0) return;
+    
+    const newReply: ReplyData = {
+      id: Date.now().toString(),
+      content,
+      author: {
+        id: 'currentUser',
+        name: 'Tu'
+      },
+      timestamp: 'acum',
+      parentId: postId,
+      depth: 1,
+      likes: 0,
+      attachments: files
+    };
+    
+    // Add the reply to the replies list
+    setReplies(prev => {
+      const updatedReplies = { ...prev };
+      if (!updatedReplies[postId]) {
+        updatedReplies[postId] = [];
+      }
+      updatedReplies[postId] = [...updatedReplies[postId], newReply];
+      return updatedReplies;
+    });
+    
+    // Update the post's reply count
+    setPosts(prevPosts =>
+      prevPosts.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            stats: {
+              ...post.stats,
+              replies: post.stats.replies + 1
+            }
+          };
+        }
+        return post;
+      })
+    );
+    
+    // Clear reply mode
+    setReplyingTo(null);
+    
+    toast({
+      title: "Răspuns adăugat",
+      description: "Răspunsul tău a fost publicat cu succes.",
+    });
+  };
+
+  const handleReplyToReply = (parentId: string, content: string, files: FilePreview[]) => {
+    if (!content.trim() && files.length === 0) return;
+    
+    // Find the post that contains this reply
+    const postId = Object.keys(replies).find(postId => 
+      replies[postId].some(reply => reply.id === parentId)
+    );
+    
+    if (!postId) return;
+    
+    // Find the depth of the parent reply
+    const parentReply = replies[postId].find(reply => reply.id === parentId);
+    const depth = parentReply ? (parentReply.depth || 1) + 1 : 2;
+    
+    const newReply: ReplyData = {
+      id: Date.now().toString(),
+      content,
+      author: {
+        id: 'currentUser',
+        name: 'Tu'
+      },
+      timestamp: 'acum',
+      parentId,
+      depth,
+      likes: 0,
+      attachments: files
+    };
+    
+    // Add the reply to the replies list
+    setReplies(prev => {
+      const updatedReplies = { ...prev };
+      if (!updatedReplies[postId]) {
+        updatedReplies[postId] = [];
+      }
+      
+      // Insert the new reply after the parent reply
+      const parentIndex = updatedReplies[postId].findIndex(r => r.id === parentId);
+      if (parentIndex !== -1) {
+        // Find the position to insert the new reply (after all children of the parent)
+        let insertIndex = parentIndex + 1;
+        const parentDepth = updatedReplies[postId][parentIndex].depth || 1;
+        
+        while (
+          insertIndex < updatedReplies[postId].length && 
+          (updatedReplies[postId][insertIndex].depth || 1) > parentDepth
+        ) {
+          insertIndex++;
+        }
+        
+        updatedReplies[postId] = [
+          ...updatedReplies[postId].slice(0, insertIndex),
+          newReply,
+          ...updatedReplies[postId].slice(insertIndex)
+        ];
+      } else {
+        updatedReplies[postId].push(newReply);
+      }
+      
+      return updatedReplies;
+    });
+    
+    // Update the post's reply count
+    setPosts(prevPosts =>
+      prevPosts.map(post => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            stats: {
+              ...post.stats,
+              replies: post.stats.replies + 1
+            }
+          };
+        }
+        return post;
+      })
+    );
+    
+    toast({
+      title: "Răspuns adăugat",
+      description: "Răspunsul tău a fost publicat cu succes.",
+    });
+  };
+
+  const handleLikeReply = (replyId: string) => {
+    setReplies(prev => {
+      const newReplies = { ...prev };
+      
+      // Find which post contains this reply
+      Object.keys(newReplies).forEach(postId => {
+        newReplies[postId] = newReplies[postId].map(reply => {
+          if (reply.id === replyId) {
+            const hasLiked = reply.hasLiked;
             return {
-              ...post,
-              replies: [...post.replies, {
-                id: Date.now().toString(),
-                content: replyContent,
-                author: 'CurrentUser',
-                timestamp: 'acum',
-                likes: 0,
-                parentId: postId,
-                depth: 1,
-                attachments: replyFiles
-              }]
+              ...reply,
+              likes: hasLiked ? reply.likes - 1 : reply.likes + 1,
+              hasLiked: !hasLiked
             };
           }
-          return post;
-        })
-      );
-      setReplyContent('');
-      setReplyFiles([]);
-      setReplyingTo(null);
-      toast({
-        title: "Răspuns adăugat!",
-        description: "Răspunsul tău a fost publicat cu succes.",
+          return reply;
+        });
       });
-    }
+      
+      return newReplies;
+    });
   };
 
-  const renderReplies = (replies: Reply[], postId: string) => {
-    return replies.map((reply) => (
-      <motion.div
-        key={reply.id}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`ml-8 mt-4 relative ${reply.depth && reply.depth > 0 ? 'pl-4' : ''}`}
-      >
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/20 via-secondary/20 to-accent/20"
-          style={{
-            left: '0.5rem',
-            top: '2rem',
-            bottom: '0.5rem'
-          }}
-        />
-        
-        <div 
-          className="absolute w-4 h-0.5 bg-gradient-to-r from-primary/20 to-secondary/20"
-          style={{
-            left: '0.5rem',
-            top: '2rem'
-          }}
-        />
-
-        <div className="glass-card rounded-xl p-4 space-y-3 hover:shadow-[0_8px_32px_rgba(139,92,246,0.1)] transition-all duration-300 border-glow">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/80 via-secondary/80 to-accent/80 flex items-center justify-center text-white font-bold text-sm">
-              {reply.author[0]}
-            </div>
-            <div>
-              <span className="font-medium text-white/90">{reply.author}</span>
-              <p className="text-sm text-white/60">{reply.timestamp}</p>
-            </div>
-          </div>
-
-          <p className="text-white/80">{reply.content}</p>
-
-          {reply.attachments && reply.attachments.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
-              {reply.attachments.map((file, index) => (
-                <div 
-                  key={index}
-                  className="relative group cursor-pointer"
-                  onClick={() => handleFileClick(file)}
-                >
-                  <div className="w-16 h-16 rounded-lg overflow-hidden glass-gradient flex items-center justify-center border border-white/10">
-                    {file.preview ? (
-                      <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="text-white/60">
-                        {file.type === 'video' && <FileVideo className="w-6 h-6" />}
-                        {file.type === 'document' && <Paperclip className="w-6 h-6" />}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="flex items-center space-x-4 pt-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setReplyingTo(reply.id)}
-              className="text-white/70 hover:text-white hover:bg-white/10 text-xs"
-            >
-              <MessageCircle className="h-4 w-4 mr-1" />
-              Răspunde
-            </Button>
-          </div>
-        </div>
-
-        {replyingTo === reply.id && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-4 space-y-4 ml-8"
-          >
-            <div className="relative">
-              <textarea
-                value={replyContent}
-                onChange={(e) => setReplyContent(e.target.value)}
-                placeholder="Scrie un răspuns..."
-                className="w-full p-4 rounded-xl 
-                          bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50
-                          backdrop-blur-lg border border-primary/20
-                          focus:border-primary/40 focus:ring-2 focus:ring-primary/30
-                          transition-all duration-300
-                          text-white/90 placeholder:text-white/40
-                          shadow-[0_8px_32px_rgba(124,58,237,0.15)]
-                          hover:border-primary/30 hover:shadow-primary/10"
-                rows={3}
-              />
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleReplyFileSelect('image')}
-                  className="text-white/70 hover:text-white hover:bg-white/10"
-                >
-                  <ImageIcon className="w-4 h-4 mr-1" />
-                  Imagine
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleReplyFileSelect('video')}
-                  className="text-white/70 hover:text-white hover:bg-white/10"
-                >
-                  <FileVideo className="w-4 h-4 mr-1" />
-                  Video
-                </Button>
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  onClick={() => setReplyingTo(null)}
-                  className="text-white/70 hover:text-white hover:bg-white/10"
-                >
-                  Anulează
-                </Button>
-                <Button
-                  onClick={() => handleReply(postId)}
-                  className="bg-gradient-to-r from-primary via-secondary to-accent 
-                           hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90
-                           text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  disabled={!replyContent.trim()}
-                >
-                  Răspunde
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </motion.div>
-    ));
-  };
+  const filteredPosts = posts
+    .filter(post => {
+      if (!searchQuery) return true;
+      return (
+        post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.author.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    })
+    .sort((a, b) => {
+      if (sortBy === 'recent') {
+        // Simple sorting by timestamp (in a real app this would be a date comparison)
+        return b.id.localeCompare(a.id);
+      } else {
+        // Popular: sort by likes and replies
+        const scoreA = a.stats.likes * 2 + a.stats.replies;
+        const scoreB = b.stats.likes * 2 + b.stats.replies;
+        return scoreB - scoreA;
+      }
+    });
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-8" // increased from space-y-6
+      className="space-y-8"
     >
-      <div className="flex items-center space-x-4 mt-6"> {/* Added mt-6 for top margin */}
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          className="p-2 hover:bg-gray-100 rounded-full"
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
-        <div>
-          <h2 className="text-2xl font-bold gradient-text">{topic.title}</h2>
-          <p className="text-gray-600">{topic.description}</p>
-        </div>
-      </div>
-
-      <div className="mt-8"> {/* Added mt-8 for more spacing */}
-        <CreatePost topicId={topicId} onPostCreated={handlePostCreated} />
-      </div>
-
-      <ScrollArea className="h-[calc(100vh-16rem)]"> {/* Adjusted height calculation */}
-        <div className="space-y-8 pb-8"> {/* Added pb-8 for bottom padding */}
-          <AnimatePresence>
-            {posts.map((post) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="glass-card rounded-xl p-6 space-y-4 hover:shadow-[0_8px_32px_rgba(139,92,246,0.15)] transition-all duration-300 border-glow"
+      {/* Header */}
+      <div className="sticky top-0 z-50 backdrop-blur-xl bg-[#1A1F2C]/80 border-b border-[#3A4366]/30 py-4">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onBack}
+                className="h-9 w-9 rounded-full text-white/70 hover:text-white hover:bg-white/10"
               >
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center text-white font-bold">
-                      {post.author[0]}
-                    </div>
-                    <div>
-                      <span className="font-medium text-white/90">{post.author}</span>
-                      <p className="text-sm text-white/60">{post.timestamp}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-white/80 text-lg leading-relaxed">{post.content}</p>
-
-                {post.attachments && post.attachments.length > 0 && (
-                  <div className="flex flex-wrap gap-4 mt-4">
-                    {post.attachments.map((file, index) => (
-                      <div 
-                        key={index} 
-                        className="relative group cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => handleFileClick(file)}
-                      >
-                        <div className="w-24 h-24 rounded-lg overflow-hidden glass-gradient flex items-center justify-center border border-white/10 hover:border-white/20 transition-colors">
-                          {file.preview ? (
-                            <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="text-white/60">
-                              {file.type === 'video' && <FileVideo className="w-8 h-8" />}
-                              {file.type === 'document' && <Paperclip className="w-8 h-8" />}
-                            </div>
-                          )}
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              
+              <div>
+                <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">
+                  {topic.title}
+                </h2>
+                <p className="text-white/60 text-sm">{topic.description}</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "h-9 rounded-lg gap-1.5 text-white/70 hover:text-white hover:bg-white/10",
+                  sortBy === 'recent' && "bg-white/10 text-white"
+                )}
+                onClick={() => setSortBy('recent')}
+              >
+                <Clock className="h-4 w-4" />
+                <span className="hidden sm:inline">Recente</span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "h-9 rounded-lg gap-1.5 text-white/70 hover:text-white hover:bg-white/10",
+                  sortBy === 'popular' && "bg-white/10 text-white"
+                )}
+                onClick={() => setSortBy('popular')}
+              >
+                <TrendingUp className="h-4 w-4" />
+                <span className="hidden sm:inline">Populare</span>
+              </Button>
+              
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 w-9 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                </Button>
+                
+                <AnimatePresence>
+                  {showFilters && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 top-full mt-2 w-64 rounded-xl overflow-hidden 
+                              bg-[#1A1F2C] border border-[#3A4366]/50 shadow-2xl z-50"
+                    >
+                      <div className="p-3">
+                        <h3 className="text-sm font-medium text-white/90 mb-2">Filtrează după</h3>
+                        
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap gap-1">
+                            <Badge className="bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 cursor-pointer">
+                              Design
+                            </Badge>
+                            <Badge className="bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 cursor-pointer">
+                              AI
+                            </Badge>
+                            <Badge className="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 cursor-pointer">
+                              Technology
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center gap-2">
+                            <Input 
+                              placeholder="Caută cuvinte cheie..." 
+                              className="h-8 text-sm bg-[#141625] border-[#3A4366]/50"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <Button size="icon" className="h-8 w-8 p-0" variant="ghost">
+                              <Search className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-6 pt-4 border-t border-white/10">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleLike(post.id)}
-                    className={cn(
-                      "flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10",
-                      post.hasLiked && "text-primary hover:text-primary/90"
-                    )}
-                  >
-                    <ThumbsUp className="h-5 w-5" />
-                    <span>{post.likes}</span>
-                  </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDislike(post.id)}
-                    className={cn(
-                      "flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10",
-                      post.hasDisliked && "text-red-500 hover:text-red-400"
-                    )}
-                  >
-                    <ThumbsDown className="h-5 w-5" />
-                    <span>{post.dislikes}</span>
-                  </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setReplyingTo(post.id)}
-                    className="flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10"
-                  >
-                    <MessageCircle className="h-5 w-5" />
-                    <span>{post.replies.length}</span>
-                  </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleShare(post.id)}
-                    className="flex items-center space-x-2 text-white/70 hover:text-white hover:bg-white/10"
-                  >
-                    <Share2 className="h-5 w-5" />
-                  </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex items-center space-x-2 text-primary hover:text-primary/90 hover:bg-white/10"
-                  >
-                    <Heart className="h-5 w-5" />
-                  </Button>
-                </div>
-
-                {post.replies.length > 0 && (
-                  <div className="mt-6 space-y-4">
-                    {renderReplies(post.replies, post.id)}
-                  </div>
-                )}
-
-                {replyingTo === post.id && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mt-4 space-y-4"
-                  >
-                    <div className="relative">
-                      <textarea
-                        value={replyContent}
-                        onChange={(e) => setReplyContent(e.target.value)}
-                        placeholder="Scrie un răspuns..."
-                        className="w-full p-4 rounded-xl 
-                                  bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50
-                                  backdrop-blur-lg border border-primary/20
-                                  focus:border-primary/40 focus:ring-2 focus:ring-primary/30
-                                  transition-all duration-300
-                                  text-white/90 placeholder:text-white/40
-                                  shadow-[0_8px_32px_rgba(124,58,237,0.15)]
-                                  hover:border-primary/30 hover:shadow-primary/10"
-                        rows={3}
-                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-4">
+        {/* Post Creator */}
+        <PremiumPostCreator 
+          topicId={topicId} 
+          onPostCreated={handlePostCreated} 
+          className="mb-8"
+        />
+        
+        {/* Posts */}
+        <ScrollArea className="h-[calc(100vh-15rem)]">
+          <div className="space-y-6 pb-20">
+            <AnimatePresence initial={false}>
+              {filteredPosts.length > 0 ? (
+                filteredPosts.map((post) => (
+                  <div key={post.id} className="space-y-4">
+                    <PremiumPost
+                      post={post}
+                      onReplyClick={(postId) => setReplyingTo(postId === replyingTo ? null : postId)}
+                      onLikeClick={handleLike}
+                      onDislikeClick={handleDislike}
+                      onShareClick={handleShare}
+                    />
+                    
+                    {/* Replies */}
+                    <div className="ml-8 space-y-4">
+                      {/* Reply input */}
+                      <AnimatePresence>
+                        {replyingTo === post.id && (
+                          <motion.div
+                            ref={replyContainerRef}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                          >
+                            <PremiumReplyInput
+                              postId={post.id}
+                              onReply={handleReply}
+                              onCancel={() => setReplyingTo(null)}
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                       
-                      {replyFiles.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {replyFiles.map((file) => (
-                            <div key={file.id} className="relative group">
-                              <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm 
-                                           flex items-center justify-center border border-white/10">
-                                {file.preview ? (
-                                  <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
-                                ) : (
-                                  <div className="text-white/60">
-                                    {file.type === 'video' && <FileVideo className="w-6 h-6" />}
-                                    {file.type === 'document' && <Paperclip className="w-6 h-6" />}
-                                  </div>
-                                )}
-                              </div>
-                              <button
-                                onClick={() => removeReplyFile(file.id)}
-                                className="absolute -top-1 -right-1 bg-black/50 backdrop-blur-sm rounded-full p-1
-                                         opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                              >
-                                <X className="w-3 h-3 text-white" />
-                              </button>
-                            </div>
+                      {/* Existing replies */}
+                      {replies[post.id]?.length > 0 && (
+                        <div className="space-y-4 pt-2">
+                          {replies[post.id].map((reply) => (
+                            <PremiumReply
+                              key={reply.id}
+                              reply={reply}
+                              onReplyToReply={handleReplyToReply}
+                              onLike={handleLikeReply}
+                            />
                           ))}
                         </div>
                       )}
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleReplyFileSelect('image')}
-                          className="text-white/70 hover:text-white hover:bg-white/10"
-                        >
-                          <ImageIcon className="w-4 h-4 mr-1" />
-                          Imagine
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleReplyFileSelect('video')}
-                          className="text-white/70 hover:text-white hover:bg-white/10"
-                        >
-                          <FileVideo className="w-4 h-4 mr-1" />
-                          Video
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleReplyFileSelect('document')}
-                          className="text-white/70 hover:text-white hover:bg-white/10"
-                        >
-                          <Paperclip className="w-4 h-4 mr-1" />
-                          Document
-                        </Button>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button
-                          variant="ghost"
-                          onClick={() => setReplyingTo(null)}
-                          className="text-white/70 hover:text-white hover:bg-white/10"
-                        >
-                          Anulează
-                        </Button>
-                        <Button
-                          onClick={() => handleReply(post.id)}
-                          className="bg-gradient-to-r from-primary via-secondary to-accent 
-                                   hover:from-primary/90 hover:via-secondary/90 hover:to-accent/90
-                                   text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                          disabled={!replyContent.trim() && replyFiles.length === 0}
-                        >
-                          Răspunde
-                        </Button>
-                      </div>
-                    </div>
-
-                    <input
-                      type="file"
-                      ref={replyFileInputRef}
-                      onChange={handleReplyFileChange}
-                      className="hidden"
-                      multiple
-                    />
-                  </motion.div>
-                )}
-
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                  </div>
+                ))
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-20"
+                >
+                  <div className="mx-auto w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
+                    <MessageCircle className="h-8 w-8 text-indigo-400" />
+                  </div>
+                  <h3 className="text-xl font-medium text-white/90 mb-2">Nicio postare găsită</h3>
+                  <p className="text-white/60 max-w-md mx-auto">
+                    {searchQuery 
+                      ? `Nu există postări care să conțină "${searchQuery}"`
+                      : "Nu există postări în această conversație. Fii primul care postează!"}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </ScrollArea>
+      </div>
+      
+      {/* Stats bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-[#1A1F2C]/90 backdrop-blur-xl border-t border-[#3A4366]/30 py-3 z-40">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-1.5 text-white/60 text-xs">
+                <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                <span>{posts.length} postări</span>
+              </div>
+              
+              <div className="flex items-center gap-1.5 text-white/60 text-xs">
+                <MessageCircle className="h-3.5 w-3.5 text-indigo-400" />
+                <span>
+                  {Object.values(replies).reduce((total, replyArr) => total + replyArr.length, 0)} răspunsuri
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-1.5 text-white/60 text-xs">
+              <Shield className="h-3.5 w-3.5 text-green-400" />
+              <span>Conversație moderată</span>
+            </div>
+          </div>
         </div>
-      </ScrollArea>
-
+      </div>
+      
       <FileViewerModal
         isOpen={selectedFile !== null}
         onClose={() => setSelectedFile(null)}
