@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -90,7 +91,7 @@ const CommunityPage = () => {
       setCommunities(updatedCommunities);
       toast({
         title: "Community created successfully! 🎉",
-        description: `"${newCommunity.name}" is now live and ready for members.",
+        description: `"${newCommunity.name}" is now live and ready for members.`,
         className: "bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border-none"
       });
     } catch (error) {
