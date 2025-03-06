@@ -2,8 +2,8 @@
 import { cn } from '@/lib/utils';
 import SidebarContent from './SidebarContent';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
 
 interface SidebarProps {
   conversations: Array<{
@@ -15,6 +15,20 @@ interface SidebarProps {
 
 const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 640);
+      if (window.innerWidth < 768) {
+        setCollapsed(true);
+      }
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   return (
     <>
@@ -27,20 +41,20 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
         }}
         className={cn(
           "fixed left-0 top-[4rem] h-[calc(100vh-4rem)] z-30",
-          "bg-gradient-to-br from-[#1a1a2e] to-[#16213e]",
-          "backdrop-blur-md border-r border-white/10",
-          "shadow-[0_4px_30px_rgba(0,0,0,0.2)]",
-          "lg:translate-x-0 transition-all duration-500 ease-in-out",
+          "bg-gradient-to-br from-[#151822]/95 via-[#1A1F2C]/95 to-[#151822]/95",
+          "backdrop-blur-lg border-r border-white/5",
+          "shadow-[0_4px_30px_rgba(0,0,0,0.15)]",
+          "transition-all duration-500 ease-in-out",
           collapsed ? "w-[80px]" : "w-[280px]",
-          "-translate-x-full sm:translate-x-0" // Hidden by default on mobile, visible on sm and up
+          isMobile ? "-translate-x-full sm:translate-x-0" : "translate-x-0"
         )}
       >
         <div className="h-full w-full relative flex flex-col">
           <div 
             className={cn(
-              "absolute -right-4 top-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full p-1",
-              "shadow-lg cursor-pointer z-50 border border-white/20 hover:scale-110 transition-transform",
-              "hover:shadow-[0_0_10px_rgba(99,102,241,0.5)]"
+              "absolute -right-3 top-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full p-1",
+              "shadow-lg cursor-pointer z-50 border border-white/10 hover:scale-110 transition-transform",
+              "hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"
             )}
             onClick={() => setCollapsed(!collapsed)}
           >
@@ -61,13 +75,15 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
       </motion.div>
       
       {/* Overlay for mobile that closes sidebar when clicked */}
-      <div 
-        className={cn(
-          "fixed inset-0 bg-black/50 z-20 sm:hidden transition-opacity",
-          "-translate-x-full" // Hidden by default
-        )}
-        onClick={() => setCollapsed(true)}
-      />
+      {isMobile && (
+        <div 
+          className={cn(
+            "fixed inset-0 bg-black/60 backdrop-blur-sm z-20 transition-opacity",
+            isMobile ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          )}
+          onClick={() => setCollapsed(true)}
+        />
+      )}
     </>
   );
 };

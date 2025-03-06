@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
@@ -82,7 +81,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
       } else if (sortBy === 'popular') {
         return (b.participants || 0) - (a.participants || 0);
       } else {
-        // For trending, we could use a combination of recency and popularity
         const scoreA = (a.participants || 0) * 0.7 + new Date(a.createdAt).getTime() * 0.3;
         const scoreB = (b.participants || 0) * 0.7 + new Date(b.createdAt).getTime() * 0.3;
         return scoreB - scoreA;
@@ -103,14 +101,13 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
         onConversationClick={handleTopicClick}
       />
 
-      <div className="pl-[240px] transition-all duration-300">
+      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="relative"
         >
-          {/* Decorative elements */}
           <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-3xl -z-10"></div>
           <div className="fixed bottom-0 left-1/3 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl -z-10"></div>
           
@@ -141,7 +138,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                {/* Header section - Adjusted to move content down */}
                 <header className="px-8 pt-16 pb-10">
                   <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
@@ -163,7 +159,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                       </Button>
                     </div>
                     
-                    {/* Search and filter bar - moved down */}
                     <div className="mt-10 p-1.5 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 flex flex-col sm:flex-row items-center gap-3">
                       <div className="relative flex-1 w-full">
                         <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -256,7 +251,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                       </div>
                     </div>
                     
-                    {/* Active filters */}
                     {filterActive && (
                       <motion.div 
                         initial={{ opacity: 0, height: 0 }}
@@ -280,7 +274,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                   </div>
                 </header>
 
-                {/* Stats bar */}
                 <div className="px-8 py-4 bg-white/5 backdrop-blur-sm">
                   <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-6">
@@ -308,12 +301,11 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                   </div>
                 </div>
 
-                {/* Main content with grid of cards - Added more spacing */}
                 <main className="px-8 py-12">
                   <div className="max-w-7xl mx-auto">
                     {filteredConversations.length > 0 ? (
                       <div className={cn(
-                        "grid gap-8", // Increased gap from 6 to 8
+                        "grid gap-8",
                         viewMode === 'grid' ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
                       )}>
                         {filteredConversations.map((conv) => (
@@ -353,7 +345,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                   </div>
                 </main>
 
-                {/* Create discussion section - Improved spacing and positioning */}
                 <div id="create-discussion" className="px-8 py-16 bg-gradient-to-br from-[#1E1D2D]/80 to-[#1A1F2C]/80 backdrop-blur-md border-t border-white/5">
                   <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-10">
@@ -381,3 +372,4 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
 };
 
 export default ConversationList;
+
