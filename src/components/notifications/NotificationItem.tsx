@@ -1,7 +1,19 @@
+
+import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Notification } from '@/types/notifications';
-import { Heart, MessageCircle, Users, PlusCircle, AtSign, Bell } from 'lucide-react';
+import { 
+  Heart, 
+  MessageCircle, 
+  Users, 
+  PlusCircle, 
+  AtSign, 
+  Bell, 
+  Check, 
+  ArrowRight 
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -27,57 +39,128 @@ const getNotificationIcon = (type: Notification['type']) => {
   }
 };
 
-export const NotificationItem = ({ 
+const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>(({ 
   notification,
   onMarkAsRead 
-}: NotificationItemProps) => {
+}, ref) => {
+  // Format notification time to relative time (e.g. "2 hours ago")
+  const getRelativeTime = (timestamp: string) => {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    return past.toLocaleDateString();
+  };
+
   return (
     <motion.div
+      ref={ref}
       layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: -100 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 500, 
+        damping: 30,
+        mass: 1
+      }}
       className={cn(
-        "glass-card p-4 rounded-lg transition-all duration-300 hover:scale-[1.02] card-hover",
+        "group relative overflow-hidden rounded-xl backdrop-blur-md transition-all duration-300",
         notification.read
-          ? "bg-gradient-to-r from-white/5 to-white/0"
-          : "bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border-glow"
+          ? "bg-gradient-to-r from-white/5 to-transparent border border-white/5"
+          : "bg-gradient-to-r from-primary/20 via-secondary/15 to-transparent border-t border-l border-white/10 border-b border-r border-white/5 shadow-[0_0_15px_rgba(74,144,226,0.1)]"
       )}
     >
-      <div className="flex items-start space-x-4">
+      {/* Premium notification glow effect for unread notifications */}
+      {!notification.read && (
         <motion.div 
-          whileHover={{ scale: 1.1 }}
-          className="p-2 rounded-full bg-white/10 backdrop-blur-sm"
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/10 via-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          animate={{ 
+            opacity: [0.2, 0.5, 0.2], 
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 3,
+          }}
+        />
+      )}
+
+      <div className="flex items-start p-4 gap-4">
+        <motion.div 
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          className={cn(
+            "flex-shrink-0 p-2.5 rounded-lg",
+            notification.read
+              ? "bg-white/5"
+              : "bg-gradient-to-br from-primary/20 to-secondary/20 backdrop-blur-xl"
+          )}
         >
           {getNotificationIcon(notification.type)}
         </motion.div>
         
-        <div className="flex-1 space-y-1">
-          <h4 className={cn(
-            "font-medium",
-            notification.read ? "text-white/80" : "text-white gradient-text"
-          )}>
-            {notification.title}
-          </h4>
-          <p className="text-sm text-white/70">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <h4 className={cn(
+              "font-medium leading-tight line-clamp-1",
+              notification.read 
+                ? "text-white/80" 
+                : "text-white gradient-text animate-text-shine font-semibold"
+            )}>
+              {notification.title}
+            </h4>
+
+            <span className="text-xs text-white/50 flex-shrink-0">
+              {getRelativeTime(notification.timestamp)}
+            </span>
+          </div>
+
+          <p className="text-sm text-white/70 mt-1 mb-2 line-clamp-2">
             {notification.message}
           </p>
-          <span className="text-xs text-white/50 block">
-            {new Date(notification.timestamp).toLocaleString()}
-          </span>
-        </div>
+          
+          {!notification.read && (
+            <div className="flex justify-end">
+              <Button 
+                variant="aurora" 
+                size="sm" 
+                rounded="full"
+                onClick={() => onMarkAsRead(notification.id)}
+                className="group/btn"
+              >
+                <span className="mr-1.5">Mark as read</span>
+                <Check className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+              </Button>
+            </div>
+          )}
 
-        {!notification.read && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onMarkAsRead(notification.id)}
-            className="text-xs text-primary hover:text-primary-hover transition-colors whitespace-nowrap"
-          >
-            Marchează ca citit
-          </motion.button>
-        )}
+          {notification.read && notification.metadata && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex justify-end"
+            >
+              <Button 
+                variant="frost" 
+                size="sm" 
+                rounded="full"
+                className="opacity-70 hover:opacity-100 group/btn"
+              >
+                <span className="mr-1">View details</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+              </Button>
+            </motion.div>
+          )}
+        </div>
       </div>
     </motion.div>
   );
-};
+});
+
+NotificationItem.displayName = "NotificationItem";
+
+export { NotificationItem };

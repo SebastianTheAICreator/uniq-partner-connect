@@ -1,7 +1,11 @@
+
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { NotificationItem } from './NotificationItem';
 import { Notification } from '@/types/notifications';
+import { Button } from '@/components/ui/button';
+import { Bell, Check, BellDot } from 'lucide-react';
 
 interface NotificationsPanelProps {
   notifications: Notification[];
@@ -14,62 +18,100 @@ export const NotificationsPanel = ({
   onMarkAsRead,
   onClearAll
 }: NotificationsPanelProps) => {
+  const unreadCount = notifications.filter(n => !n.read).length;
+  
   return (
-    <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/95 to-[#1a1a2e]/95 backdrop-blur-xl border-l border-white/10 shadow-2xl">
-      <SheetHeader className="space-y-4">
+    <SheetContent className="p-0 w-[380px] sm:w-[480px] border-0 overflow-hidden">
+      <div className="h-full flex flex-col bg-gradient-to-br from-[#0F172A]/95 via-[#1E293B]/95 to-[#0F172A]/95 backdrop-blur-xl border-l border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.3)]">
+        <div className="relative">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+          
+          <SheetHeader className="px-6 pt-6 pb-4 relative z-10">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  {unreadCount > 0 ? (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="bg-gradient-to-r from-primary to-secondary p-2 rounded-full"
+                    >
+                      <BellDot className="w-5 h-5 text-white" />
+                    </motion.div>
+                  ) : (
+                    <div className="bg-white/10 p-2 rounded-full">
+                      <Bell className="w-5 h-5 text-white/70" />
+                    </div>
+                  )}
+                </div>
+                <SheetTitle className="text-2xl font-bold gradient-text animate-text-shine">
+                  Notifications
+                </SheetTitle>
+              </div>
+              
+              {notifications.length > 0 && (
+                <Button
+                  variant="premium-ghost"
+                  size="sm"
+                  rounded="full"
+                  onClick={onClearAll}
+                  className="opacity-80 hover:opacity-100"
+                >
+                  <span className="mr-1.5">Clear all</span>
+                  <Check className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+            
+            <SheetDescription className="text-white/60 max-w-[90%]">
+              {unreadCount > 0 
+                ? `You have ${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}`
+                : 'Stay informed about activity in your communities'}
+            </SheetDescription>
+          </SheetHeader>
+        </div>
+        
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex-1 overflow-hidden"
         >
-          <SheetTitle className="flex justify-between items-center">
-            <span className="text-2xl font-bold gradient-text animate-text-shine">
-              Notificări
-            </span>
-            {notifications.length > 0 && (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onClearAll}
-                className="text-sm text-primary hover:text-primary-hover transition-colors"
-              >
-                Șterge tot
-              </motion.button>
-            )}
-          </SheetTitle>
-          <SheetDescription className="text-white/60">
-            Vezi toate notificările tale recente
-          </SheetDescription>
+          <div className="h-full px-4 pb-4 overflow-y-auto custom-scrollbar">
+            <div className="space-y-3 mt-2 pr-2">
+              <AnimatePresence mode="popLayout">
+                {notifications.length > 0 ? (
+                  notifications.map((notification) => (
+                    <NotificationItem
+                      key={notification.id}
+                      notification={notification}
+                      onMarkAsRead={onMarkAsRead}
+                    />
+                  ))
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className="flex flex-col items-center justify-center py-20 px-6 text-center"
+                  >
+                    <div className="bg-white/5 p-4 rounded-full mb-4">
+                      <Bell className="w-8 h-8 text-white/30" />
+                    </div>
+                    <h3 className="text-lg font-medium text-white/80 mb-2">All caught up!</h3>
+                    <p className="text-sm text-white/50 max-w-[260px]">
+                      You don't have any notifications right now. We'll notify you when something important happens.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </motion.div>
-      </SheetHeader>
-      
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-        className="mt-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-4 custom-scrollbar"
-      >
-        <AnimatePresence mode="popLayout">
-          {notifications.length > 0 ? (
-            notifications.map((notification) => (
-              <NotificationItem
-                key={notification.id}
-                notification={notification}
-                onMarkAsRead={onMarkAsRead}
-              />
-            ))
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-card p-8 rounded-lg text-center"
-            >
-              <p className="text-white/50">Nu ai notificări noi</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+      </div>
     </SheetContent>
   );
 };
