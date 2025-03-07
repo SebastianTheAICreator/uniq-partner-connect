@@ -23,9 +23,6 @@ const buttonVariants = cva(
         'premium-outline': "bg-transparent border border-primary/20 text-white hover:bg-primary/10 hover:border-primary/40 transition-all duration-300",
         'premium-ghost': "bg-white/5 text-white hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300",
         glass: "backdrop-blur-md bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:border-white/20 transition-all duration-300",
-        'glass-primary': "backdrop-blur-md bg-primary/10 border border-primary/20 text-white hover:bg-primary/20 hover:border-primary/30 transition-all duration-300",
-        'glass-secondary': "backdrop-blur-md bg-secondary/10 border border-secondary/20 text-white hover:bg-secondary/20 hover:border-secondary/30 transition-all duration-300",
-        'glass-accent': "backdrop-blur-md bg-accent/10 border border-accent/20 text-white hover:bg-accent/20 hover:border-accent/30 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
