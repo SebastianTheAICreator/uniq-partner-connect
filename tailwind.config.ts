@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -71,6 +72,20 @@ export default {
             "background-size": "200% 200%",
             "background-position": "right center"
           }
+        },
+        "gradient-x": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center"
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center"
+          }
+        },
+        pulse: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" }
         }
       },
       animation: {
@@ -78,7 +93,9 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
         "float": "float 3s ease-in-out infinite",
-        "text-shine": "text-shine 3s ease-in-out infinite"
+        "text-shine": "text-shine 3s ease-in-out infinite",
+        "gradient-x": "gradient-x 15s ease infinite",
+        "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
       },
     },
   },
