@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,6 +12,10 @@
 
 .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-emerald-400 to-blue-400 animate-text-shine;
+}
+
+.text-gradient-blue-purple {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400;
 }
 
 .glass-card {
