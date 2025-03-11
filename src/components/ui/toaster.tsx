@@ -17,10 +17,10 @@ export function Toaster() {
         return (
           <Toast 
             key={id} 
-            className="bg-gradient-to-r from-[#0F172A]/95 to-[#1E293B]/95 backdrop-blur-lg border border-white/10 text-white shadow-lg"
+            className="bg-gradient-to-r from-[#0F172A]/95 via-[#1E293B]/95 to-[#0F172A]/95 backdrop-blur-lg border border-indigo-500/20 text-white shadow-lg"
           >
             <div className="grid gap-1">
-              {title && <ToastTitle className="text-primary/90 font-medium">{title}</ToastTitle>}
+              {title && <ToastTitle className="text-indigo-400 font-medium">{title}</ToastTitle>}
               {description && <ToastDescription className="text-white/80">{description}</ToastDescription>}
             </div>
             {action}
