@@ -31,6 +31,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import BasicInfoStep from './steps/BasicInfoStep';
 import InterestsStep from './steps/InterestsStep';
 
@@ -261,81 +262,85 @@ const CreateCommunityDialog = ({ onCommunityCreated }: CreateCommunityDialogProp
         </motion.div>
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_8px_32px_rgba(98,114,164,0.2)]">
-        <DialogHeader>
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-2"
-          >
-            <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-text-shine">
-              {step === 1 ? 'Definește-ți comunitatea' : 'Personalizează experiența'}
-            </DialogTitle>
-            <DialogDescription className="text-lg text-white/70">
-              {step === 1 ? 'Creează un spațiu unde ideile prind viață' : 'Conectează-te cu cei care împărtășesc aceleași pasiuni'}
-            </DialogDescription>
-          </motion.div>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl max-h-[85vh] p-0 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_8px_32px_rgba(98,114,164,0.2)]">
+        <ScrollArea className="max-h-[85vh] overflow-y-auto custom-scrollbar rounded-3xl">
+          <div className="p-6 sm:p-8">
+            <DialogHeader>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-2"
+              >
+                <DialogTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-text-shine">
+                  {step === 1 ? 'Definește-ți comunitatea' : 'Personalizează experiența'}
+                </DialogTitle>
+                <DialogDescription className="text-lg text-white/70">
+                  {step === 1 ? 'Creează un spațiu unde ideile prind viață' : 'Conectează-te cu cei care împărtășesc aceleași pasiuni'}
+                </DialogDescription>
+              </motion.div>
+            </DialogHeader>
 
-        <AnimatePresence mode="wait">
-          {step === 1 ? (
-            <BasicInfoStep
-              name={newCommunityData.name}
-              description={newCommunityData.description}
-              onNameChange={(value) => setNewCommunityData(prev => ({ ...prev, name: value }))}
-              onDescriptionChange={(value) => setNewCommunityData(prev => ({ ...prev, description: value }))}
-            />
-          ) : (
-            <InterestsStep
-              interests={[
-                "Artă", "Muzică", "Gaming", "Sport", "Tehnologie",
-                "Filme", "Cărți", "Călătorii", "Fotografie", "Modă",
-                "Dans", "Gătit", "Fitness", "Yoga", "Meditație",
-                "Crypto", "NFTs", "Metaverse", "Inteligență Artificială", "Realitate Virtuală",
-                "Business", "Investiții", "Marketing", "Design", "Dezvoltare Personală"
-              ]}
-              selectedInterests={newCommunityData.interests}
-              onInterestToggle={(interest) => {
-                setNewCommunityData(prev => ({
-                  ...prev,
-                  interests: prev.interests.includes(interest)
-                    ? prev.interests.filter(i => i !== interest)
-                    : [...prev.interests, interest]
-                }));
-              }}
-            />
-          )}
-        </AnimatePresence>
+            <AnimatePresence mode="wait">
+              {step === 1 ? (
+                <BasicInfoStep
+                  name={newCommunityData.name}
+                  description={newCommunityData.description}
+                  onNameChange={(value) => setNewCommunityData(prev => ({ ...prev, name: value }))}
+                  onDescriptionChange={(value) => setNewCommunityData(prev => ({ ...prev, description: value }))}
+                />
+              ) : (
+                <InterestsStep
+                  interests={[
+                    "Artă", "Muzică", "Gaming", "Sport", "Tehnologie",
+                    "Filme", "Cărți", "Călătorii", "Fotografie", "Modă",
+                    "Dans", "Gătit", "Fitness", "Yoga", "Meditație",
+                    "Crypto", "NFTs", "Metaverse", "Inteligență Artificială", "Realitate Virtuală",
+                    "Business", "Investiții", "Marketing", "Design", "Dezvoltare Personală"
+                  ]}
+                  selectedInterests={newCommunityData.interests}
+                  onInterestToggle={(interest) => {
+                    setNewCommunityData(prev => ({
+                      ...prev,
+                      interests: prev.interests.includes(interest)
+                        ? prev.interests.filter(i => i !== interest)
+                        : [...prev.interests, interest]
+                    }));
+                  }}
+                />
+              )}
+            </AnimatePresence>
 
-        <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
-          {step === 2 && (
-            <Button
-              variant="frost"
-              onClick={() => setStep(1)}
-              className="order-2 sm:order-1 flex-1 h-14 text-lg rounded-xl"
-            >
-              Înapoi
-            </Button>
-          )}
-          <Button
-            variant="aurora"
-            onClick={step === 1 ? () => setStep(2) : handleCreateCommunity}
-            disabled={step === 1 ? !newCommunityData.name || !newCommunityData.description : newCommunityData.interests.length === 0}
-            className={`order-1 sm:order-2 ${step === 1 ? 'w-full' : 'flex-1'} h-14 text-lg rounded-xl disabled:opacity-50 disabled:cursor-not-allowed`}
-          >
-            {step === 1 ? (
-              <>
-                Continuă
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </>
-            ) : (
-              <>
-                Lansează Comunitatea
-                <Sparkles className="ml-2 h-5 w-5 animate-pulse" />
-              </>
-            )}
-          </Button>
-        </div>
+            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
+              {step === 2 && (
+                <Button
+                  variant="frost"
+                  onClick={() => setStep(1)}
+                  className="order-2 sm:order-1 flex-1 h-14 text-lg rounded-xl"
+                >
+                  Înapoi
+                </Button>
+              )}
+              <Button
+                variant="aurora"
+                onClick={step === 1 ? () => setStep(2) : handleCreateCommunity}
+                disabled={step === 1 ? !newCommunityData.name || !newCommunityData.description : newCommunityData.interests.length === 0}
+                className={`order-1 sm:order-2 ${step === 1 ? 'w-full' : 'flex-1'} h-14 text-lg rounded-xl disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {step === 1 ? (
+                  <>
+                    Continuă
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </>
+                ) : (
+                  <>
+                    Lansează Comunitatea
+                    <Sparkles className="ml-2 h-5 w-5 animate-pulse" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
