@@ -406,10 +406,10 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-8"
+      className="space-y-8 relative"
     >
-      {/* Header */}
-      <div className="sticky top-0 z-50 backdrop-blur-xl bg-[#1A1F2C]/80 border-b border-[#3A4366]/30 py-4">
+      {/* Header - Modified to be more integrated with the layout */}
+      <div className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-gradient-to-r from-[#1A1F2C]/95 to-[#1E293B]/95 border-b border-[#3A4366]/30 py-3 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -515,7 +515,10 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
-      <div className="container mx-auto px-4">
+      {/* Spacer to prevent content from being hidden behind fixed header */}
+      <div className="h-16"></div>
+      
+      <div className="container mx-auto px-4 pt-4">
         {/* Post Creator */}
         <PremiumPostCreator 
           topicId={topicId} 
