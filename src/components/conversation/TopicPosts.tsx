@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
@@ -406,10 +407,10 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-8 relative"
+      className="space-y-8 relative mt-16" // Added mt-16 to account for the main navbar height
     >
-      {/* Header - Modified to be more integrated with the layout */}
-      <div className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-gradient-to-r from-[#1A1F2C]/95 to-[#1E293B]/95 border-b border-[#3A4366]/30 py-3 shadow-md">
+      {/* Header - Modified to be positioned below the main navbar */}
+      <div className="sticky top-16 left-0 right-0 z-30 backdrop-blur-xl bg-gradient-to-r from-[#1A1F2C]/95 to-[#1E293B]/95 border-b border-[#3A4366]/30 py-3 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -515,8 +516,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
-      {/* Spacer to prevent content from being hidden behind fixed header */}
-      <div className="h-16"></div>
+      {/* No need for spacer anymore since we're using sticky positioning instead of fixed */}
       
       <div className="container mx-auto px-4 pt-4">
         {/* Post Creator */}
@@ -527,7 +527,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         />
         
         {/* Posts */}
-        <ScrollArea className="h-[calc(100vh-15rem)]">
+        <ScrollArea className="h-[calc(100vh-17rem)]"> {/* Adjusted height to account for navbar + topic header */}
           <div className="space-y-6 pb-20">
             <AnimatePresence initial={false}>
               {filteredPosts.length > 0 ? (
