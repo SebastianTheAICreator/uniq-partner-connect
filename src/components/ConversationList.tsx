@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import Sidebar from './sidebar/Sidebar';
@@ -39,7 +38,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
   const [showTagSelector, setShowTagSelector] = useState(false);
   const { toast } = useToast();
 
-  // All available tags
   const availableTags = useMemo(() => [
     { name: 'Design', color: 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30' },
     { name: 'Technology', color: 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30' },
@@ -120,7 +118,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
   const filteredConversations = useMemo(() => {
     return conversations
       .filter(conv => {
-        // Filter by search query
         if (searchQuery && !(
           conv.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
           (conv.description && conv.description.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -128,13 +125,9 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
           return false;
         }
         
-        // Filter by active tags
         if (activeTags.length > 0) {
-          // This is a mock implementation since we don't have actual tags in the data model
-          // In a real app, you would check if the conversation has all the selected tags
           const mockConvTags = ['Design', 'Technology', 'AI', 'Business'].slice(0, Math.floor(Math.random() * 4) + 1);
           
-          // Check if any of the active tags is in the conversation tags
           return activeTags.some(tag => mockConvTags.includes(tag));
         }
         
@@ -174,7 +167,6 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
           transition={{ duration: 0.5 }}
           className="relative"
         >
-          {/* Decorative background elements */}
           <div className="fixed top-40 right-[5%] w-[600px] h-[600px] bg-purple-600/5 rounded-full blur-[120px] -z-10"></div>
           <div className="fixed bottom-40 left-[30%] w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px] -z-10"></div>
           <div className="fixed top-[20%] left-[10%] w-[400px] h-[400px] bg-indigo-600/5 rounded-full blur-[120px] -z-10"></div>
@@ -230,7 +222,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                       </Button>
                     </div>
                     
-                    <div className="mt-10 relative z-20">
+                    <div className="mt-10 relative z-30">
                       <div className="p-1.5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                         <div className="flex flex-col sm:flex-row items-stretch gap-3">
                           <div className="relative flex-1 w-full">
@@ -405,7 +397,7 @@ const ConversationList = ({ communityId = 1 }: ConversationListProps) => {
                           animate={{ opacity: 1, height: 'auto', y: 0 }}
                           exit={{ opacity: 0, height: 0, y: -10 }}
                           transition={{ duration: 0.2 }}
-                          className="mt-3 p-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                          className="mt-3 p-4 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] z-30"
                         >
                           <div className="flex flex-col gap-3">
                             <div className="flex items-center justify-between">

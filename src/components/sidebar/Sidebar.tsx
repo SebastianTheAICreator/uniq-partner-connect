@@ -40,7 +40,7 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
           ease: [0.6, -0.05, 0.01, 0.99]
         }}
         className={cn(
-          "fixed left-0 top-[4rem] h-[calc(100vh-4rem)] z-30",
+          "fixed left-0 top-[4rem] h-[calc(100vh-4rem)] z-50", // Updated z-index from z-30 to z-50
           "bg-gradient-to-br from-[#151822]/95 via-[#1A1F2C]/95 to-[#151822]/95",
           "backdrop-blur-lg border-r border-white/5",
           "shadow-[0_4px_30px_rgba(0,0,0,0.15)]",
@@ -78,7 +78,7 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
       {isMobile && (
         <div 
           className={cn(
-            "fixed inset-0 bg-black/60 backdrop-blur-sm z-20 transition-opacity",
+            "fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity", // Updated z-index from z-20 to z-40
             isMobile ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           )}
           onClick={() => setCollapsed(true)}

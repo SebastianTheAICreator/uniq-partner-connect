@@ -12,7 +12,7 @@ const Navbar = () => {
   const { notifications, markAsRead, clearAll, unreadCount } = useNotifications();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-gradient-to-b from-gray-900/95 to-gray-900/90 backdrop-blur-md border-b border-white/5 shadow-lg z-50">
+    <nav className="fixed top-0 left-0 right-0 bg-gradient-to-b from-gray-900/95 to-gray-900/90 backdrop-blur-md border-b border-white/5 shadow-lg z-40">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
