@@ -59,7 +59,7 @@ const mockPosts = [
   },
   {
     id: '2',
-    content: 'Our latest market analysis shows a significant shift in consumer behavior post-pandemic. We've identified 5 key trends that will shape the industry for the next decade.',
+    content: "Our latest market analysis shows a significant shift in consumer behavior post-pandemic. We've identified 5 key trends that will shape the industry for the next decade.",
     author: {
       id: 'user2',
       name: 'Michael Reynolds',
@@ -83,7 +83,7 @@ const mockPosts = [
   },
   {
     id: '3',
-    content: 'Thrilled to announce we've secured $175M in Series C funding to accelerate our global expansion and product development. Grateful to our investors who believe in our vision of transforming how enterprises leverage data.',
+    content: "Thrilled to announce we've secured $175M in Series C funding to accelerate our global expansion and product development. Grateful to our investors who believe in our vision of transforming how enterprises leverage data.",
     author: {
       id: 'user3',
       name: 'Sarah Blackwood',
