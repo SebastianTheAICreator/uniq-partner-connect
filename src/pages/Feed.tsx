@@ -27,6 +27,7 @@ import {
 import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
+import { Post, PostAttachment } from '@/components/feed/FeedPost';
 
 const mockConversations = [
   { id: '1', title: 'My first conversation' },
@@ -35,7 +36,7 @@ const mockConversations = [
 ];
 
 // Mock post data to display in the feed
-const mockPosts = [
+const mockPosts: Post[] = [
   {
     id: '1',
     content: 'Just launched our revolutionary AI feature that helps businesses increase productivity by 300%. Early users are seeing unprecedented results across their workflows.',
@@ -77,7 +78,7 @@ const mockPosts = [
     },
     tags: ['market-analysis', 'consumer-trends', 'strategy'],
     attachments: [{
-      type: 'image',
+      type: 'image' as const,
       url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070'
     }]
   },
