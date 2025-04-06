@@ -8,7 +8,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Separator } from '../ui/separator';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SidebarContentProps {
   conversations: Array<{
@@ -25,6 +25,7 @@ const SidebarContent = ({
   collapsed = false
 }: SidebarContentProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
 
   const menuItems = [{
@@ -100,6 +101,11 @@ const SidebarContent = ({
     show: { opacity: 1, x: 0 }
   };
 
+  // Funcție pentru navigare când se face click pe un element din meniu
+  const handleMenuItemClick = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-6rem)]">
       {/* App logo/brand */}
@@ -147,6 +153,7 @@ const SidebarContent = ({
                       "hover:bg-white/5 relative overflow-hidden",
                       isActive ? "bg-white/10 text-white" : ""
                     )}
+                    onClick={() => handleMenuItemClick(item.path)}
                   >
                     <span className={cn(
                       "flex items-center", 
