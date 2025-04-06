@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Community from "./pages/Community";
 import Feed from "./pages/Feed";
+import TrendingTopics from "./pages/TrendingTopics";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Navigate to="/feed" replace />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/trending-topics" element={<TrendingTopics />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

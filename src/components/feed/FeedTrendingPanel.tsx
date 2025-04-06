@@ -1,6 +1,6 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -96,9 +96,16 @@ const FeedTrendingPanel = () => {
               ))}
             </div>
             <div className="px-4 pt-2 pb-4">
-              <Button variant="ghost" size="sm" className="w-full justify-between text-blue-400 hover:text-blue-300 text-xs">
-                <span>Explore all trending topics</span>
-                <ArrowRight className="h-3.5 w-3.5 ml-1" />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-between text-blue-400 hover:text-blue-300 text-xs"
+                asChild
+              >
+                <Link to="/trending-topics">
+                  <span>Explore all trending topics</span>
+                  <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                </Link>
               </Button>
             </div>
           </CardContent>
