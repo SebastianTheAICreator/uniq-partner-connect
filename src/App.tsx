@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Community from "./pages/Community";
 import Feed from "./pages/Feed";
 import TrendingTopics from "./pages/TrendingTopics";
+import DiscoverPeople from "./pages/DiscoverPeople";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/feed" element={<Feed />} />
           <Route path="/community" element={<Community />} />
           <Route path="/trending-topics" element={<TrendingTopics />} />
+          <Route path="/discover-people" element={<DiscoverPeople />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

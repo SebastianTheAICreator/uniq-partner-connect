@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -164,9 +165,16 @@ const FeedTrendingPanel = () => {
               ))}
             </div>
             <div className="px-4 pt-2 pb-4">
-              <Button variant="ghost" size="sm" className="w-full justify-between text-purple-400 hover:text-purple-300 text-xs">
-                <span>Discover more people</span>
-                <ArrowRight className="h-3.5 w-3.5 ml-1" />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-between text-purple-400 hover:text-purple-300 text-xs"
+                asChild
+              >
+                <Link to="/discover-people">
+                  <span>Discover more people</span>
+                  <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                </Link>
               </Button>
             </div>
           </CardContent>
