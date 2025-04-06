@@ -8,6 +8,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Separator } from '../ui/separator';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useLocation } from 'react-router-dom';
 
 interface SidebarContentProps {
   conversations: Array<{
@@ -23,51 +24,65 @@ const SidebarContent = ({
   onConversationClick,
   collapsed = false
 }: SidebarContentProps) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const menuItems = [{
     icon: Rss,
     label: 'Feed',
-    badge: '3'
+    badge: '3',
+    path: '/feed'
   }, {
     icon: TrendingUp,
     label: 'Trending',
-    badge: '5'
+    badge: '5',
+    path: '/trending-topics'
   }, {
     icon: Video,
     label: 'UniVideo',
-    badge: '12'
+    badge: '12',
+    path: '/univideo'
   }, {
     icon: Newspaper,
     label: 'UniNews',
-    badge: '8'
+    badge: '8',
+    path: '/uninews'
   }, {
     icon: Users,
     label: 'Comuniti',
-    badge: '24'
+    badge: '24',
+    path: '/community'
   }, {
     icon: Banknote,
     label: 'UniBanking',
-    badge: '4'
+    badge: '4',
+    path: '/unibanking'
   }, {
     icon: Heart,
     label: 'Matches',
-    badge: '7'
+    badge: '7',
+    path: '/matches'
   }, {
     icon: MessageSquare,
     label: 'Friends',
-    badge: '9'
+    badge: '9',
+    path: '/friends'
   }, {
     icon: MessageSquare,
     label: 'Messages',
-    badge: '2'
+    badge: '2',
+    path: '/messages'
   }, {
     icon: MessageCircle,
     label: 'Ol-yAIChat',
-    badge: '1'
+    badge: '1',
+    path: '/chat'
   }, {
     icon: Building,
     label: 'UniQ Enterprise',
     badge: 'PRO',
-    className: 'bg-gradient-to-r from-blue-400 to-emerald-400 hover:from-blue-500 hover:to-emerald-500'
+    className: 'bg-gradient-to-r from-blue-400 to-emerald-400 hover:from-blue-500 hover:to-emerald-500',
+    path: '/enterprise'
   }];
 
   const containerVariants = {
@@ -118,70 +133,89 @@ const SidebarContent = ({
               </h2>
             )}
             
-            {menuItems.map(item => (
-              <motion.div key={item.label} variants={itemVariants}>
-                <Button 
-                  variant="ghost" 
-                  className={cn(
-                    "group transition-all duration-300",
-                    collapsed ? "justify-center w-full px-0" : "w-full justify-between",
-                    item.className || '',
-                    "hover:bg-white/5 relative overflow-hidden"
-                  )}
-                >
-                  <span className={cn(
-                    "flex items-center", 
-                    collapsed ? "justify-center" : "gap-3"
-                  )}>
-                    <div className="relative">
-                      <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-500/20 to-emerald-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <item.icon className={cn(
-                        "h-4 w-4 z-10 relative transition-all duration-300",
-                        collapsed ? "h-5 w-5" : "",
-                        item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : 'text-blue-400 group-hover:text-blue-300'
-                      )} />
-                    </div>
-                    
-                    {!collapsed && (
-                      <span className={cn(
-                        "text-sm font-medium transition-colors group-hover:text-white font-inter",
-                        item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : 'text-gray-300'
-                      )}>
-                        {item.label}
-                      </span>
+            {menuItems.map(item => {
+              const isActive = currentPath === item.path;
+              
+              return (
+                <motion.div key={item.label} variants={itemVariants}>
+                  <Button 
+                    variant="ghost" 
+                    className={cn(
+                      "group transition-all duration-300",
+                      collapsed ? "justify-center w-full px-0" : "w-full justify-between",
+                      item.className || '',
+                      "hover:bg-white/5 relative overflow-hidden",
+                      isActive ? "bg-white/10 text-white" : ""
                     )}
-                  </span>
-                  
-                  {!collapsed && item.badge && (
+                  >
                     <span className={cn(
-                      "px-2 py-1 text-xs font-medium rounded-full",
-                      item.label === 'UniQ Enterprise' 
-                        ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white' 
-                        : 'bg-gradient-to-r from-blue-500/20 to-emerald-500/20 text-white'
+                      "flex items-center", 
+                      collapsed ? "justify-center" : "gap-3"
                     )}>
-                      {item.badge}
+                      <div className="relative">
+                        <div className={cn(
+                          "absolute -inset-1 rounded-full blur-sm",
+                          isActive 
+                            ? "bg-gradient-to-r from-blue-500/50 to-emerald-500/50 opacity-100" 
+                            : "bg-gradient-to-r from-blue-500/20 to-emerald-500/20 opacity-0 group-hover:opacity-100"
+                        )} />
+                        <item.icon className={cn(
+                          "h-4 w-4 z-10 relative transition-all duration-300",
+                          collapsed ? "h-5 w-5" : "",
+                          item.label === 'UniQ Enterprise' ? 'text-white animate-pulse' : isActive ? 'text-blue-300' : 'text-blue-400 group-hover:text-blue-300'
+                        )} />
+                      </div>
+                      
+                      {!collapsed && (
+                        <span className={cn(
+                          "text-sm font-medium transition-colors group-hover:text-white font-inter",
+                          item.label === 'UniQ Enterprise' ? 'text-white font-semibold' : isActive ? 'text-white' : 'text-gray-300'
+                        )}>
+                          {item.label}
+                        </span>
+                      )}
                     </span>
-                  )}
-                  
-                  {/* Show smaller badges when collapsed */}
-                  {collapsed && item.badge && (
-                    <div className="absolute -top-1 -right-1">
+                    
+                    {!collapsed && item.badge && (
                       <span className={cn(
-                        "px-1.5 py-0.5 text-[10px] font-medium rounded-full",
+                        "px-2 py-1 text-xs font-medium rounded-full",
                         item.label === 'UniQ Enterprise' 
                           ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white' 
-                          : 'bg-gradient-to-r from-blue-500/20 to-emerald-500/20 text-white'
+                          : isActive
+                            ? 'bg-gradient-to-r from-blue-500/40 to-emerald-500/40 text-white'
+                            : 'bg-gradient-to-r from-blue-500/20 to-emerald-500/20 text-white'
                       )}>
                         {item.badge}
                       </span>
-                    </div>
-                  )}
-                  
-                  {/* Hover effect - sliding gradient */}
-                  <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-emerald-500/0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
-                </Button>
-              </motion.div>
-            ))}
+                    )}
+                    
+                    {/* Show smaller badges when collapsed */}
+                    {collapsed && item.badge && (
+                      <div className="absolute -top-1 -right-1">
+                        <span className={cn(
+                          "px-1.5 py-0.5 text-[10px] font-medium rounded-full",
+                          item.label === 'UniQ Enterprise' 
+                            ? 'bg-gradient-to-r from-blue-400 to-emerald-400 text-white' 
+                            : isActive
+                              ? 'bg-gradient-to-r from-blue-500/40 to-emerald-500/40 text-white'
+                              : 'bg-gradient-to-r from-blue-500/20 to-emerald-500/20 text-white'
+                        )}>
+                          {item.badge}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {/* Active indicator bar */}
+                    {isActive && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-emerald-400" />
+                    )}
+                    
+                    {/* Hover effect - sliding gradient */}
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-emerald-500/0 -translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
+                  </Button>
+                </motion.div>
+              );
+            })}
           </motion.div>
 
           <Separator className="mx-1 bg-white/5" />
