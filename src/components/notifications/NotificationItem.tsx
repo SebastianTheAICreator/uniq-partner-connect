@@ -23,19 +23,19 @@ interface NotificationItemProps {
 const getNotificationIcon = (type: Notification['type']) => {
   switch (type) {
     case 'POST_LIKE':
-      return <Heart className="w-5 h-5 text-pink-400" />;
+      return <Heart className="w-5 h-5 text-interactive" />;
     case 'POST_COMMENT':
     case 'COMMENT_REPLY':
-      return <MessageCircle className="w-5 h-5 text-blue-400" />;
+      return <MessageCircle className="w-5 h-5 text-interactive" />;
     case 'GROUP_JOIN':
     case 'NEW_GROUP':
-      return <Users className="w-5 h-5 text-green-400" />;
+      return <Users className="w-5 h-5 text-interactive" />;
     case 'NEW_DISCUSSION':
-      return <PlusCircle className="w-5 h-5 text-purple-400" />;
+      return <PlusCircle className="w-5 h-5 text-interactive" />;
     case 'MENTION':
-      return <AtSign className="w-5 h-5 text-yellow-400" />;
+      return <AtSign className="w-5 h-5 text-interactive" />;
     default:
-      return <Bell className="w-5 h-5 text-gray-400" />;
+      return <Bell className="w-5 h-5 text-foreground/50" />;
   }
 };
 
@@ -70,34 +70,20 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
         mass: 1
       }}
       className={cn(
-        "group relative overflow-hidden rounded-xl backdrop-blur-md transition-all duration-300",
+        "group relative overflow-hidden rounded border transition-all duration-300",
         notification.read
-          ? "bg-gradient-to-r from-white/5 to-transparent border border-white/5"
-          : "bg-gradient-to-r from-primary/20 via-secondary/15 to-transparent border-t border-l border-white/10 border-b border-r border-white/5 shadow-[0_0_15px_rgba(74,144,226,0.1)]"
+          ? "bg-primary/80 border-white/5"
+          : "bg-secondary/30 border-interactive/20 shadow-sm"
       )}
     >
-      {/* Premium notification glow effect for unread notifications */}
-      {!notification.read && (
-        <motion.div 
-          className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/10 via-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          animate={{ 
-            opacity: [0.2, 0.5, 0.2], 
-          }}
-          transition={{ 
-            repeat: Infinity, 
-            duration: 3,
-          }}
-        />
-      )}
-
       <div className="flex items-start p-4 gap-4">
         <motion.div 
-          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileHover={{ scale: 1.1 }}
           className={cn(
-            "flex-shrink-0 p-2.5 rounded-lg",
+            "flex-shrink-0 p-2.5 rounded",
             notification.read
-              ? "bg-white/5"
-              : "bg-gradient-to-br from-primary/20 to-secondary/20 backdrop-blur-xl"
+              ? "bg-secondary/30"
+              : "bg-interactive/10"
           )}
         >
           {getNotificationIcon(notification.type)}
@@ -108,25 +94,25 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
             <h4 className={cn(
               "font-medium leading-tight line-clamp-1",
               notification.read 
-                ? "text-white/80" 
-                : "text-white gradient-text animate-text-shine font-semibold"
+                ? "text-foreground/80" 
+                : "text-interactive font-semibold"
             )}>
               {notification.title}
             </h4>
 
-            <span className="text-xs text-white/50 flex-shrink-0">
+            <span className="text-xs text-foreground/50 flex-shrink-0">
               {getRelativeTime(notification.timestamp)}
             </span>
           </div>
 
-          <p className="text-sm text-white/70 mt-1 mb-2 line-clamp-2">
+          <p className="text-sm text-foreground/70 mt-1 mb-2 line-clamp-2">
             {notification.message}
           </p>
           
           {!notification.read && (
             <div className="flex justify-end">
               <Button 
-                variant="aurora" 
+                variant="classic-blue" 
                 size="sm" 
                 rounded="full"
                 onClick={() => onMarkAsRead(notification.id)}
@@ -145,7 +131,7 @@ const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>
               className="flex justify-end"
             >
               <Button 
-                variant="frost" 
+                variant="classic-outline" 
                 size="sm" 
                 rounded="full"
                 className="opacity-70 hover:opacity-100 group/btn"

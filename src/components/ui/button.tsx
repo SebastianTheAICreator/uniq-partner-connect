@@ -10,33 +10,23 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        premium: "bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg hover:shadow-primary/20 transition-all duration-300",
-        'premium-outline': "bg-transparent border border-primary/20 text-white hover:bg-primary/10 hover:border-primary/40 transition-all duration-300",
-        'premium-ghost': "bg-white/5 text-white hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-300",
-        glass: "backdrop-blur-md bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:border-white/20 transition-all duration-300",
-        'diamond': "relative bg-gradient-to-r from-primary/90 via-secondary/80 to-accent/90 text-white overflow-hidden before:absolute before:inset-0 before:bg-[url('/assets/noise.svg')] before:opacity-5 before:mix-blend-overlay hover:shadow-lg hover:shadow-primary/30 hover:scale-[1.02] transition-all duration-300",
-        'frost': "backdrop-blur-xl bg-white/5 border border-white/20 text-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] hover:bg-white/10 hover:border-white/30 hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all duration-300",
-        'aurora': "relative bg-gradient-to-br from-primary/80 via-secondary/60 to-accent/80 text-white overflow-hidden shadow-md after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent after:opacity-0 hover:after:opacity-100 after:transition-opacity hover:shadow-lg hover:shadow-primary/20 transition-all duration-300",
-        'neon': "relative bg-transparent border border-primary/50 text-white overflow-hidden before:absolute before:inset-0 before:bg-primary/10 before:opacity-0 hover:before:opacity-100 before:transition-opacity hover:border-primary/80 hover:shadow-[0_0_15px_rgba(74,144,226,0.5)] transition-all duration-300",
-        // Premium variants
-        'cosmos': "relative bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#334155] text-white border border-white/10 overflow-hidden shadow-lg before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_top_right,_rgba(74,144,226,0.15),_transparent_70%)] hover:shadow-primary/20 hover:before:opacity-100 hover:scale-[1.02] transition-all duration-300",
-        'midnight': "bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white border border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_4px_30px_rgba(74,144,226,0.2)] hover:border-white/10 transition-all duration-300",
-        'stellar': "relative bg-gradient-to-r from-primary/80 to-secondary/80 text-white overflow-hidden before:absolute before:inset-0 before:bg-[url('/assets/noise.svg')] before:opacity-5 before:mix-blend-overlay after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/30 after:to-transparent hover:shadow-lg hover:shadow-primary/30 hover:scale-[1.02] transition-all duration-300",
-        // New premium variants
-        'celestial': "relative bg-gradient-to-br from-indigo-500/90 via-purple-500/90 to-pink-500/90 text-white overflow-hidden shadow-lg before:absolute before:inset-0 before:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] before:opacity-10 hover:shadow-[0_8px_30px_rgba(109,40,217,0.3)] hover:scale-[1.02] transition-all duration-300",
-        'nebula': "relative bg-gradient-to-br from-[#1E293B]/95 to-[#0F172A]/95 text-white border border-indigo-500/20 overflow-hidden shadow-[0_4px_20px_rgba(79,70,229,0.15)] before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_top,_rgba(79,70,229,0.15),_transparent_70%)] hover:shadow-[0_8px_30px_rgba(79,70,229,0.2)] hover:border-indigo-500/30 transition-all duration-300",
-        'quantum': "relative bg-[#0F172A]/90 text-white border border-white/10 overflow-hidden shadow-md before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_50%_50%,_rgba(124,58,237,0.1),_rgba(240,171,252,0.1)_70%,_transparent_100%)] hover:shadow-[0_8px_30px_rgba(124,58,237,0.2)] hover:border-white/20 hover:scale-[1.03] transition-all duration-300",
-        'eclipse': "relative bg-gradient-to-br from-[#1E293B]/95 via-[#334155]/95 to-[#1E293B]/95 text-white border border-pink-500/20 overflow-hidden shadow-[0_4px_20px_rgba(236,72,153,0.15)] before:absolute before:inset-0 before:bg-[radial-gradient(ellipse_at_bottom,_rgba(236,72,153,0.15),_transparent_70%)] hover:shadow-[0_8px_30px_rgba(236,72,153,0.2)] hover:border-pink-500/30 transition-all duration-300",
-        'cosmic': "relative bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl text-white border border-white/10 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.15)] hover:bg-gradient-to-r hover:from-indigo-500/20 hover:via-purple-500/20 hover:to-pink-500/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.25)] hover:border-white/20 transition-all duration-300",
+        default: "bg-primary text-foreground hover:bg-primary/90 border border-white/5",
+        destructive: "bg-red-900 text-white hover:bg-red-800 border border-red-800/50",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-white hover:bg-secondary/90 border border-white/5",
+        ghost: "hover:bg-secondary hover:text-accent-foreground",
+        link: "text-interactive underline-offset-4 hover:underline",
+        
+        // Classic variants
+        'classic': "bg-primary border border-white/10 text-foreground hover:bg-secondary shadow-sm hover:shadow-md transition-all duration-300",
+        'classic-blue': "bg-interactive text-white hover:bg-interactive/90 border border-white/10 shadow-classic-blue hover:shadow-classic-lg transition-all duration-300",
+        'classic-outline': "bg-transparent border border-white/10 text-foreground hover:bg-primary/80 hover:border-white/20 transition-all duration-300",
+        'classic-subtle': "bg-background/70 text-foreground border border-white/5 hover:bg-background hover:border-white/10 transition-all duration-300",
+        'classic-ghost': "bg-transparent text-foreground hover:bg-white/5 transition-all duration-300",
+        
+        // Premium variants (simplified)
+        'premium': "bg-interactive text-white hover:bg-interactive/90 border border-white/10 shadow-classic-blue hover:shadow-classic-lg transition-all duration-300",
+        'premium-outline': "bg-transparent border border-interactive/20 text-white hover:bg-primary/80 hover:border-interactive/40 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -51,7 +41,8 @@ const buttonVariants = cva(
         full: "rounded-full",
         lg: "rounded-lg",
         xl: "rounded-xl",
-        '2xl': "rounded-2xl"
+        '2xl': "rounded-2xl",
+        none: "rounded-none"
       }
     },
     defaultVariants: {

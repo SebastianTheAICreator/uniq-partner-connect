@@ -12,9 +12,9 @@ interface PremiumButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const PremiumButton = React.forwardRef<HTMLButtonElement, PremiumButtonProps>(
   ({ className, icon, children, variant = 'subtle', ...props }, ref) => {
     const buttonStyles = {
-      primary: "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white border-transparent hover:shadow-[0_0_25px_rgba(124,58,237,0.5)]",
-      secondary: "bg-white/10 backdrop-blur-md border-white/10 text-white hover:bg-white/15",
-      subtle: "bg-white/5 border-white/10 backdrop-blur-sm text-white/80 hover:bg-white/10 hover:text-white"
+      primary: "bg-interactive text-white border-interactive/20 hover:shadow-classic-blue",
+      secondary: "bg-secondary border-white/10 text-white hover:bg-secondary/80",
+      subtle: "bg-primary/70 border-white/5 text-white/80 hover:bg-primary hover:text-white"
     };
 
     return (
@@ -23,7 +23,7 @@ const PremiumButton = React.forwardRef<HTMLButtonElement, PremiumButtonProps>(
           ref={ref}
           className={cn(
             "font-medium transition-all duration-300",
-            "rounded-xl border",
+            "rounded-md border",
             "shadow-sm hover:shadow-md",
             buttonStyles[variant],
             className

@@ -1,3 +1,4 @@
+
 import { ButtonHTMLAttributes, FC } from 'react';
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
@@ -14,16 +15,16 @@ const ActionButton: FC<ActionButtonProps> = ({
 }) => {
   return (
     <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
       className={cn(
-        "px-6 py-3 rounded-lg font-semibold text-white shadow-lg",
+        "px-6 py-3 rounded-lg font-semibold text-white shadow-classic",
         "transition-all duration-300",
-        "hover:shadow-xl",
+        "hover:shadow-classic-md border",
         {
-          'bg-gradient-to-r from-primary to-primary-hover': variant === 'primary',
-          'bg-gradient-to-r from-secondary to-secondary-hover': variant === 'secondary',
-          'bg-gradient-to-r from-accent to-accent-hover': variant === 'accent',
+          'bg-interactive border-interactive/30 hover:bg-interactive/90': variant === 'primary',
+          'bg-secondary border-white/5 hover:bg-secondary/90': variant === 'secondary',
+          'bg-accent border-white/5 hover:bg-accent/90': variant === 'accent',
         },
         className
       )}

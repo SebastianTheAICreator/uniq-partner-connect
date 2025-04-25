@@ -20,26 +20,30 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: "hsl(240, 3.7%, 15.9%)",
+        input: "hsl(240, 3.7%, 15.9%)",
+        ring: "hsl(240, 4.9%, 83.9%)",
+        background: "#151822",
+        foreground: "#f3f3f3",
         primary: {
+          DEFAULT: "#1E293B",
+          hover: "#0F172A",
+        },
+        secondary: {
+          DEFAULT: "#334155",
+          hover: "#1E293B",
+        },
+        accent: {
+          DEFAULT: "#0F172A",
+          hover: "#0F172A",
+        },
+        interactive: {
           DEFAULT: "#4A90E2",
           hover: "#357ABD",
         },
-        secondary: {
-          DEFAULT: "#64D2FF",
-          hover: "#4BBAED",
-        },
-        accent: {
-          DEFAULT: "#42E695",
-          hover: "#2DCC7D",
-        },
-        interactive: {
-          DEFAULT: "#FF9ECD",
-          hover: "#FF85BE",
+        muted: {
+          DEFAULT: "#1A1F2C",
+          foreground: "#a1a1aa",
         }
       },
       fontFamily: {
@@ -61,71 +65,45 @@ export default {
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" }
-        },
-        "text-shine": {
-          "0%": {
-            "background-size": "200% 200%",
-            "background-position": "left center"
-          },
-          "100%": {
-            "background-size": "200% 200%",
-            "background-position": "right center"
-          }
-        },
-        "gradient-x": {
-          "0%, 100%": {
-            "background-size": "200% 200%",
-            "background-position": "left center"
-          },
-          "50%": {
-            "background-size": "200% 200%",
-            "background-position": "right center"
-          }
+          "50%": { transform: "translateY(-5px)" }
         },
         pulse: {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" }
+          "50%": { opacity: "0.7" }
         },
-        "glow-pulse": {
+        "subtle-glow": {
           "0%, 100%": { 
-            "box-shadow": "0 0 20px 0px rgba(74, 144, 226, 0.3)" 
+            "box-shadow": "0 0 10px 0px rgba(74, 144, 226, 0.2)" 
           },
           "50%": { 
-            "box-shadow": "0 0 30px 10px rgba(74, 144, 226, 0.5)" 
+            "box-shadow": "0 0 15px 5px rgba(74, 144, 226, 0.3)" 
           }
         },
-        "border-glow": {
+        "border-pulse": {
           "0%, 100%": { 
-            "box-shadow": "0 0 0px 0px rgba(74, 144, 226, 0)",
-            "border-color": "rgba(255, 255, 255, 0.05)"
+            "border-color": "rgba(255, 255, 255, 0.1)"
           },
           "50%": { 
-            "box-shadow": "0 0 10px 3px rgba(74, 144, 226, 0.3)",
-            "border-color": "rgba(74, 144, 226, 0.3)"
+            "border-color": "rgba(74, 144, 226, 0.2)"
           }
         },
-        "shimmer": {
-          "0%": { 
-            "background-position": "-1000px 0"
-          },
-          "100%": { 
-            "background-position": "1000px 0"
-          }
-        }
       },
       animation: {
         "fade-up": "fade-up 0.5s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
         "float": "float 3s ease-in-out infinite",
-        "text-shine": "text-shine 3s ease-in-out infinite",
-        "gradient-x": "gradient-x 15s ease infinite",
         "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
-        "border-glow": "border-glow 2s ease-in-out infinite",
-        "shimmer": "shimmer 2s linear infinite"
+        "subtle-glow": "subtle-glow 2s ease-in-out infinite",
+        "border-pulse": "border-pulse 2s ease-in-out infinite",
       },
+      boxShadow: {
+        'classic': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'classic-md': '0 6px 10px -2px rgba(0, 0, 0, 0.2), 0 3px 6px -2px rgba(0, 0, 0, 0.12)',
+        'classic-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)',
+        'classic-inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.15)',
+        'classic-blue': '0 4px 14px 0 rgba(74, 144, 226, 0.25)',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -22,13 +22,9 @@ export const NotificationsPanel = ({
   
   return (
     <SheetContent className="p-0 w-[380px] sm:w-[480px] border-0 overflow-hidden">
-      <div className="h-full flex flex-col bg-gradient-to-br from-[#0F172A]/95 via-[#1E293B]/95 to-[#0F172A]/95 backdrop-blur-xl border-l border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.3)]">
+      <div className="h-full flex flex-col bg-primary border-l border-white/10 shadow-classic-lg">
         <div className="relative">
-          {/* Background decorative elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-          
-          <SheetHeader className="px-6 pt-6 pb-4 relative z-10">
+          <SheetHeader className="px-6 pt-6 pb-4 relative z-10 border-b border-white/5">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -36,24 +32,24 @@ export const NotificationsPanel = ({
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="bg-gradient-to-r from-primary to-secondary p-2 rounded-full"
+                      className="bg-interactive p-2 rounded-full shadow-sm"
                     >
                       <BellDot className="w-5 h-5 text-white" />
                     </motion.div>
                   ) : (
-                    <div className="bg-white/10 p-2 rounded-full">
-                      <Bell className="w-5 h-5 text-white/70" />
+                    <div className="bg-secondary/50 p-2 rounded-full">
+                      <Bell className="w-5 h-5 text-foreground/70" />
                     </div>
                   )}
                 </div>
-                <SheetTitle className="text-2xl font-bold gradient-text animate-text-shine">
+                <SheetTitle className="text-2xl font-bold text-interactive">
                   Notifications
                 </SheetTitle>
               </div>
               
               {notifications.length > 0 && (
                 <Button
-                  variant="premium-ghost"
+                  variant="classic-ghost"
                   size="sm"
                   rounded="full"
                   onClick={onClearAll}
@@ -65,7 +61,7 @@ export const NotificationsPanel = ({
               )}
             </div>
             
-            <SheetDescription className="text-white/60 max-w-[90%]">
+            <SheetDescription className="text-foreground/60 max-w-[90%]">
               {unreadCount > 0 
                 ? `You have ${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}`
                 : 'Stay informed about activity in your communities'}
@@ -79,7 +75,7 @@ export const NotificationsPanel = ({
           transition={{ duration: 0.5, delay: 0.1 }}
           className="flex-1 overflow-hidden"
         >
-          <div className="h-full px-4 pb-4 overflow-y-auto custom-scrollbar">
+          <div className="h-full px-4 pb-4 overflow-y-auto classic-scrollbar">
             <div className="space-y-3 mt-2 pr-2">
               <AnimatePresence mode="popLayout">
                 {notifications.length > 0 ? (
@@ -98,11 +94,11 @@ export const NotificationsPanel = ({
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     className="flex flex-col items-center justify-center py-20 px-6 text-center"
                   >
-                    <div className="bg-white/5 p-4 rounded-full mb-4">
-                      <Bell className="w-8 h-8 text-white/30" />
+                    <div className="bg-secondary/30 p-4 rounded-full mb-4">
+                      <Bell className="w-8 h-8 text-foreground/30" />
                     </div>
-                    <h3 className="text-lg font-medium text-white/80 mb-2">All caught up!</h3>
-                    <p className="text-sm text-white/50 max-w-[260px]">
+                    <h3 className="text-lg font-medium text-foreground/80 mb-2">All caught up!</h3>
+                    <p className="text-sm text-foreground/50 max-w-[260px]">
                       You don't have any notifications right now. We'll notify you when something important happens.
                     </p>
                   </motion.div>

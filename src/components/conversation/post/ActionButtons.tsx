@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ImageIcon, FileVideo, Paperclip, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,28 +20,28 @@ export const ActionButtons = ({ onFileSelect, onSubmit, isDisabled }: ActionButt
     >
       <Button 
         onClick={() => onFileSelect('image')} 
-        variant="outline" 
-        className="group hover:bg-indigo-500/10 border-white/10 bg-white/5 backdrop-blur-sm text-white"
+        variant="classic-outline" 
+        className="group hover:bg-primary/80"
       >
-        <ImageIcon className="mr-2 h-4 w-4 group-hover:text-indigo-400 transition-colors" />
+        <ImageIcon className="mr-2 h-4 w-4 group-hover:text-interactive transition-colors" />
         Imagine
       </Button>
 
       <Button 
         onClick={() => onFileSelect('video')} 
-        variant="outline"
-        className="group hover:bg-purple-500/10 border-white/10 bg-white/5 backdrop-blur-sm text-white"
+        variant="classic-outline"
+        className="group hover:bg-primary/80"
       >
-        <FileVideo className="mr-2 h-4 w-4 group-hover:text-purple-400 transition-colors" />
+        <FileVideo className="mr-2 h-4 w-4 group-hover:text-interactive transition-colors" />
         Video
       </Button>
 
       <Button 
         onClick={() => onFileSelect('document')} 
-        variant="outline"
-        className="group hover:bg-pink-500/10 border-white/10 bg-white/5 backdrop-blur-sm text-white"
+        variant="classic-outline"
+        className="group hover:bg-primary/80"
       >
-        <Paperclip className="mr-2 h-4 w-4 group-hover:text-pink-400 transition-colors" />
+        <Paperclip className="mr-2 h-4 w-4 group-hover:text-interactive transition-colors" />
         Atașament
       </Button>
 
@@ -48,9 +49,8 @@ export const ActionButtons = ({ onFileSelect, onSubmit, isDisabled }: ActionButt
         onClick={onSubmit}
         className={cn(
           "ml-auto",
-          "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
-          "hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600",
-          "text-white shadow-lg hover:shadow-xl transition-all duration-300",
+          "bg-interactive hover:bg-interactive/90",
+          "text-white shadow-classic hover:shadow-classic-blue transition-all duration-300",
           "border border-white/10 hover:border-white/20",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         )}

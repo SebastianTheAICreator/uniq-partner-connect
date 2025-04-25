@@ -31,10 +31,10 @@ export const AttachmentPreview = ({ files, onRemove }: AttachmentPreviewProps) =
             className="relative group"
           >
             <div className={cn(
-              "aspect-square rounded-xl overflow-hidden",
-              "bg-[#1E2235] border border-[#3A4366]",
+              "aspect-square rounded overflow-hidden",
+              "bg-secondary border border-white/10",
               "flex items-center justify-center",
-              "group-hover:border-primary/40 transition-colors"
+              "group-hover:border-interactive/40 transition-colors"
             )}>
               {file.type === 'image' && file.preview ? (
                 <div className="w-full h-full relative">
@@ -42,15 +42,15 @@ export const AttachmentPreview = ({ files, onRemove }: AttachmentPreviewProps) =
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               ) : (
-                <div className="text-white/60 flex flex-col items-center justify-center p-4">
+                <div className="text-foreground/60 flex flex-col items-center justify-center p-4">
                   {file.type === 'video' ? (
-                    <FileVideo className="w-10 h-10 mb-2 text-purple-400" />
+                    <FileVideo className="w-10 h-10 mb-2 text-interactive" />
                   ) : file.type === 'image' ? (
-                    <FileImage className="w-10 h-10 mb-2 text-blue-400" />
+                    <FileImage className="w-10 h-10 mb-2 text-interactive" />
                   ) : (
-                    <FileIcon className="w-10 h-10 mb-2 text-pink-400" />
+                    <FileIcon className="w-10 h-10 mb-2 text-interactive" />
                   )}
-                  <p className="text-xs text-center text-white/70 font-medium truncate max-w-full px-2">
+                  <p className="text-xs text-center text-foreground/70 font-medium truncate max-w-full px-2">
                     {file.file.name.length > 20 
                       ? `${file.file.name.substring(0, 18)}...` 
                       : file.file.name}
@@ -62,9 +62,9 @@ export const AttachmentPreview = ({ files, onRemove }: AttachmentPreviewProps) =
               onClick={() => onRemove(file.id)}
               className={cn(
                 "absolute -top-2 -right-2 rounded-full p-1",
-                "bg-black/70 backdrop-blur-sm shadow-lg",
+                "bg-primary/90 shadow-classic",
                 "opacity-0 group-hover:opacity-100 transition-all duration-200",
-                "hover:bg-red-500/80 hover:scale-110"
+                "hover:bg-red-900 hover:scale-110"
               )}
             >
               <X className="w-4 h-4 text-white" />
