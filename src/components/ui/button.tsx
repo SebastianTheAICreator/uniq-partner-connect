@@ -27,6 +27,12 @@ const buttonVariants = cva(
         // Premium variants (simplified)
         'premium': "bg-interactive text-white hover:bg-interactive/90 border border-white/10 shadow-classic-blue hover:shadow-classic-lg transition-all duration-300",
         'premium-outline': "bg-transparent border border-interactive/20 text-white hover:bg-primary/80 hover:border-interactive/40 transition-all duration-300",
+        
+        // Adding the missing variants
+        'aurora': "bg-interactive text-white hover:bg-interactive/90 border border-white/10 shadow-classic-blue hover:shadow-classic-lg transition-all duration-300",
+        'frost': "bg-background/70 text-foreground border border-white/5 hover:bg-background hover:border-white/10 transition-all duration-300",
+        'premium-ghost': "bg-transparent text-foreground hover:bg-white/5 transition-all duration-300",
+        'cosmos': "bg-interactive text-white border border-interactive/30 hover:bg-interactive/80 shadow-classic-blue transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",
