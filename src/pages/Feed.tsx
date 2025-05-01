@@ -104,7 +104,7 @@ const Feed = () => {
   return <div className="min-h-screen bg-gradient-to-b from-[#0F1118] to-[#131620] text-white bg-stone-800">
       <Navbar />
       
-      <div className="container mx-auto pt-20 px-4 md:px-8 flex bg-stone-800">
+      <div className="container mx-auto pt-20 px-4 md:px-8 flex bg-stone-800 rounded-none">
         <Sidebar conversations={mockConversations} />
         
         <div className="w-full lg:pr-72 pl-0 sm:pl-20 md:pl-24 xl:pl-28 bg-stone-800">
