@@ -101,7 +101,7 @@ const Feed = () => {
       description: "Your post has been published successfully."
     });
   };
-  return <div className="min-h-screen bg-gradient-to-b from-[#0F1118] to-[#131620] text-white">
+  return <div className="min-h-screen bg-gradient-to-b from-[#0F1118] to-[#131620] text-white bg-stone-800">
       <Navbar />
       
       <div className="container mx-auto pt-20 px-4 md:px-8 flex bg-stone-800">
