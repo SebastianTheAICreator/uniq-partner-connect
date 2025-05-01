@@ -107,7 +107,7 @@ const Feed = () => {
       <div className="container mx-auto pt-20 px-4 md:px-8 flex">
         <Sidebar conversations={mockConversations} />
         
-        <div className="w-full lg:pr-72 pl-0 sm:pl-20 md:pl-24 xl:pl-28 bg-neutral-800">
+        <div className="w-full lg:pr-72 pl-0 sm:pl-20 md:pl-24 xl:pl-28 bg-gray-800">
           <motion.div initial={{
           opacity: 0,
           y: 20
@@ -116,7 +116,7 @@ const Feed = () => {
           y: 0
         }} transition={{
           duration: 0.5
-        }} className="mt-4 space-y-6 bg-gray-900">
+        }} className="mt-4 space-y-6 bg-gray-800">
             {/* Feed header */}
             <div className="flex items-center justify-between sticky top-16 z-20 py-4 backdrop-blur-lg border-b border-white/5 bg-gray-800">
               <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
