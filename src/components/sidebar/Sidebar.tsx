@@ -1,10 +1,8 @@
-
 import { cn } from '@/lib/utils';
 import SidebarContent from './SidebarContent';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
-
 interface SidebarProps {
   conversations: Array<{
     id: string;
@@ -12,11 +10,12 @@ interface SidebarProps {
   }>;
   onConversationClick?: (id: string) => void;
 }
-
-const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
+const Sidebar = ({
+  conversations,
+  onConversationClick
+}: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 640);
@@ -24,66 +23,34 @@ const Sidebar = ({ conversations, onConversationClick }: SidebarProps) => {
         setCollapsed(true);
       }
     };
-    
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
-
-  return (
-    <>
-      <motion.div 
-        initial={{ opacity: 0, x: -40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ 
-          duration: 0.8,
-          ease: [0.6, -0.05, 0.01, 0.99]
-        }}
-        className={cn(
-          "fixed left-0 top-[4rem] h-[calc(100vh-4rem)] z-50",
-          "bg-primary border-r border-white/5",
-          "shadow-classic-md classic-sidebar",
-          "transition-all duration-500 ease-in-out",
-          collapsed ? "w-[80px]" : "w-[280px]",
-          isMobile ? "-translate-x-full sm:translate-x-0" : "translate-x-0"
-        )}
-      >
+  return <>
+      <motion.div initial={{
+      opacity: 0,
+      x: -40
+    }} animate={{
+      opacity: 1,
+      x: 0
+    }} transition={{
+      duration: 0.8,
+      ease: [0.6, -0.05, 0.01, 0.99]
+    }} className={cn("fixed left-0 top-[4rem] h-[calc(100vh-4rem)] z-50", "bg-primary border-r border-white/5", "shadow-classic-md classic-sidebar", "transition-all duration-500 ease-in-out", collapsed ? "w-[80px]" : "w-[280px]", isMobile ? "-translate-x-full sm:translate-x-0" : "translate-x-0")}>
         <div className="h-full w-full relative flex flex-col">
-          <div 
-            className={cn(
-              "absolute -right-3 top-6 bg-interactive rounded p-1",
-              "shadow-classic-blue cursor-pointer z-50 border border-white/10 hover:scale-110 transition-transform",
-            )}
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            {collapsed ? 
-              <ChevronRight className="h-4 w-4 text-white" /> : 
-              <ChevronLeft className="h-4 w-4 text-white" />
-            }
+          <div className={cn("absolute -right-3 top-6 bg-interactive rounded p-1", "shadow-classic-blue cursor-pointer z-50 border border-white/10 hover:scale-110 transition-transform")} onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? <ChevronRight className="h-4 w-4 text-white" /> : <ChevronLeft className="h-4 w-4 text-white" />}
           </div>
           
-          <div className="p-4 flex-1 overflow-hidden">
-            <SidebarContent 
-              conversations={conversations} 
-              onConversationClick={onConversationClick} 
-              collapsed={collapsed}
-            />
+          <div className="p-4 flex-1 overflow-hidden bg-zinc-800">
+            <SidebarContent conversations={conversations} onConversationClick={onConversationClick} collapsed={collapsed} />
           </div>
         </div>
       </motion.div>
       
       {/* Overlay for mobile that closes sidebar when clicked */}
-      {isMobile && (
-        <div 
-          className={cn(
-            "fixed inset-0 bg-black/60 z-40 transition-opacity",
-            isMobile ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          )}
-          onClick={() => setCollapsed(true)}
-        />
-      )}
-    </>
-  );
+      {isMobile && <div className={cn("fixed inset-0 bg-black/60 z-40 transition-opacity", isMobile ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")} onClick={() => setCollapsed(true)} />}
+    </>;
 };
-
 export default Sidebar;
