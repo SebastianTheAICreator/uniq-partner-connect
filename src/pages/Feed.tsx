@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/sidebar/Sidebar';
 import { Separator } from '@/components/ui/separator';
@@ -12,6 +12,7 @@ import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
 import { Post } from '@/components/feed/FeedPost';
+import InfiniteBanner from '@/components/feed/InfiniteBanner';
 
 const mockConversations = [
   { id: '1', title: 'My first conversation' },
@@ -95,6 +96,7 @@ const Feed = () => {
   const { toast } = useToast();
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'trending' | 'recent'>('trending');
+  const [isLoading, setIsLoading] = useState(false);
   
   const toggleFilter = () => setFilterOpen(prev => !prev);
   
@@ -105,8 +107,19 @@ const Feed = () => {
     });
   };
 
+  // Mock loading more posts on scroll
+  const handleLoadMore = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    
+    // Simulate loading delay
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-200">
+    <div className="min-h-screen bg-[#0d1117] text-gray-100">
       <Navbar />
       
       <div className="container mx-auto pt-20 px-4 md:px-8 flex">
@@ -119,11 +132,11 @@ const Feed = () => {
             transition={{ duration: 0.5 }}
             className="mt-4 space-y-6"
           >
-            {/* Feed header with minimalist design */}
-            <div className="flex items-center justify-between sticky top-16 z-20 py-4 backdrop-blur-lg border-b border-gray-800 bg-gray-950/80">
+            {/* Feed header with gradient background */}
+            <div className="flex items-center justify-between sticky top-16 z-20 py-4 backdrop-blur-lg bg-gradient-to-r from-[#0d1117]/95 via-[#1a1f2c]/95 to-[#0d1117]/95 border-b border-[#30363d]">
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-gray-100">Feed</h1>
-                <div className="h-5 w-5 rounded-full bg-gray-700 animate-pulse"></div>
+                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Feed</h1>
+                <div className="h-5 w-5 rounded-full bg-blue-500 animate-pulse"></div>
               </div>
               
               <div className="flex items-center gap-2">
@@ -131,7 +144,7 @@ const Feed = () => {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setSortBy('trending')} 
-                  className={`rounded-lg px-3 ${sortBy === 'trending' ? 'bg-gray-800 text-gray-100' : 'text-gray-400'}`}
+                  className={`rounded-lg px-3 ${sortBy === 'trending' ? 'bg-blue-900/30 text-blue-400' : 'text-gray-400'}`}
                 >
                   <TrendingUp className="mr-2 h-4 w-4" />
                   <span className="hidden sm:inline">Trending</span>
@@ -141,7 +154,7 @@ const Feed = () => {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setSortBy('recent')} 
-                  className={`rounded-lg px-3 ${sortBy === 'recent' ? 'bg-gray-800 text-gray-100' : 'text-gray-400'}`}
+                  className={`rounded-lg px-3 ${sortBy === 'recent' ? 'bg-purple-900/30 text-purple-400' : 'text-gray-400'}`}
                 >
                   <Clock className="mr-2 h-4 w-4" />
                   <span className="hidden sm:inline">Recent</span>
@@ -151,7 +164,7 @@ const Feed = () => {
                   variant="ghost" 
                   size="sm" 
                   onClick={toggleFilter} 
-                  className="rounded-lg px-3"
+                  className="rounded-lg px-3 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
                 >
                   <Filter className="h-4 w-4" />
                 </Button>
@@ -159,14 +172,14 @@ const Feed = () => {
                 <Button 
                   variant="ghost" 
                   size="sm"  
-                  className="rounded-lg px-3"
+                  className="rounded-lg px-3 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
                 >
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
             </div>
             
-            {/* New Feed Creator with minimalist design */}
+            {/* New Feed Creator with colorful accents */}
             <PremiumFeedCreator onPostCreated={handlePostCreated} />
             
             <div className="flex gap-6">
@@ -183,11 +196,18 @@ const Feed = () => {
                         />
                       ))}
                     </AnimatePresence>
+                    
+                    {/* Loading indicator */}
+                    {isLoading && (
+                      <div className="flex justify-center py-8">
+                        <div className="w-8 h-8 border-4 border-t-blue-500 border-r-blue-500 border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                      </div>
+                    )}
                   </div>
                 </ScrollArea>
               </div>
               
-              {/* Redesigned Trending panel */}
+              {/* Redesigned Trending panel with more color */}
               <div className="hidden lg:block w-72 absolute right-8 top-24">
                 <FeedTrendingPanel />
               </div>
@@ -195,6 +215,9 @@ const Feed = () => {
           </motion.div>
         </div>
       </div>
+      
+      {/* New Infinite Banner component */}
+      <InfiniteBanner />
     </div>
   );
 };
