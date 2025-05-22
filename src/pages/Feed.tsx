@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -12,129 +13,146 @@ import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
 import { Post, PostAttachment } from '@/components/feed/FeedPost';
-const mockConversations = [{
-  id: '1',
-  title: 'My first conversation'
-}, {
-  id: '2',
-  title: 'Another conversation'
-}, {
-  id: '3',
-  title: 'Design discussion'
-}];
+
+const mockConversations = [
+  { id: '1', title: 'My first conversation' },
+  { id: '2', title: 'Another conversation' }, 
+  { id: '3', title: 'Design discussion' }
+];
 
 // Mock post data to display in the feed
-const mockPosts: Post[] = [{
-  id: '1',
-  content: 'Just launched our revolutionary AI feature that helps businesses increase productivity by 300%. Early users are seeing unprecedented results across their workflows.',
-  author: {
-    id: 'user1',
-    name: 'Alexandra Chen',
-    role: 'Chief AI Officer',
-    avatar: '',
-    verified: true
+const mockPosts: Post[] = [
+  {
+    id: '1',
+    content: 'Just launched our revolutionary AI feature that helps businesses increase productivity by 300%. Early users are seeing unprecedented results across their workflows.',
+    author: {
+      id: 'user1',
+      name: 'Alexandra Chen',
+      role: 'Chief AI Officer',
+      avatar: '',
+      verified: true
+    },
+    timestamp: '2 hours ago',
+    stats: {
+      likes: 2452,
+      dislikes: 12,
+      replies: 342,
+      shares: 158,
+      views: 12789
+    },
+    tags: ['artificial-intelligence', 'productivity', 'future-of-work'],
+    isPinned: true
   },
-  timestamp: '2 hours ago',
-  stats: {
-    likes: 2452,
-    dislikes: 12,
-    replies: 342,
-    shares: 158,
-    views: 12789
+  {
+    id: '2',
+    content: "Our latest market analysis shows a significant shift in consumer behavior post-pandemic. We've identified 5 key trends that will shape the industry for the next decade.",
+    author: {
+      id: 'user2',
+      name: 'Michael Reynolds',
+      role: 'Market Strategist',
+      avatar: '',
+      verified: true
+    },
+    timestamp: '5 hours ago',
+    stats: {
+      likes: 1836,
+      dislikes: 23,
+      replies: 215,
+      shares: 427,
+      views: 8943
+    },
+    tags: ['market-analysis', 'consumer-trends', 'strategy'],
+    attachments: [
+      {
+        type: 'image' as const,
+        url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070'
+      }
+    ]
   },
-  tags: ['artificial-intelligence', 'productivity', 'future-of-work'],
-  isPinned: true
-}, {
-  id: '2',
-  content: "Our latest market analysis shows a significant shift in consumer behavior post-pandemic. We've identified 5 key trends that will shape the industry for the next decade.",
-  author: {
-    id: 'user2',
-    name: 'Michael Reynolds',
-    role: 'Market Strategist',
-    avatar: '',
-    verified: true
-  },
-  timestamp: '5 hours ago',
-  stats: {
-    likes: 1836,
-    dislikes: 23,
-    replies: 215,
-    shares: 427,
-    views: 8943
-  },
-  tags: ['market-analysis', 'consumer-trends', 'strategy'],
-  attachments: [{
-    type: 'image' as const,
-    url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070'
-  }]
-}, {
-  id: '3',
-  content: "Thrilled to announce we've secured $175M in Series C funding to accelerate our global expansion and product development. Grateful to our investors who believe in our vision of transforming how enterprises leverage data.",
-  author: {
-    id: 'user3',
-    name: 'Sarah Blackwood',
-    role: 'CEO & Founder',
-    avatar: '',
-    verified: true
-  },
-  timestamp: '1 day ago',
-  stats: {
-    likes: 4278,
-    dislikes: 0,
-    replies: 532,
-    shares: 982,
-    views: 26754
-  },
-  tags: ['funding', 'startup', 'venture-capital'],
-  isPinned: false
-}];
+  {
+    id: '3',
+    content: "Thrilled to announce we've secured $175M in Series C funding to accelerate our global expansion and product development. Grateful to our investors who believe in our vision of transforming how enterprises leverage data.",
+    author: {
+      id: 'user3',
+      name: 'Sarah Blackwood',
+      role: 'CEO & Founder',
+      avatar: '',
+      verified: true
+    },
+    timestamp: '1 day ago',
+    stats: {
+      likes: 4278,
+      dislikes: 0,
+      replies: 532,
+      shares: 982,
+      views: 26754
+    },
+    tags: ['funding', 'startup', 'venture-capital'],
+    isPinned: false
+  }
+];
+
 const Feed = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'trending' | 'recent'>('trending');
+  
   const toggleFilter = () => setFilterOpen(prev => !prev);
+  
   const handlePostCreated = (content: string) => {
     toast({
       title: "Post published",
       description: "Your post has been published successfully."
     });
   };
-  return <div className="min-h-screen bg-gradient-to-b from-[#0F1118] to-[#131620] text-white bg-stone-800">
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-gray-100">
       <Navbar />
       
-      <div className="container mx-auto pt-20 px-4 md:px-8 flex bg-stone-800 rounded-none">
+      <div className="container mx-auto pt-20 px-4 md:px-8 flex">
         <Sidebar conversations={mockConversations} />
         
-        <div className="w-full lg:pr-72 pl-0 sm:pl-20 md:pl-24 xl:pl-28 bg-stone-800">
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.5
-        }} className="mt-4 space-y-6 bg-stone-800">
+        <div className="w-full lg:pr-72 pl-0 sm:pl-20 md:pl-24 xl:pl-28">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mt-4 space-y-6"
+          >
             {/* Feed header */}
-            <div className="flex items-center justify-between sticky top-16 z-20 py-4 backdrop-blur-lg border-b border-white/5 bg-gray-800">
-              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+            <div className="flex items-center justify-between sticky top-16 z-20 py-4 backdrop-blur-lg border-b border-gray-800 bg-gray-950/80">
+              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-400">
                 Your Feed
               </h1>
               
               <div className="flex space-x-2">
-                <Button variant="ghost" size="sm" onClick={() => setSortBy('trending')} className={`rounded-lg px-3 ${sortBy === 'trending' ? 'bg-white/10 text-white' : 'text-white/70'}`}>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setSortBy('trending')} 
+                  className={`rounded-lg px-3 ${sortBy === 'trending' ? 'bg-gray-800 text-gray-100' : 'text-gray-400'}`}
+                >
                   <TrendingUp className="mr-2 h-4 w-4" />
                   <span className="hidden sm:inline">Trending</span>
                 </Button>
                 
-                <Button variant="ghost" size="sm" onClick={() => setSortBy('recent')} className={`rounded-lg px-3 ${sortBy === 'recent' ? 'bg-white/10 text-white' : 'text-white/70'}`}>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setSortBy('recent')} 
+                  className={`rounded-lg px-3 ${sortBy === 'recent' ? 'bg-gray-800 text-gray-100' : 'text-gray-400'}`}
+                >
                   <Clock className="mr-2 h-4 w-4" />
                   <span className="hidden sm:inline">Recent</span>
                 </Button>
                 
-                <Button variant="ghost" size="sm" onClick={toggleFilter} className="rounded-lg px-3">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={toggleFilter} 
+                  className="rounded-lg px-3"
+                >
                   <Filter className="h-4 w-4" />
                 </Button>
               </div>
@@ -149,7 +167,13 @@ const Feed = () => {
                 <ScrollArea className="h-[calc(100vh-14rem)]">
                   <div className="space-y-6 pb-20">
                     <AnimatePresence>
-                      {mockPosts.map((post, index) => <FeedPost key={post.id} post={post} delay={index * 0.1} />)}
+                      {mockPosts.map((post, index) => (
+                        <FeedPost 
+                          key={post.id} 
+                          post={post} 
+                          delay={index * 0.1} 
+                        />
+                      ))}
                     </AnimatePresence>
                   </div>
                 </ScrollArea>
@@ -163,6 +187,8 @@ const Feed = () => {
           </motion.div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Feed;

@@ -80,8 +80,8 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
         }}
         className={cn(
           "relative overflow-hidden rounded-xl border transition-all duration-300",
-          "bg-gradient-to-b from-[#1c1f2e]/80 to-[#141625]/90",
-          "border-[#2a2f45]/50 hover:border-[#2a3154]",
+          "bg-gray-900",
+          "border-gray-800 hover:border-gray-700",
           isExpanded ? "shadow-2xl" : "shadow-xl"
         )}
         onDragOver={handleDragOver}
@@ -89,11 +89,11 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
         onDrop={handleDrop}
         onClick={!isExpanded ? handleExpand : undefined}
       >
-        {/* Glow effect at top edge */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        {/* Top edge subtle highlight */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
         
-        {/* Glow effect at bottom edge */}
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
+        {/* Bottom edge subtle highlight */}
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
         
         <div className={cn(
           "p-5 transition-all duration-300",
@@ -106,12 +106,12 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                 animate={{ opacity: 1 }}
                 className="flex items-center gap-3"
               >
-                <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500/30 to-purple-500/30 flex items-center justify-center">
-                  <UserCircle className="h-5 w-5 text-blue-300" />
+                <div className="h-9 w-9 rounded-full bg-gray-800 flex items-center justify-center">
+                  <UserCircle className="h-5 w-5 text-gray-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white/90">Create a post</p>
-                  <p className="text-xs text-white/50">Visible to everyone in your network</p>
+                  <p className="text-sm font-medium text-gray-200">Create a post</p>
+                  <p className="text-xs text-gray-500">Visible to everyone in your network</p>
                 </div>
               </motion.div>
               
@@ -119,7 +119,7 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsExpanded(false)}
-                className="h-8 w-8 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
+                className="h-8 w-8 p-0 rounded-full text-gray-400 hover:text-gray-200 hover:bg-gray-800"
               >
                 <ChevronUp className="h-4 w-4" />
                 <span className="sr-only">Minimize</span>
@@ -129,7 +129,7 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
 
           <div className={cn(
             "w-full transition-all duration-300 relative rounded-lg overflow-hidden",
-            isDragging && "ring-2 ring-blue-500/30"
+            isDragging && "ring-1 ring-gray-600"
           )}>
             <Textarea
               ref={textareaRef}
@@ -138,18 +138,18 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
               placeholder={isExpanded ? "What's on your mind?" : "Share something with your network..."}
               className={cn(
                 "w-full resize-none transition-all duration-300 border-0",
-                "bg-[#1E2235]/80 text-white/90 placeholder:text-white/40",
-                "focus:ring-1 focus:ring-blue-500/30 focus:border-blue-500/40",
+                "bg-gray-800 text-gray-200 placeholder:text-gray-500",
+                "focus:ring-1 focus:ring-gray-600 focus:border-gray-600",
                 isExpanded ? "min-h-[120px] py-4 px-5 text-base" : "min-h-[56px] py-4 px-4 text-sm"
               )}
             />
 
             {isDragging && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-lg">
-                <div className="bg-[#141625]/90 px-4 py-2 rounded-full border border-blue-500/30">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900/80 backdrop-blur-sm rounded-lg">
+                <div className="bg-gray-800 px-4 py-2 rounded-full border border-gray-700">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-blue-400" />
-                    <span className="text-blue-300 font-medium text-sm">Drop files here</span>
+                    <Sparkles className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-300 font-medium text-sm">Drop files here</span>
                   </div>
                 </div>
               </div>
@@ -171,9 +171,9 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                       <TooltipTrigger asChild>
                         <Button 
                           variant="ghost"
-                          className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                          className="h-9 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800 text-xs font-medium"
                         >
-                          <ImageIcon className="h-3.5 w-3.5 mr-2 text-blue-400" />
+                          <ImageIcon className="h-3.5 w-3.5 mr-2 text-gray-500" />
                           Image
                         </Button>
                       </TooltipTrigger>
@@ -188,9 +188,9 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                       <TooltipTrigger asChild>
                         <Button 
                           variant="ghost"
-                          className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                          className="h-9 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800 text-xs font-medium"
                         >
-                          <FileVideo className="h-3.5 w-3.5 mr-2 text-purple-400" />
+                          <FileVideo className="h-3.5 w-3.5 mr-2 text-gray-500" />
                           Video
                         </Button>
                       </TooltipTrigger>
@@ -205,9 +205,9 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                       <TooltipTrigger asChild>
                         <Button 
                           variant="ghost"
-                          className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                          className="h-9 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800 text-xs font-medium"
                         >
-                          <FileText className="h-3.5 w-3.5 mr-2 text-pink-400" />
+                          <FileText className="h-3.5 w-3.5 mr-2 text-gray-500" />
                           Document
                         </Button>
                       </TooltipTrigger>
@@ -222,9 +222,9 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                       <TooltipTrigger asChild>
                         <Button 
                           variant="ghost"
-                          className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                          className="h-9 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800 text-xs font-medium"
                         >
-                          <Smile className="h-3.5 w-3.5 mr-2 text-amber-400" />
+                          <Smile className="h-3.5 w-3.5 mr-2 text-gray-500" />
                           Emoji
                         </Button>
                       </TooltipTrigger>
@@ -239,9 +239,9 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                       <TooltipTrigger asChild>
                         <Button 
                           variant="ghost"
-                          className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                          className="h-9 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800 text-xs font-medium"
                         >
-                          <Hash className="h-3.5 w-3.5 mr-2 text-green-400" />
+                          <Hash className="h-3.5 w-3.5 mr-2 text-gray-500" />
                           Tag
                         </Button>
                       </TooltipTrigger>
@@ -256,11 +256,10 @@ const PremiumFeedCreator = ({ onPostCreated, className }: PremiumFeedCreatorProp
                   onClick={handlePostSubmit}
                   disabled={!content.trim()}
                   className={cn(
-                    "h-9 px-4 rounded-lg gap-2 text-white font-medium text-sm",
-                    "bg-gradient-to-r from-blue-500 to-purple-500",
-                    "hover:from-blue-600 hover:to-purple-600",
-                    "shadow-lg shadow-blue-500/20",
-                    "border border-white/10",
+                    "h-9 px-4 rounded-lg gap-2 text-gray-100 font-medium text-sm",
+                    "bg-gray-700 hover:bg-gray-600",
+                    "shadow-lg shadow-gray-900/20",
+                    "border border-gray-600",
                     "transition-all duration-300",
                     (!content.trim()) && "opacity-50 cursor-not-allowed"
                   )}
