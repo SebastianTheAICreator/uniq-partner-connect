@@ -12,7 +12,6 @@ import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
 import { Post } from '@/components/feed/FeedPost';
-import InfiniteBanner from '@/components/feed/InfiniteBanner';
 
 const mockConversations = [
   { id: '1', title: 'My first conversation' },
@@ -215,9 +214,6 @@ const Feed = () => {
           </motion.div>
         </div>
       </div>
-      
-      {/* New Infinite Banner component */}
-      <InfiniteBanner />
     </div>
   );
 };
