@@ -3,16 +3,15 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/sidebar/Sidebar';
-import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { TrendingUp, Sparkles, Clock, Filter, Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, Image as ImageIcon, FileVideo, Link2, Smile, Send } from 'lucide-react';
+import { TrendingUp, Clock, Filter, Search, Bookmark, Settings, Plus } from 'lucide-react';
 import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
-import { Post, PostAttachment } from '@/components/feed/FeedPost';
+import { Post } from '@/components/feed/FeedPost';
 
 const mockConversations = [
   { id: '1', title: 'My first conversation' },
@@ -107,7 +106,7 @@ const Feed = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-gray-950 text-gray-200">
       <Navbar />
       
       <div className="container mx-auto pt-20 px-4 md:px-8 flex">
@@ -120,13 +119,14 @@ const Feed = () => {
             transition={{ duration: 0.5 }}
             className="mt-4 space-y-6"
           >
-            {/* Feed header */}
+            {/* Feed header with minimalist design */}
             <div className="flex items-center justify-between sticky top-16 z-20 py-4 backdrop-blur-lg border-b border-gray-800 bg-gray-950/80">
-              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-400">
-                Your Feed
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-gray-100">Feed</h1>
+                <div className="h-5 w-5 rounded-full bg-gray-700 animate-pulse"></div>
+              </div>
               
-              <div className="flex space-x-2">
+              <div className="flex items-center gap-2">
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -155,14 +155,22 @@ const Feed = () => {
                 >
                   <Filter className="h-4 w-4" />
                 </Button>
+
+                <Button 
+                  variant="ghost" 
+                  size="sm"  
+                  className="rounded-lg px-3"
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
               </div>
             </div>
             
-            {/* Post creator */}
+            {/* New Feed Creator with minimalist design */}
             <PremiumFeedCreator onPostCreated={handlePostCreated} />
             
             <div className="flex gap-6">
-              {/* Main feed */}
+              {/* Main feed with redesigned post cards */}
               <div className="flex-1">
                 <ScrollArea className="h-[calc(100vh-14rem)]">
                   <div className="space-y-6 pb-20">
@@ -179,7 +187,7 @@ const Feed = () => {
                 </ScrollArea>
               </div>
               
-              {/* Trending panel - only visible on desktop */}
+              {/* Redesigned Trending panel */}
               <div className="hidden lg:block w-72 absolute right-8 top-24">
                 <FeedTrendingPanel />
               </div>

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ThumbsUp, ThumbsDown, MessageCircle, Share2, MoreHorizontal, Bookmark, Heart, Clock, Eye, Award, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageCircle, Share2, MoreHorizontal, Bookmark, Eye, Clock, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 export interface PostAuthor {
   id: string;
@@ -117,23 +117,20 @@ const FeedPost = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
       className={cn(
-        "w-full rounded-xl overflow-hidden backdrop-blur-lg transition-all duration-300",
-        "border border-gray-800 hover:border-gray-700",
-        expanded ? "shadow-2xl" : "shadow-xl",
-        "bg-gray-900",
+        "w-full rounded-2xl overflow-hidden transition-all duration-300",
+        "border border-gray-800",
+        "bg-gradient-to-b from-gray-900 to-gray-950",
+        expanded ? "shadow-lg shadow-gray-950" : "shadow-md shadow-gray-950/50",
         className
       )}
     >
-      {/* Top subtle highlight */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
-      
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex items-center gap-3">
+      <div className="p-5">
+        {/* Header - Simplified, modern design */}
+        <div className="flex justify-between items-start mb-5">
+          <div className="flex items-center gap-4">
             <div className={cn(
-              "h-10 w-10 rounded-full flex items-center justify-center text-gray-200 font-semibold text-sm",
-              "bg-gradient-to-br from-gray-700 to-gray-800"
+              "h-11 w-11 rounded-full flex items-center justify-center bg-gray-800 text-gray-200",
+              "ring-2 ring-gray-700 ring-offset-2 ring-offset-gray-900"
             )}>
               {post.author.avatar ? (
                 <img 
@@ -148,27 +145,26 @@ const FeedPost = ({
             
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-medium text-gray-200">{post.author.name}</span>
+                <span className="font-semibold text-gray-100">{post.author.name}</span>
                 {post.author.verified && (
-                  <Badge variant="outline" className="h-5 px-1.5 bg-gray-700 text-gray-300 border-none text-xs">
+                  <Badge className="bg-gray-700 text-gray-200 hover:bg-gray-600">
                     Verified
                   </Badge>
                 )}
                 {post.isPinned && (
-                  <Badge variant="outline" className="h-5 px-1.5 bg-gray-700 text-gray-300 border-none text-xs">
+                  <Badge className="bg-gray-600 text-gray-300 hover:bg-gray-500">
                     Featured
                   </Badge>
                 )}
               </div>
               
-              <div className="flex items-center gap-1.5 text-gray-500 text-xs mt-0.5">
+              <div className="flex items-center gap-1.5 text-gray-400 text-xs mt-1">
                 {post.author.role && (
                   <>
                     <span>{post.author.role}</span>
                     <span className="mx-1">•</span>
                   </>
                 )}
-                <Clock className="h-3 w-3" />
                 <span>{post.timestamp}</span>
                 {post.isEdited && (
                   <>
@@ -180,56 +176,41 @@ const FeedPost = ({
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-gray-300 hover:bg-gray-800" 
-              onClick={() => setExpanded(!expanded)}
-            >
-              {expanded ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-gray-300 hover:bg-gray-800"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0 rounded-full text-gray-400 hover:text-gray-100 hover:bg-gray-800"
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
         </div>
         
-        {/* Content */}
-        <div className="mb-4">
-          <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
+        {/* Content - Clean typography */}
+        <div className="mb-5">
+          <p className="text-gray-200 whitespace-pre-wrap leading-relaxed text-base">
             {displayContent}
           </p>
           
           {isLongContent && (
             <button 
               onClick={() => setShowFullContent(!showFullContent)}
-              className="text-gray-400 hover:text-gray-300 text-sm font-medium mt-2 flex items-center gap-1"
+              className="text-gray-400 hover:text-gray-200 text-sm mt-3 flex items-center gap-1 font-medium"
             >
               {showFullContent ? "Show less" : "Show more"}
               {showFullContent ? (
-                <ChevronUp className="h-3.5 w-3.5" />
+                <ChevronUp className="h-4 w-4" />
               ) : (
-                <ChevronDown className="h-3.5 w-3.5" />
+                <ChevronDown className="h-4 w-4" />
               )}
             </button>
           )}
           
           {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3">
+            <div className="flex flex-wrap gap-2 mt-4">
               {post.tags.map((tag, index) => (
                 <span 
                   key={index} 
-                  className="text-xs px-2 py-1 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors cursor-pointer"
+                  className="text-xs px-3 py-1 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors cursor-pointer"
                 >
                   #{tag}
                 </span>
@@ -238,52 +219,68 @@ const FeedPost = ({
           )}
         </div>
         
-        {/* Attachments */}
+        {/* Attachments - Modern card design */}
         {hasAttachments && (
-          <div className="mb-4 grid gap-3">
+          <div className="mb-5 overflow-hidden rounded-xl">
             {post.attachments.map((attachment, idx) => (
               <div 
                 key={idx} 
-                className="rounded-lg overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-300 group"
+                className="relative group aspect-video w-full overflow-hidden rounded-xl border border-gray-800"
               >
                 {attachment.type === 'image' && (
-                  <div className="relative h-full w-full">
+                  <>
                     <img 
                       src={attachment.url} 
                       alt="attachment" 
-                      className="h-full w-full object-cover max-h-[400px]" 
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="absolute bottom-0 right-0 p-3">
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-3 right-3">
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="h-8 w-8 p-0 rounded-full bg-gray-900/50 backdrop-blur-sm text-gray-200 hover:bg-gray-800"
+                          className="h-9 w-9 p-0 rounded-full bg-gray-800/80 backdrop-blur-sm text-gray-200 hover:bg-gray-700"
                         >
                           <ExternalLink className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
-                  </div>
+                  </>
                 )}
               </div>
             ))}
           </div>
         )}
         
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-800">
+        {/* Interaction stats */}
+        <div className="flex items-center gap-4 text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-1">
+            <Eye className="h-3.5 w-3.5" />
+            <span>{post.stats.views.toLocaleString()} views</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <MessageCircle className="h-3.5 w-3.5" />
+            <span>{post.stats.replies.toLocaleString()} replies</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Share2 className="h-3.5 w-3.5" />
+            <span>{post.stats.shares.toLocaleString()} shares</span>
+          </div>
+        </div>
+        
+        {/* Actions - Sleek minimal action bar */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-800/70">
           <div className="flex items-center gap-1">
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={handleLike} 
               className={cn(
-                "h-9 rounded-lg gap-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800",
-                liked && "text-gray-200"
+                "h-10 rounded-xl text-gray-400 hover:text-gray-200 hover:bg-gray-800/70",
+                liked && "text-gray-100 bg-gray-800/50"
               )}
             >
-              <ThumbsUp className="h-4 w-4" />
+              <ThumbsUp className="h-4 w-4 mr-2" />
               <span className="text-xs font-medium">{likeCount.toLocaleString()}</span>
             </Button>
             
@@ -292,52 +289,59 @@ const FeedPost = ({
               size="sm" 
               onClick={handleDislike} 
               className={cn(
-                "h-9 rounded-lg gap-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800",
-                disliked && "text-gray-200"
+                "h-10 rounded-xl text-gray-400 hover:text-gray-200 hover:bg-gray-800/70",
+                disliked && "text-gray-100 bg-gray-800/50"
               )}
             >
-              <ThumbsDown className="h-4 w-4" />
+              <ThumbsDown className="h-4 w-4 mr-2" />
               <span className="text-xs font-medium">{dislikeCount.toLocaleString()}</span>
             </Button>
             
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-9 rounded-lg gap-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800"
+              className="h-10 rounded-xl text-gray-400 hover:text-gray-200 hover:bg-gray-800/70"
             >
-              <MessageCircle className="h-4 w-4" />
-              <span className="text-xs font-medium">{post.stats.replies.toLocaleString()}</span>
+              <MessageCircle className="h-4 w-4 mr-2" />
+              <span className="text-xs font-medium">Reply</span>
             </Button>
             
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={handleShare} 
-              className="h-9 rounded-lg gap-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800"
+              className="h-10 rounded-xl text-gray-400 hover:text-gray-200 hover:bg-gray-800/70"
             >
-              <Share2 className="h-4 w-4" />
-              <span className="text-xs font-medium">{post.stats.shares.toLocaleString()}</span>
+              <Share2 className="h-4 w-4 mr-2" />
+              <span className="text-xs font-medium">Share</span>
             </Button>
           </div>
           
-          <div className="flex items-center gap-1">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleBookmark} 
-              className="h-9 w-9 p-0 rounded-full text-gray-400 hover:text-gray-200 hover:bg-gray-800"
-            >
-              <Bookmark className="h-4 w-4" />
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-9 w-9 p-0 rounded-full text-gray-400 hover:text-gray-200 hover:bg-gray-800"
-            >
-              <Award className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleBookmark} 
+            className="h-10 w-10 p-0 rounded-full text-gray-400 hover:text-gray-200 hover:bg-gray-800/70"
+          >
+            <Bookmark className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        {/* Toggle more post details */}
+        <div className="mt-4 flex justify-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setExpanded(!expanded)}
+            className="rounded-xl text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1"
+          >
+            {expanded ? "Show less" : "Show more"}
+            {expanded ? (
+              <ChevronUp className="h-3.5 w-3.5" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5" />
+            )}
+          </Button>
         </div>
         
         {/* Expanded content */}
@@ -348,9 +352,9 @@ const FeedPost = ({
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="mt-4 pt-4 border-t border-gray-800"
+              className="mt-4 pt-4 border-t border-gray-800/50"
             >
-              <div className="text-gray-500 text-xs space-y-2">
+              <div className="text-gray-400 text-xs space-y-3">
                 <div className="flex items-center gap-2">
                   <Clock className="h-3.5 w-3.5" />
                   <span>Published on {new Date().toLocaleDateString('en-US', { 
