@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
-import ConversationList from "@/components/ConversationList";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunityGrid from "@/components/community/CommunityGrid";
 import CommunityStats from "@/components/community/CommunityStats";
@@ -76,7 +75,6 @@ const CommunityPage = () => {
 
   const handleJoinCommunity = async (communityId: number, communityName: string) => {
     try {
-      // Simulate joining - in real app this would update the backend
       const updatedCommunities = communities.map(c => 
         c.id === communityId ? { ...c, memberCount: (c.memberCount || 0) + 1 } : c
       );
@@ -103,73 +101,39 @@ const CommunityPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10] flex">
-      <Sidebar conversations={[]} />
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
+      <Navbar />
       
-      <div className="flex-1 ml-16 lg:ml-72">
-        <Navbar />
+      <div className="flex">
+        <Sidebar conversations={[]} />
         
-        <div className="flex-grow">
-          {!selectedCategory ? (
-            <div className="relative">
-              {/* Hero Section */}
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                transition={{ duration: 0.8 }}
-                className="relative overflow-hidden py-24 bg-gradient-to-br from-[#0A0C10] to-[#0F1117]"
-              >
-                <div className="absolute inset-0 bg-[url('/assets/grid.svg')] bg-center opacity-5"></div>
-                <div className="container mx-auto px-6 relative z-10">
-                  <div className="text-center space-y-6 max-w-3xl mx-auto">
-                    <motion.h1 
-                      initial={{ opacity: 0, y: 20 }} 
-                      animate={{ opacity: 1, y: 0 }} 
-                      transition={{ delay: 0.3, duration: 0.6 }}
-                      className="text-4xl md:text-6xl font-bold text-white"
-                    >
-                      Discover <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Communities</span>
-                    </motion.h1>
-                    <motion.p 
-                      initial={{ opacity: 0, y: 20 }} 
-                      animate={{ opacity: 1, y: 0 }} 
-                      transition={{ delay: 0.5, duration: 0.6 }}
-                      className="text-xl text-white/70 leading-relaxed"
-                    >
-                      Connect with like-minded individuals and build meaningful relationships
-                    </motion.p>
-                  </div>
-                </div>
-              </motion.div>
+        <div className="flex-1 ml-16 lg:ml-72">
+          <div className="pt-20">
+            {/* Header with Search and Filters */}
+            <CommunityHeader
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              selectedFilter={selectedFilter}
+              onFilterChange={setSelectedFilter}
+              onCommunityCreated={handleCommunityCreated}
+            />
 
-              {/* Header with Search and Filters */}
-              <CommunityHeader
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-                selectedFilter={selectedFilter}
-                onFilterChange={setSelectedFilter}
-                onCommunityCreated={handleCommunityCreated}
-              />
+            {/* Stats Section */}
+            <CommunityStats communities={communities} />
 
-              {/* Stats Section */}
-              <CommunityStats communities={communities} />
-
-              {/* Communities Grid */}
-              <CommunityGrid
-                communities={filteredCommunities}
-                onJoinCommunity={handleJoinCommunity}
-                searchTerm={searchTerm}
-                onCommunityCreated={handleCommunityCreated}
-              />
-            </div>
-          ) : (
-            <ConversationList />
-          )}
+            {/* Communities Grid */}
+            <CommunityGrid
+              communities={filteredCommunities}
+              onJoinCommunity={handleJoinCommunity}
+              searchTerm={searchTerm}
+              onCommunityCreated={handleCommunityCreated}
+            />
+          </div>
+          
+          <Footer />
         </div>
-        
-        <Footer />
       </div>
     </div>
   );
