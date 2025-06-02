@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
-  Search, Users, MessageCircle, Plus, Heart, TrendingUp, Star
+  Search, Users, MessageCircle, Plus, Globe, MapPin, TrendingUp
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import Footer from "@/components/Footer";
 import CreateCommunityDialog from "@/components/community/CreateCommunityDialog";
 import { getAllCommunities, addCommunity, type Community, updateCommunityMemberCount } from "@/db/database";
 import { useNotifications } from "@/contexts/NotificationContext";
+import { cn } from "@/lib/utils";
 
 const CommunityPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,6 +48,7 @@ const CommunityPage = () => {
       toast({
         title: "Welcome! 🎉",
         description: `You've joined ${communityName}`,
+        className: "bg-gradient-to-r from-primary/20 to-secondary/20"
       });
       
       addNotification("GROUP_JOIN", "Community Joined!", `You are now a member of "${communityName}".`, {
@@ -77,6 +79,7 @@ const CommunityPage = () => {
       toast({
         title: "Community Created! 🎉",
         description: `"${newCommunity.name}" is now live.`,
+        className: "bg-gradient-to-r from-primary/10 to-secondary/10"
       });
     } catch (error) {
       console.error('Error creating community:', error);
@@ -94,40 +97,40 @@ const CommunityPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10] flex flex-col">
       <Navbar />
       
-      <main className="flex-grow py-24">
-        <div className="container mx-auto px-6 max-w-6xl">
-          {/* Hero Section */}
+      <div className="flex-grow py-24">
+        <div className="container mx-auto px-6">
+          {/* Header Section */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6 }} 
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 rounded-full mb-6">
-              <Users className="h-5 w-5 text-blue-400" />
-              <span className="text-blue-300 text-sm font-medium">Connect & Discover</span>
-            </div>
+            <Badge className="px-4 py-2 bg-gradient-to-r from-primary/20 to-secondary/20 border-none mb-6">
+              <Globe className="h-4 w-4 mr-2 text-secondary" />
+              <span className="text-white">Communities</span>
+            </Badge>
             
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Find Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Community</span>
+            <h1 className="text-5xl font-bold text-white mb-6">
+              Discover Your Tribe
             </h1>
-            <p className="text-slate-300 text-xl max-w-2xl mx-auto mb-12">
-              Join communities that share your interests and connect with like-minded people
+            <p className="text-white/70 text-lg max-w-2xl mx-auto mb-8">
+              Connect with like-minded people, share interests, and build meaningful relationships
             </p>
             
-            {/* Search Bar */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-lg mx-auto mb-8">
+            {/* Search and Create */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
               <div className="relative flex-1 w-full">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/40" />
                 <Input
                   type="search"
                   placeholder="Search communities..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-white/10 border-white/20 rounded-full pl-12 py-4 placeholder:text-slate-400 text-white h-12"
+                  className="bg-white/10 border-white/20 rounded-xl pl-10 py-3 placeholder:text-white/40 text-white"
                 />
               </div>
               <CreateCommunityDialog onCommunityCreated={handleCommunityCreated} />
@@ -136,64 +139,64 @@ const CommunityPage = () => {
 
           {/* Communities Grid */}
           {filteredCommunities.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCommunities.map((community, index) => (
                 <motion.div
                   key={community.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
-                  whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                  whileHover={{ y: -5 }}
                 >
-                  <Card className="h-full bg-white/5 backdrop-blur border-white/10 hover:border-blue-400/30 transition-all duration-300 group">
+                  <Card className="h-full bg-gradient-to-br from-white/5 to-white/10 border-white/10 hover:border-primary/30 transition-all duration-300">
                     <CardHeader className="pb-4">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400/20 to-purple-400/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                          <Users className="w-7 h-7 text-blue-400" />
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                          <MapPin className="w-6 h-6 text-primary" />
                         </div>
                         {community.memberCount > 50 && (
-                          <Badge className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border-amber-500/30">
-                            <Star className="h-3 w-3 mr-1" /> Popular
+                          <Badge className="bg-gradient-to-r from-secondary/20 to-primary/20 text-white border-none">
+                            <TrendingUp className="h-3 w-3 mr-1" /> Popular
                           </Badge>
                         )}
                       </div>
                       
-                      <CardTitle className="text-white text-2xl mb-3 group-hover:text-blue-300 transition-colors">
+                      <CardTitle className="text-white text-xl mb-2">
                         {community.name}
                       </CardTitle>
                       
-                      <div className="flex items-center gap-6 text-slate-400 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-blue-400" />
-                          <span>{community.memberCount} members</span>
+                      <div className="flex items-center gap-4 text-white/60 text-sm">
+                        <div className="flex items-center">
+                          <Users className="h-4 w-4 mr-1 text-primary/80" />
+                          <span>{community.memberCount}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <MessageCircle className="h-4 w-4 text-purple-400" />
-                          <span>{community.conversationCount} topics</span>
+                        <div className="flex items-center">
+                          <MessageCircle className="h-4 w-4 mr-1 text-primary/80" />
+                          <span>{community.conversationCount}</span>
                         </div>
                       </div>
                     </CardHeader>
                     
                     <CardContent className="pt-0">
-                      <div className="flex flex-wrap gap-2 mb-8">
+                      <div className="flex flex-wrap gap-2 mb-6">
                         {community.interests.slice(0, 3).map((interest, i) => (
                           <span 
                             key={i} 
-                            className="text-xs px-3 py-1 rounded-full bg-white/10 text-slate-300 border border-white/10"
+                            className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/70"
                           >
                             {interest}
                           </span>
                         ))}
                         {community.interests.length > 3 && (
-                          <span className="text-xs px-3 py-1 rounded-full bg-white/5 text-slate-400">
-                            +{community.interests.length - 3} more
+                          <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/50">
+                            +{community.interests.length - 3}
                           </span>
                         )}
                       </div>
                       
                       <Button 
                         onClick={() => handleJoinCommunity(community.id!, community.name)}
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium rounded-xl py-3 group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300"
+                        className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-medium rounded-lg py-3"
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Join Community
@@ -209,22 +212,22 @@ const CommunityPage = () => {
               animate={{ opacity: 1 }} 
               className="text-center py-20"
             >
-              <div className="w-32 h-32 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-8">
-                <Search className="h-16 w-16 text-slate-400" />
+              <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
+                <Search className="h-12 w-12 text-white/20" />
               </div>
-              <h3 className="text-3xl font-semibold text-white mb-4">
-                {searchTerm ? "No matches found" : "Start Building Community"}
+              <h3 className="text-2xl font-semibold text-white mb-4">
+                {searchTerm ? "No matches found" : "No communities yet"}
               </h3>
-              <p className="text-slate-400 max-w-md mx-auto mb-8 text-lg">
+              <p className="text-white/60 max-w-md mx-auto mb-8">
                 {searchTerm 
                   ? `No communities match "${searchTerm}". Try different keywords or create a new community.`
-                  : "Be the first to create a community and start connecting with others!"}
+                  : "Be the first to create a community and start building connections!"}
               </p>
               <CreateCommunityDialog onCommunityCreated={handleCommunityCreated} />
             </motion.div>
           )}
         </div>
-      </main>
+      </div>
       
       <Footer />
     </div>
