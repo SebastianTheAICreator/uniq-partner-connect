@@ -82,9 +82,9 @@ const CommunityConversations = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10] pt-16">
       {/* Hero Section */}
-      <section className="relative py-12 px-6">
+      <section className="relative py-16 px-6">
         <div className="absolute inset-0 bg-[url('/assets/grid.svg')] bg-center opacity-5"></div>
         <div className="max-w-6xl mx-auto relative">
           <motion.div
@@ -117,7 +117,7 @@ const CommunityConversations = ({
       />
 
       {/* Main Content */}
-      <section className="px-6 pb-12">
+      <section className="px-6 pb-12 pt-8">
         <div className="max-w-6xl mx-auto">
           <ConversationGrid
             topics={topics}

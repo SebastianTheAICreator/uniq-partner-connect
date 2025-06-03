@@ -40,7 +40,7 @@ const ConversationFilters = ({ filters, onFiltersChange }: ConversationFiltersPr
   const hasActiveFilters = filters.searchQuery || filters.selectedTags.length > 0;
 
   return (
-    <section className="sticky top-0 z-20 bg-[#0F1117]/95 backdrop-blur-xl border-b border-white/5 py-4 px-6">
+    <section className="sticky top-16 z-20 bg-[#0F1117]/95 backdrop-blur-xl border-b border-white/5 py-6 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Main Filter Bar */}
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
@@ -138,7 +138,7 @@ const ConversationFilters = ({ filters, onFiltersChange }: ConversationFiltersPr
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
-              className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10"
+              className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10"
             >
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-medium text-white/90">Filtrează după tag-uri</h3>
