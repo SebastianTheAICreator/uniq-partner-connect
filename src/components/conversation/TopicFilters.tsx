@@ -36,53 +36,57 @@ const TopicFilters = ({ searchQuery, sortBy, onSearchChange, onSortChange }: Top
   };
 
   return (
-    <div className="sticky top-32 z-10 bg-[#1A1F2C]/90 backdrop-blur-xl border-b border-[#3A4366]/30 py-3">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="py-4"
+    >
       <div className="container mx-auto px-4">
-        <div className="flex items-center gap-3 justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           {/* Search */}
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 max-w-md w-full sm:w-auto">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/50" />
             <Input
               placeholder="Caută în conversație..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 bg-[#141625] border-[#3A4366]/50 text-white placeholder:text-white/50 focus:ring-indigo-500/30"
+              className="pl-10 bg-[#141625]/80 border-[#3A4366]/50 text-white placeholder:text-white/50 focus:ring-indigo-500/30 h-11"
             />
           </div>
 
           {/* Sort & Filter Controls */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <Button
               variant="ghost"
               size="sm"
               className={cn(
-                "h-9 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10",
+                "h-11 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10 px-4",
                 sortBy === 'recent' && "bg-white/10 text-white"
               )}
               onClick={() => onSortChange('recent')}
             >
               <Clock className="h-4 w-4" />
-              <span className="hidden sm:inline">Recente</span>
+              <span>Recente</span>
             </Button>
             
             <Button
               variant="ghost"
               size="sm"
               className={cn(
-                "h-9 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10",
+                "h-11 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10 px-4",
                 sortBy === 'popular' && "bg-white/10 text-white"
               )}
               onClick={() => onSortChange('popular')}
             >
               <TrendingUp className="h-4 w-4" />
-              <span className="hidden sm:inline">Populare</span>
+              <span>Populare</span>
             </Button>
             
             <Button
               variant="ghost"
               size="sm"
               className={cn(
-                "h-9 w-9 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10",
+                "h-11 w-11 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10",
                 showFilters && "bg-white/10 text-white"
               )}
               onClick={() => setShowFilters(!showFilters)}
@@ -99,10 +103,10 @@ const TopicFilters = ({ searchQuery, sortBy, onSearchChange, onSortChange }: Top
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-3 pt-3 border-t border-[#3A4366]/30"
+              className="mt-4 pt-4 border-t border-[#3A4366]/30"
             >
-              <div className="flex flex-wrap gap-2 items-center">
-                <span className="text-sm text-white/60 mr-2">Filtrează după:</span>
+              <div className="flex flex-wrap gap-3 items-center">
+                <span className="text-sm text-white/60 mr-2">Filtrează după etichete:</span>
                 {availableTags.map((tag) => (
                   <Badge
                     key={tag}
@@ -124,7 +128,7 @@ const TopicFilters = ({ searchQuery, sortBy, onSearchChange, onSortChange }: Top
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedTags([])}
-                    className="h-6 px-2 text-white/50 hover:text-white text-xs"
+                    className="h-7 px-3 text-white/50 hover:text-white text-xs"
                   >
                     <X className="h-3 w-3 mr-1" />
                     Șterge toate
@@ -135,7 +139,7 @@ const TopicFilters = ({ searchQuery, sortBy, onSearchChange, onSortChange }: Top
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

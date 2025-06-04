@@ -19,7 +19,8 @@ import {
   Clock,
   AlertCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Eye
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -71,7 +72,6 @@ const PremiumPost = ({
   className
 }: PremiumPostProps) => {
   const { toast } = useToast();
-  const [expanded, setExpanded] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
   
   const isLongContent = post.content.length > 280;
@@ -91,57 +91,65 @@ const PremiumPost = ({
   const hasAttachments = post.attachments && post.attachments.length > 0;
   
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       className={cn(
-        "w-full rounded-xl overflow-hidden backdrop-blur-lg transition-all duration-300",
-        "border border-[#3A4366]/50 hover:border-[#3A4366]",
-        expanded ? "shadow-2xl" : "shadow-xl",
-        "bg-gradient-to-b from-[#1E2235]/90 to-[#141625]/95",
+        "group relative bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10",
+        "hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300",
+        "shadow-lg hover:shadow-2xl overflow-hidden",
         className
       )}
     >
-      {/* Top glowing border effect */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent"></div>
+      {/* Pinned indicator */}
+      {post.isPinned && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500"></div>
+      )}
       
       <div className="p-6">
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
-            <div className={cn(
-              "h-10 w-10 rounded-full flex items-center justify-center text-white font-semibold text-sm",
-              "bg-gradient-to-br from-indigo-500 to-purple-500"
-            )}>
-              {post.author.avatar ? (
-                <img 
-                  src={post.author.avatar} 
-                  alt={post.author.name} 
-                  className="h-full w-full object-cover rounded-full"
-                />
-              ) : (
-                post.author.name.charAt(0)
+            <div className="relative">
+              <div className={cn(
+                "h-12 w-12 rounded-full flex items-center justify-center text-white font-semibold",
+                "bg-gradient-to-br from-indigo-500 to-purple-500 ring-2 ring-white/10"
+              )}>
+                {post.author.avatar ? (
+                  <img 
+                    src={post.author.avatar} 
+                    alt={post.author.name} 
+                    className="h-full w-full object-cover rounded-full"
+                  />
+                ) : (
+                  post.author.name.charAt(0)
+                )}
+              </div>
+              {post.author.verified && (
+                <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center ring-2 ring-[#1E2235]">
+                  <span className="text-[8px] text-white font-bold">✓</span>
+                </div>
               )}
             </div>
             
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-white/90">{post.author.name}</span>
-                {post.author.verified && (
-                  <Badge variant="outline" className="h-5 px-1.5 bg-blue-500/20 text-blue-400 border-none text-xs">
-                    Pro
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-semibold text-white">{post.author.name}</span>
+                {post.author.role && (
+                  <Badge variant="outline" className="h-5 px-2 bg-indigo-500/10 text-indigo-400 border-indigo-500/30 text-xs">
+                    {post.author.role}
                   </Badge>
                 )}
                 {post.isPinned && (
-                  <Badge variant="outline" className="h-5 px-1.5 bg-amber-500/20 text-amber-400 border-none text-xs">
-                    Pinned
+                  <Badge className="h-5 px-2 bg-amber-500/20 text-amber-400 text-xs">
+                    Fixat
                   </Badge>
                 )}
               </div>
               
-              <div className="flex items-center gap-1.5 text-white/50 text-xs mt-0.5">
-                <Clock className="h-3 w-3" />
+              <div className="flex items-center gap-2 text-white/50 text-sm">
+                <Clock className="h-3.5 w-3.5" />
                 <span>{post.timestamp}</span>
                 {post.isEdited && (
                   <>
@@ -149,60 +157,50 @@ const PremiumPost = ({
                     <span>editat</span>
                   </>
                 )}
+                <span>•</span>
+                <div className="flex items-center gap-1">
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>{post.stats.views}</span>
+                </div>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
-              onClick={() => setExpanded(!expanded)}
-            >
-              {expanded ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 rounded-full text-white/50 hover:text-white hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-all"
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
         </div>
         
         {/* Content */}
-        <div className="mb-4">
-          <p className="text-white/90 whitespace-pre-wrap leading-relaxed">
+        <div className="mb-6">
+          <p className="text-white/90 text-base leading-relaxed whitespace-pre-wrap">
             {displayContent}
           </p>
           
           {isLongContent && (
             <button 
               onClick={() => setShowFullContent(!showFullContent)}
-              className="text-indigo-400 hover:text-indigo-300 text-sm font-medium mt-2 flex items-center gap-1"
+              className="text-indigo-400 hover:text-indigo-300 text-sm font-medium mt-3 flex items-center gap-1 transition-colors"
             >
-              {showFullContent ? "Arată mai puțin" : "Arată mai mult"}
+              {showFullContent ? "Arată mai puțin" : "Citește mai mult"}
               {showFullContent ? (
-                <ChevronUp className="h-3.5 w-3.5" />
+                <ChevronUp className="h-4 w-4" />
               ) : (
-                <ChevronDown className="h-3.5 w-3.5" />
+                <ChevronDown className="h-4 w-4" />
               )}
             </button>
           )}
           
           {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3">
+            <div className="flex flex-wrap gap-2 mt-4">
               {post.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="text-xs px-2 py-1 rounded-full bg-indigo-500/10 text-indigo-400"
+                  className="text-xs px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors cursor-pointer"
                 >
                   #{tag}
                 </span>
@@ -214,19 +212,18 @@ const PremiumPost = ({
         {/* Attachments */}
         {hasAttachments && (
           <div className={cn(
-            "mb-4 grid gap-3",
+            "mb-6 grid gap-3 rounded-xl overflow-hidden",
             post.attachments.length === 1 && "grid-cols-1",
             post.attachments.length === 2 && "grid-cols-2",
-            post.attachments.length >= 3 && "grid-cols-3",
+            post.attachments.length >= 3 && "grid-cols-2 md:grid-cols-3",
           )}>
             {post.attachments.map((file, idx) => (
               <div
                 key={file.id}
                 className={cn(
-                  "overflow-hidden rounded-lg border border-[#3A4366]/50 hover:border-indigo-500/40",
-                  "aspect-square transition-all duration-300 group",
-                  file.type === 'image' ? 'col-span-1' : '',
-                  idx === 0 && post.attachments.length === 3 ? 'col-span-full sm:col-span-2 sm:row-span-2' : ''
+                  "relative overflow-hidden rounded-lg border border-white/10 hover:border-indigo-500/40",
+                  "transition-all duration-300 group/attachment bg-white/[0.02]",
+                  file.type === 'image' ? 'aspect-video' : 'aspect-square'
                 )}
               >
                 {file.type === 'image' && file.preview ? (
@@ -236,16 +233,16 @@ const PremiumPost = ({
                       alt="attachment"
                       className="h-full w-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover/attachment:opacity-100 transition-opacity"></div>
                   </div>
                 ) : (
-                  <div className="h-full w-full flex flex-col items-center justify-center p-4 bg-[#1A1E30]/50">
+                  <div className="h-full w-full flex flex-col items-center justify-center p-4">
                     {file.type === 'video' ? (
-                      <FileVideo className="h-12 w-12 text-purple-400 mb-2" />
+                      <FileVideo className="h-8 w-8 text-purple-400 mb-2" />
                     ) : file.type === 'image' ? (
-                      <FileImage className="h-12 w-12 text-indigo-400 mb-2" />
+                      <FileImage className="h-8 w-8 text-indigo-400 mb-2" />
                     ) : (
-                      <FileText className="h-12 w-12 text-pink-400 mb-2" />
+                      <FileText className="h-8 w-8 text-pink-400 mb-2" />
                     )}
                     <span className="text-xs text-white/70 font-medium text-center break-all line-clamp-2">
                       {file.file.name}
@@ -258,19 +255,19 @@ const PremiumPost = ({
         )}
         
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#3A4366]/30">
+        <div className="flex items-center justify-between pt-4 border-t border-white/10">
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onLikeClick(post.id)}
               className={cn(
-                "h-9 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10",
-                post.hasLiked && "text-indigo-400 hover:text-indigo-300"
+                "h-10 px-4 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10 transition-all",
+                post.hasLiked && "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10"
               )}
             >
               <ThumbsUp className="h-4 w-4" />
-              <span className="text-xs font-medium">{post.stats.likes}</span>
+              <span className="font-medium">{post.stats.likes}</span>
             </Button>
             
             <Button
@@ -278,32 +275,32 @@ const PremiumPost = ({
               size="sm"
               onClick={() => onDislikeClick(post.id)}
               className={cn(
-                "h-9 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10",
-                post.hasDisliked && "text-red-400 hover:text-red-300"
+                "h-10 px-4 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10 transition-all",
+                post.hasDisliked && "text-red-400 hover:text-red-300 bg-red-500/10"
               )}
             >
               <ThumbsDown className="h-4 w-4" />
-              <span className="text-xs font-medium">{post.stats.dislikes}</span>
+              <span className="font-medium">{post.stats.dislikes}</span>
             </Button>
             
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onReplyClick(post.id)}
-              className="h-9 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10"
+              className="h-10 px-4 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10 transition-all"
             >
               <MessageCircle className="h-4 w-4" />
-              <span className="text-xs font-medium">{post.stats.replies}</span>
+              <span className="font-medium">{post.stats.replies}</span>
             </Button>
             
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onShareClick(post.id)}
-              className="h-9 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10"
+              className="h-10 px-4 rounded-lg gap-2 text-white/70 hover:text-white hover:bg-white/10 transition-all"
             >
               <Share2 className="h-4 w-4" />
-              <span className="text-xs font-medium">{post.stats.shares}</span>
+              <span className="font-medium">{post.stats.shares}</span>
             </Button>
           </div>
           
@@ -312,7 +309,7 @@ const PremiumPost = ({
               variant="ghost"
               size="sm"
               onClick={handleBookmark}
-              className="h-9 w-9 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
+              className="h-10 w-10 p-0 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all"
             >
               <Bookmark className="h-4 w-4" />
             </Button>
@@ -320,45 +317,14 @@ const PremiumPost = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-9 w-9 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
+              className="h-10 w-10 p-0 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all"
             >
               <Heart className="h-4 w-4" />
             </Button>
           </div>
         </div>
-        
-        {/* Expanded content */}
-        <AnimatePresence>
-          {expanded && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mt-4 pt-4 border-t border-[#3A4366]/30"
-            >
-              <div className="text-white/60 text-xs space-y-2">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>Publicat pe {new Date().toLocaleDateString('ro-RO', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}</span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <AlertCircle className="h-3.5 w-3.5" />
-                  <span>Vizualizat de {post.stats.views} persoane</span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </motion.div>
+    </motion.article>
   );
 };
 

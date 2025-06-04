@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
@@ -12,16 +11,12 @@ import {
   FileVideo,
   FileUp,
   Send,
-  ChevronDown,
-  ChevronUp,
-  Sparkles,
-  MicIcon,
-  Link2Icon,
-  SmileIcon,
   X,
-  UserCircle,
+  SmileIcon,
+  MicIcon,
   AtSign,
-  Hash
+  Hash,
+  Sparkles
 } from 'lucide-react';
 
 interface PremiumPostCreatorProps {
@@ -184,89 +179,63 @@ const PremiumPostCreator = ({ topicId, onPostCreated, className }: PremiumPostCr
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={cn(
-        "mx-auto w-full backdrop-blur-lg rounded-xl",
-        className
-      )}
+      className={cn("mx-auto w-full", className)}
     >
       <motion.div 
-        initial="initial"
-        animate={isExpanded ? "expanded" : "initial"}
-        variants={{
-          initial: { boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.1)" },
-          expanded: { boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.2)" }
-        }}
         className={cn(
-          "relative overflow-hidden rounded-xl border transition-all duration-300",
-          "bg-gradient-to-b from-[#1E2235]/80 to-[#141625]/90",
-          "border-[#3A4366]/50 hover:border-[#3A4366]",
-          isExpanded ? "shadow-2xl" : "shadow-xl"
+          "relative overflow-hidden rounded-2xl border transition-all duration-300",
+          "bg-white/[0.02] backdrop-blur-xl border-white/10",
+          "hover:bg-white/[0.04] hover:border-white/20",
+          isExpanded ? "shadow-2xl border-indigo-500/30" : "shadow-xl"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={!isExpanded ? handleExpand : undefined}
       >
-        {/* Glow effect at top edge */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent"></div>
+        {/* Top accent */}
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent"></div>
         
-        {/* Glow effect at bottom edge */}
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
-        
-        <div className={cn(
-          "p-5 transition-all duration-300",
-          isExpanded ? "p-6" : "p-4"
-        )}>
+        <div className="p-6">
           {isExpanded && (
-            <div className="flex justify-between items-center mb-4">
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex items-center gap-3"
-              >
-                <div className="h-9 w-9 rounded-full bg-gradient-to-br from-indigo-500/30 to-purple-500/30 flex items-center justify-center">
-                  <UserCircle className="h-5 w-5 text-indigo-300" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white/90">Creează o postare nouă</p>
-                  <p className="text-xs text-white/50">Vizibilă tuturor utilizatorilor din această comunitate</p>
-                </div>
-              </motion.div>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsExpanded(false)}
-                className="h-8 w-8 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
-              >
-                <ChevronUp className="h-4 w-4" />
-                <span className="sr-only">Minimize</span>
-              </Button>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center gap-3 mb-6"
+            >
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center ring-2 ring-white/10">
+                <span className="text-white font-semibold text-sm">Tu</span>
+              </div>
+              <div>
+                <p className="text-white font-medium">Creează o postare nouă</p>
+                <p className="text-white/50 text-sm">Împărtășește gândurile tale cu comunitatea</p>
+              </div>
+            </motion.div>
           )}
 
           <div className={cn(
-            "w-full transition-all duration-300 relative rounded-lg overflow-hidden",
-            isDragging && "ring-2 ring-indigo-500/30"
+            "relative rounded-xl overflow-hidden transition-all duration-300",
+            isDragging && "ring-2 ring-indigo-500/50 bg-indigo-500/5"
           )}>
             <Textarea
               ref={textareaRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder={isExpanded ? "Ce gânduri vrei să împărtășești?" : "Creează o postare..."}
+              placeholder={isExpanded ? "Ce ai pe suflet? Împărtășește cu noi..." : "Creează o postare..."}
               className={cn(
-                "w-full resize-none transition-all duration-300 border-0",
-                "bg-[#1E2235]/80 text-white/90 placeholder:text-white/40",
-                "focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500/40",
-                isExpanded ? "min-h-[120px] py-4 px-5 text-base" : "min-h-[56px] py-4 px-4 text-sm"
+                "w-full resize-none border-0 bg-transparent text-white/90 placeholder:text-white/40",
+                "focus-visible:ring-0 focus-visible:ring-offset-0",
+                isExpanded ? "min-h-[120px] py-4 px-5 text-base" : "min-h-[60px] py-4 px-4 text-sm cursor-pointer"
               )}
+              readOnly={!isExpanded}
             />
 
+            {/* Mention/Tag suggestions */}
             {(isMentioning || isTagging) && (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute left-4 right-4 bottom-2 bg-[#141625] border border-[#3A4366] rounded-lg shadow-xl z-10"
+                className="absolute left-4 right-4 bottom-2 bg-[#141625]/95 backdrop-blur-sm border border-white/20 rounded-lg shadow-xl z-10"
               >
                 <div className="p-2">
                   <div className="flex items-center px-3 py-2 text-xs text-white/50">
@@ -330,47 +299,42 @@ const PremiumPostCreator = ({ topicId, onPostCreated, className }: PremiumPostCr
             )}
             
             {isDragging && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-indigo-500/20 to-purple-500/20 backdrop-blur-sm rounded-lg">
-                <div className="bg-[#141625]/90 px-4 py-2 rounded-full border border-indigo-500/30">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-indigo-400" />
-                    <span className="text-indigo-300 font-medium text-sm">Trage fișierele aici</span>
+              <div className="absolute inset-0 flex items-center justify-center bg-indigo-500/10 backdrop-blur-sm rounded-xl">
+                <div className="bg-[#141625]/90 px-6 py-3 rounded-full border border-indigo-500/30">
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="h-5 w-5 text-indigo-400" />
+                    <span className="text-indigo-300 font-medium">Trage fișierele aici</span>
                   </div>
                 </div>
               </div>
             )}
           </div>
           
-          <AnimatePresence mode="wait">
+          {/* File previews */}
+          <AnimatePresence>
             {selectedFiles.length > 0 && isExpanded && (
               <motion.div 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="mt-4"
+                className="mt-6"
               >
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                   {selectedFiles.map(file => (
                     <motion.div
                       key={file.id}
-                      initial={{ scale: 0.9, opacity: 0 }}
+                      initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       className="relative group aspect-square"
                     >
-                      <div className={cn(
-                        "h-full w-full rounded-lg overflow-hidden",
-                        "bg-[#1A1E30] border border-[#3A4366]",
-                        "flex items-center justify-center",
-                        "group-hover:border-indigo-500/40 transition-colors"
-                      )}>
+                      <div className="h-full w-full rounded-xl overflow-hidden bg-white/[0.02] border border-white/10 group-hover:border-white/30 transition-all">
                         {file.type === 'image' && file.preview ? (
                           <div className="w-full h-full relative">
                             <img src={file.preview} alt="preview" className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                         ) : (
-                          <div className="text-white/60 flex flex-col items-center justify-center p-3">
+                          <div className="h-full flex flex-col items-center justify-center p-3">
                             {file.type === 'video' ? (
                               <FileVideo className="w-8 h-8 mb-2 text-purple-400" />
                             ) : file.type === 'image' ? (
@@ -378,22 +342,15 @@ const PremiumPostCreator = ({ topicId, onPostCreated, className }: PremiumPostCr
                             ) : (
                               <FileUp className="w-8 h-8 mb-2 text-pink-400" />
                             )}
-                            <p className="text-xs text-center text-white/70 font-medium truncate max-w-full px-1">
-                              {file.file.name.length > 15 
-                                ? `${file.file.name.substring(0, 13)}...` 
-                                : file.file.name}
+                            <p className="text-xs text-white/70 font-medium text-center break-all line-clamp-2">
+                              {file.file.name}
                             </p>
                           </div>
                         )}
                       </div>
                       <button
                         onClick={() => removeFile(file.id)}
-                        className={cn(
-                          "absolute -top-2 -right-2 rounded-full p-1",
-                          "bg-black/70 backdrop-blur-sm shadow-lg border border-white/10",
-                          "opacity-0 group-hover:opacity-100 transition-all duration-200",
-                          "hover:bg-red-500/80 hover:scale-110"
-                        )}
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-lg"
                       >
                         <X className="w-3.5 h-3.5 text-white" />
                       </button>
@@ -404,54 +361,49 @@ const PremiumPostCreator = ({ topicId, onPostCreated, className }: PremiumPostCr
             )}
           </AnimatePresence>
           
-          <AnimatePresence mode="wait">
+          {/* Actions */}
+          <AnimatePresence>
             {isExpanded && (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="mt-5 flex flex-wrap gap-2 items-center justify-between"
+                className="flex flex-wrap gap-3 items-center justify-between mt-6 pt-4 border-t border-white/10"
               >
-                <div className="flex flex-wrap gap-2 items-center">
+                <div className="flex flex-wrap gap-2">
                   <Button 
                     onClick={() => handleFileSelect('image')} 
                     variant="ghost"
-                    className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                    className="h-10 px-4 rounded-lg text-white/70 hover:text-white hover:bg-white/10 gap-2"
                   >
-                    <ImageIcon className="h-3.5 w-3.5 mr-2 text-indigo-400" />
-                    Imagine
+                    <ImageIcon className="h-4 w-4 text-indigo-400" />
+                    <span className="text-sm">Imagine</span>
                   </Button>
+                  
                   <Button 
                     onClick={() => handleFileSelect('video')}
                     variant="ghost"
-                    className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                    className="h-10 px-4 rounded-lg text-white/70 hover:text-white hover:bg-white/10 gap-2"
                   >
-                    <FileVideo className="h-3.5 w-3.5 mr-2 text-purple-400" />
-                    Video
+                    <FileVideo className="h-4 w-4 text-purple-400" />
+                    <span className="text-sm">Video</span>
                   </Button>
+                  
                   <Button 
                     onClick={() => handleFileSelect('document')}
                     variant="ghost"
-                    className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                    className="h-10 px-4 rounded-lg text-white/70 hover:text-white hover:bg-white/10 gap-2"
                   >
-                    <FileUp className="h-3.5 w-3.5 mr-2 text-pink-400" />
-                    Document
+                    <FileUp className="h-4 w-4 text-pink-400" />
+                    <span className="text-sm">Document</span>
                   </Button>
                   
                   <Button 
                     variant="ghost"
-                    className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
+                    className="h-10 px-4 rounded-lg text-white/70 hover:text-white hover:bg-white/10 gap-2"
                   >
-                    <SmileIcon className="h-3.5 w-3.5 mr-2 text-amber-400" />
-                    Emoji
-                  </Button>
-                  <Button 
-                    variant="ghost"
-                    className="h-9 rounded-lg text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium"
-                  >
-                    <MicIcon className="h-3.5 w-3.5 mr-2 text-red-400" />
-                    Audio
+                    <SmileIcon className="h-4 w-4 text-amber-400" />
+                    <span className="text-sm">Emoji</span>
                   </Button>
                 </div>
 
@@ -459,17 +411,15 @@ const PremiumPostCreator = ({ topicId, onPostCreated, className }: PremiumPostCr
                   onClick={handlePostSubmit}
                   disabled={!content.trim() && selectedFiles.length === 0}
                   className={cn(
-                    "h-9 px-4 rounded-lg gap-2 text-white font-medium text-sm",
+                    "h-10 px-6 rounded-lg gap-2 text-white font-medium",
                     "bg-gradient-to-r from-indigo-500 to-purple-500",
                     "hover:from-indigo-600 hover:to-purple-600",
-                    "shadow-lg shadow-indigo-500/20",
-                    "border border-white/10",
-                    "transition-all duration-300",
-                    (!content.trim() && selectedFiles.length === 0) && "opacity-50 cursor-not-allowed"
+                    "shadow-lg shadow-indigo-500/25 transition-all duration-300",
+                    "disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                   )}
                 >
                   <span>Publică</span>
-                  <Send className="h-3.5 w-3.5" />
+                  <Send className="h-4 w-4" />
                 </Button>
               </motion.div>
             )}

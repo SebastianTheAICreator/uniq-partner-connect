@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -396,76 +395,81 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]"
     >
-      <TopicHeader 
-        topic={topic}
-        onBack={onBack}
-        stats={{
-          totalPosts: posts.length,
-          totalReplies: totalReplies
-        }}
-      />
+      {/* Extended background for header and sidebar */}
+      <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30">
+        <div className="container mx-auto px-4">
+          <TopicHeader 
+            topic={topic}
+            onBack={onBack}
+            stats={{
+              totalPosts: posts.length,
+              totalReplies: totalReplies
+            }}
+          />
+        </div>
+      </div>
       
-      <TopicFilters 
-        searchQuery={searchQuery}
-        sortBy={sortBy}
-        onSearchChange={setSearchQuery}
-        onSortChange={setSortBy}
-      />
+      <div className="bg-gradient-to-r from-[#1A1F2C]/60 via-[#1E293B]/60 to-[#1A1F2C]/60 border-b border-[#3A4366]/20">
+        <TopicFilters 
+          searchQuery={searchQuery}
+          sortBy={sortBy}
+          onSearchChange={setSearchQuery}
+          onSortChange={setSortBy}
+        />
+      </div>
       
-      <div className="container mx-auto px-4 pt-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="container mx-auto px-4 pt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-8">
             <PremiumPostCreator 
               topicId={topicId} 
               onPostCreated={handlePostCreated} 
             />
             
-            <ScrollArea className="h-[calc(100vh-24rem)]">
-              <div className="space-y-6 pb-20">
-                <AnimatePresence initial={false}>
-                  {filteredPosts.length > 0 ? (
-                    filteredPosts.map((post) => (
-                      <div key={post.id} ref={replyingTo === post.id ? replyContainerRef : undefined}>
-                        <PostThread
-                          post={post}
-                          replies={replies[post.id] || []}
-                          replyingTo={replyingTo}
-                          onReplyClick={(postId) => setReplyingTo(postId === replyingTo ? null : postId)}
-                          onLikeClick={handleLike}
-                          onDislikeClick={handleDislike}
-                          onShareClick={handleShare}
-                          onReply={handleReply}
-                          onReplyToReply={handleReplyToReply}
-                          onLikeReply={handleLikeReply}
-                          onCancelReply={() => setReplyingTo(null)}
-                        />
-                      </div>
-                    ))
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-20"
-                    >
-                      <div className="mx-auto w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
-                        <MessageCircle className="h-8 w-8 text-indigo-400" />
-                      </div>
-                      <h3 className="text-xl font-medium text-white/90 mb-2">Nicio postare găsită</h3>
-                      <p className="text-white/60 max-w-md mx-auto">
-                        {searchQuery 
-                          ? `Nu există postări care să conțină "${searchQuery}"`
-                          : "Nu există postări în această conversație. Fii primul care postează!"}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </ScrollArea>
+            <div className="space-y-8">
+              <AnimatePresence initial={false}>
+                {filteredPosts.length > 0 ? (
+                  filteredPosts.map((post) => (
+                    <div key={post.id} ref={replyingTo === post.id ? replyContainerRef : undefined}>
+                      <PostThread
+                        post={post}
+                        replies={replies[post.id] || []}
+                        replyingTo={replyingTo}
+                        onReplyClick={(postId) => setReplyingTo(postId === replyingTo ? null : postId)}
+                        onLikeClick={handleLike}
+                        onDislikeClick={handleDislike}
+                        onShareClick={handleShare}
+                        onReply={handleReply}
+                        onReplyToReply={handleReplyToReply}
+                        onLikeReply={handleLikeReply}
+                        onCancelReply={() => setReplyingTo(null)}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center py-20"
+                  >
+                    <div className="mx-auto w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
+                      <MessageCircle className="h-8 w-8 text-indigo-400" />
+                    </div>
+                    <h3 className="text-xl font-medium text-white/90 mb-2">Nicio postare găsită</h3>
+                    <p className="text-white/60 max-w-md mx-auto">
+                      {searchQuery 
+                        ? `Nu există postări care să conțină "${searchQuery}"`
+                        : "Nu există postări în această conversație. Fii primul care postează!"}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
           
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-6">
             <LiveActivity 
               activeUsers={12}
               totalViews={847}
