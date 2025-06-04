@@ -1,18 +1,18 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
-import { Button } from '../ui/button';
-import { ArrowLeft, Filter, Search, TrendingUp, Clock, MessageCircle, SlidersHorizontal, Sparkles, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { MessageCircle } from 'lucide-react';
 import { FilePreview } from './post/types';
 import FileViewerModal from './FileViewerModal';
 import PremiumPostCreator from './post/PremiumPostCreator';
-import PremiumPost, { PostData } from './post/PremiumPost';
-import PremiumReply, { ReplyData } from './post/PremiumReply';
-import PremiumReplyInput from './post/PremiumReplyInput';
-import { Badge } from '../ui/badge';
-import { Input } from '../ui/input';
+import PostThread from './PostThread';
+import TopicHeader from './TopicHeader';
+import TopicFilters from './TopicFilters';
+import LiveActivity from './LiveActivity';
+import { PostData } from './post/PremiumPost';
+import { ReplyData } from './post/PremiumReply';
 
 interface TopicPostsProps {
   topicId: string;
@@ -114,16 +114,15 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   const [posts, setPosts] = useState<PostData[]>(mockPosts);
   const [replies, setReplies] = useState<Record<string, ReplyData[]>>(mockReplies);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const { toast } = useToast();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'recent' | 'popular'>('recent');
   const [selectedFile, setSelectedFile] = useState<{
     type: 'image' | 'video' | 'document';
     preview?: string;
     file: File;
   } | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'recent' | 'popular'>('recent');
-  const [showFilters, setShowFilters] = useState(false);
   
+  const { toast } = useToast();
   const replyContainerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -389,215 +388,93 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       }
     });
 
+  const totalReplies = Object.values(replies).reduce((total, replyArr) => total + replyArr.length, 0);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-8 relative mt-16"
+      className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]"
     >
-      <div className="sticky top-16 left-0 right-0 z-20 backdrop-blur-xl bg-gradient-to-r from-[#1A1F2C]/95 to-[#1E293B]/95 border-b border-[#3A4366]/30 py-3 shadow-md">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onBack}
-                className="h-9 w-9 rounded-full text-white/70 hover:text-white hover:bg-white/10"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              
-              <div>
-                <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">
-                  {topic.title}
-                </h2>
-                <p className="text-white/60 text-sm">{topic.description}</p>
-              </div>
-            </div>
+      <TopicHeader 
+        topic={topic}
+        onBack={onBack}
+        stats={{
+          totalPosts: posts.length,
+          totalReplies: totalReplies
+        }}
+      />
+      
+      <TopicFilters 
+        searchQuery={searchQuery}
+        sortBy={sortBy}
+        onSearchChange={setSearchQuery}
+        onSortChange={setSortBy}
+      />
+      
+      <div className="container mx-auto px-4 pt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-3 space-y-6">
+            <PremiumPostCreator 
+              topicId={topicId} 
+              onPostCreated={handlePostCreated} 
+            />
             
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "h-9 rounded-lg gap-1.5 text-white/70 hover:text-white hover:bg-white/10",
-                  sortBy === 'recent' && "bg-white/10 text-white"
-                )}
-                onClick={() => setSortBy('recent')}
-              >
-                <Clock className="h-4 w-4" />
-                <span className="hidden sm:inline">Recente</span>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "h-9 rounded-lg gap-1.5 text-white/70 hover:text-white hover:bg-white/10",
-                  sortBy === 'popular' && "bg-white/10 text-white"
-                )}
-                onClick={() => setSortBy('popular')}
-              >
-                <TrendingUp className="h-4 w-4" />
-                <span className="hidden sm:inline">Populare</span>
-              </Button>
-              
-              <div className="relative">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 w-9 p-0 rounded-full text-white/70 hover:text-white hover:bg-white/10"
-                  onClick={() => setShowFilters(!showFilters)}
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                </Button>
-                
-                <AnimatePresence>
-                  {showFilters && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-0 top-full mt-2 w-64 rounded-xl overflow-hidden 
-                              bg-[#1A1F2C] border border-[#3A4366]/50 shadow-2xl z-50"
-                    >
-                      <div className="p-3">
-                        <h3 className="text-sm font-medium text-white/90 mb-2">Filtrează după</h3>
-                        
-                        <div className="space-y-2">
-                          <div className="flex flex-wrap gap-1">
-                            <Badge className="bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 cursor-pointer">
-                              Design
-                            </Badge>
-                            <Badge className="bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 cursor-pointer">
-                              AI
-                            </Badge>
-                            <Badge className="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 cursor-pointer">
-                              Technology
-                            </Badge>
-                          </div>
-                          
-                          <div className="flex items-center gap-2">
-                            <Input 
-                              placeholder="Caută cuvinte cheie..." 
-                              className="h-8 text-sm bg-[#141625] border-[#3A4366]/50"
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            <Button size="icon" className="h-8 w-8 p-0" variant="ghost">
-                              <Search className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
+            <ScrollArea className="h-[calc(100vh-24rem)]">
+              <div className="space-y-6 pb-20">
+                <AnimatePresence initial={false}>
+                  {filteredPosts.length > 0 ? (
+                    filteredPosts.map((post) => (
+                      <div key={post.id} ref={replyingTo === post.id ? replyContainerRef : undefined}>
+                        <PostThread
+                          post={post}
+                          replies={replies[post.id] || []}
+                          replyingTo={replyingTo}
+                          onReplyClick={(postId) => setReplyingTo(postId === replyingTo ? null : postId)}
+                          onLikeClick={handleLike}
+                          onDislikeClick={handleDislike}
+                          onShareClick={handleShare}
+                          onReply={handleReply}
+                          onReplyToReply={handleReplyToReply}
+                          onLikeReply={handleLikeReply}
+                          onCancelReply={() => setReplyingTo(null)}
+                        />
                       </div>
+                    ))
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center py-20"
+                    >
+                      <div className="mx-auto w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
+                        <MessageCircle className="h-8 w-8 text-indigo-400" />
+                      </div>
+                      <h3 className="text-xl font-medium text-white/90 mb-2">Nicio postare găsită</h3>
+                      <p className="text-white/60 max-w-md mx-auto">
+                        {searchQuery 
+                          ? `Nu există postări care să conțină "${searchQuery}"`
+                          : "Nu există postări în această conversație. Fii primul care postează!"}
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
-            </div>
+            </ScrollArea>
           </div>
-        </div>
-      </div>
-      
-      <div className="container mx-auto px-4 pt-4">
-        <PremiumPostCreator 
-          topicId={topicId} 
-          onPostCreated={handlePostCreated} 
-          className="mb-8"
-        />
-        
-        <ScrollArea className="h-[calc(100vh-17rem)]">
-          <div className="space-y-6 pb-20">
-            <AnimatePresence initial={false}>
-              {filteredPosts.length > 0 ? (
-                filteredPosts.map((post) => (
-                  <div key={post.id} className="space-y-4">
-                    <PremiumPost
-                      post={post}
-                      onReplyClick={(postId) => setReplyingTo(postId === replyingTo ? null : postId)}
-                      onLikeClick={handleLike}
-                      onDislikeClick={handleDislike}
-                      onShareClick={handleShare}
-                    />
-                    
-                    <div className="ml-8 space-y-4">
-                      <AnimatePresence>
-                        {replyingTo === post.id && (
-                          <motion.div
-                            ref={replyContainerRef}
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                          >
-                            <PremiumReplyInput
-                              postId={post.id}
-                              onReply={handleReply}
-                              onCancel={() => setReplyingTo(null)}
-                            />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                      
-                      {replies[post.id]?.length > 0 && (
-                        <div className="space-y-4 pt-2">
-                          {replies[post.id].map((reply) => (
-                            <PremiumReply
-                              key={reply.id}
-                              reply={reply}
-                              onReplyToReply={handleReplyToReply}
-                              onLike={handleLikeReply}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-20"
-                >
-                  <div className="mx-auto w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
-                    <MessageCircle className="h-8 w-8 text-indigo-400" />
-                  </div>
-                  <h3 className="text-xl font-medium text-white/90 mb-2">Nicio postare găsită</h3>
-                  <p className="text-white/60 max-w-md mx-auto">
-                    {searchQuery 
-                      ? `Nu există postări care să conțină "${searchQuery}"`
-                      : "Nu există postări în această conversație. Fii primul care postează!"}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </ScrollArea>
-      </div>
-      
-      <div className="fixed bottom-0 left-0 right-0 bg-[#1A1F2C]/90 backdrop-blur-xl border-t border-[#3A4366]/30 py-3 z-40">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-1.5 text-white/60 text-xs">
-                <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-                <span>{posts.length} postări</span>
-              </div>
-              
-              <div className="flex items-center gap-1.5 text-white/60 text-xs">
-                <MessageCircle className="h-3.5 w-3.5 text-indigo-400" />
-                <span>
-                  {Object.values(replies).reduce((total, replyArr) => total + replyArr.length, 0)} răspunsuri
-                </span>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-1.5 text-white/60 text-xs">
-              <Shield className="h-3.5 w-3.5 text-green-400" />
-              <span>Conversație moderată</span>
-            </div>
+          
+          {/* Sidebar */}
+          <div className="lg:col-span-1 space-y-4">
+            <LiveActivity 
+              activeUsers={12}
+              totalViews={847}
+              recentActivity={[
+                "Alexandra a adăugat un răspuns",
+                "Mihai a apreciat o postare", 
+                "3 utilizatori noi s-au alăturat"
+              ]}
+            />
           </div>
         </div>
       </div>
