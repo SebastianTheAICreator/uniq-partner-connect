@@ -431,7 +431,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
-      <div className="transition-all duration-300 pt-8">
+      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Main Content */}
