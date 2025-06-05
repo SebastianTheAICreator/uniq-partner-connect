@@ -20,6 +20,7 @@ interface PostThreadProps {
   onReplyToReply: (parentId: string, content: string, files: FilePreview[]) => void;
   onLikeReply: (replyId: string) => void;
   onCancelReply: () => void;
+  onImageClick?: (file: FilePreview) => void;
 }
 
 const PostThread = ({
@@ -33,7 +34,8 @@ const PostThread = ({
   onReply,
   onReplyToReply,
   onLikeReply,
-  onCancelReply
+  onCancelReply,
+  onImageClick
 }: PostThreadProps) => {
   return (
     <motion.div
@@ -48,6 +50,7 @@ const PostThread = ({
         onLikeClick={onLikeClick}
         onDislikeClick={onDislikeClick}
         onShareClick={onShareClick}
+        onImageClick={onImageClick}
       />
       
       {/* Reply Input */}
@@ -86,6 +89,7 @@ const PostThread = ({
                 reply={reply}
                 onReplyToReply={onReplyToReply}
                 onLike={onLikeReply}
+                onImageClick={onImageClick}
               />
             ))}
           </div>

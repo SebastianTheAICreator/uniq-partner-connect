@@ -20,7 +20,8 @@ import {
   AlertCircle,
   ChevronDown,
   ChevronUp,
-  Eye
+  Eye,
+  ZoomIn
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -60,8 +61,29 @@ interface PremiumPostProps {
   onLikeClick: (postId: string) => void;
   onDislikeClick: (postId: string) => void;
   onShareClick: (postId: string) => void;
+  onImageClick?: (file: FilePreview) => void;
   className?: string;
 }
+
+// Predefined color palette for hashtags
+const hashtagColors = [
+  'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+  'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  'bg-pink-500/10 text-pink-400 border-pink-500/20',
+  'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+  'bg-teal-500/10 text-teal-400 border-teal-500/20',
+  'bg-green-500/10 text-green-400 border-green-500/20',
+  'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+  'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  'bg-red-500/10 text-red-400 border-red-500/20',
+];
+
+// Function to get consistent color for a hashtag
+const getHashtagColor = (tag: string) => {
+  const hash = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return hashtagColors[hash % hashtagColors.length];
+};
 
 const PremiumPost = ({
   post,
@@ -69,6 +91,7 @@ const PremiumPost = ({
   onLikeClick,
   onDislikeClick,
   onShareClick,
+  onImageClick,
   className
 }: PremiumPostProps) => {
   const { toast } = useToast();
@@ -86,6 +109,12 @@ const PremiumPost = ({
       title: "Postare salvată",
       description: "Postarea a fost adăugată la favorite",
     });
+  };
+
+  const handleImageClick = (file: FilePreview) => {
+    if (onImageClick) {
+      onImageClick(file);
+    }
   };
 
   const hasAttachments = post.attachments && post.attachments.length > 0;
@@ -200,7 +229,10 @@ const PremiumPost = ({
               {post.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="text-xs px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors cursor-pointer"
+                  className={cn(
+                    "text-xs px-3 py-1.5 rounded-full border hover:opacity-80 transition-opacity cursor-pointer",
+                    getHashtagColor(tag)
+                  )}
                 >
                   #{tag}
                 </span>
@@ -211,46 +243,52 @@ const PremiumPost = ({
         
         {/* Attachments */}
         {hasAttachments && (
-          <div className={cn(
-            "mb-6 grid gap-3 rounded-xl overflow-hidden",
-            post.attachments.length === 1 && "grid-cols-1",
-            post.attachments.length === 2 && "grid-cols-2",
-            post.attachments.length >= 3 && "grid-cols-2 md:grid-cols-3",
-          )}>
-            {post.attachments.map((file, idx) => (
-              <div
-                key={file.id}
-                className={cn(
-                  "relative overflow-hidden rounded-lg border border-white/10 hover:border-indigo-500/40",
-                  "transition-all duration-300 group/attachment bg-white/[0.02]",
-                  file.type === 'image' ? 'aspect-video' : 'aspect-square'
-                )}
-              >
-                {file.type === 'image' && file.preview ? (
-                  <div className="relative h-full w-full">
-                    <img
-                      src={file.preview}
-                      alt="attachment"
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover/attachment:opacity-100 transition-opacity"></div>
-                  </div>
-                ) : (
-                  <div className="h-full w-full flex flex-col items-center justify-center p-4">
-                    {file.type === 'video' ? (
-                      <FileVideo className="h-8 w-8 text-purple-400 mb-2" />
-                    ) : file.type === 'image' ? (
-                      <FileImage className="h-8 w-8 text-indigo-400 mb-2" />
-                    ) : (
-                      <FileText className="h-8 w-8 text-pink-400 mb-2" />
-                    )}
-                    <span className="text-xs text-white/70 font-medium text-center break-all line-clamp-2">
-                      {file.file.name}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="mb-6">
+            <div className={cn(
+              "grid gap-3 rounded-xl overflow-hidden",
+              post.attachments.length === 1 && "grid-cols-1",
+              post.attachments.length === 2 && "grid-cols-2",
+              post.attachments.length >= 3 && "grid-cols-2 md:grid-cols-3",
+            )}>
+              {post.attachments.map((file, idx) => (
+                <div
+                  key={file.id}
+                  className={cn(
+                    "relative overflow-hidden rounded-lg border border-white/10 hover:border-indigo-500/40",
+                    "transition-all duration-300 group/attachment bg-white/[0.02] cursor-pointer",
+                    file.type === 'image' ? 'aspect-auto' : 'aspect-square'
+                  )}
+                  onClick={() => file.type === 'image' && handleImageClick(file)}
+                >
+                  {file.type === 'image' && file.preview ? (
+                    <div className="relative w-full">
+                      <img
+                        src={file.preview}
+                        alt="attachment"
+                        className="w-full h-auto object-contain max-h-80 rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover/attachment:opacity-100 transition-opacity rounded-lg"></div>
+                      <div className="absolute top-2 right-2 bg-black/50 rounded-full p-2 opacity-0 group-hover/attachment:opacity-100 transition-opacity">
+                        <ZoomIn className="h-4 w-4 text-white" />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-full w-full flex flex-col items-center justify-center p-4">
+                      {file.type === 'video' ? (
+                        <FileVideo className="h-8 w-8 text-purple-400 mb-2" />
+                      ) : file.type === 'image' ? (
+                        <FileImage className="h-8 w-8 text-indigo-400 mb-2" />
+                      ) : (
+                        <FileText className="h-8 w-8 text-pink-400 mb-2" />
+                      )}
+                      <span className="text-xs text-white/70 font-medium text-center break-all line-clamp-2">
+                        {file.file.name}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
         
