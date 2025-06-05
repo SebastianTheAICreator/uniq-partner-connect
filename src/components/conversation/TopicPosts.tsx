@@ -404,7 +404,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]"
     >
-      {/* Extended background for header */}
+      {/* Extended background for header - now reaches sidebar */}
       <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30">
         <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
           <div className="container mx-auto px-4">
@@ -420,6 +420,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
+      {/* Extended background for filters - now reaches sidebar */}
       <div className="bg-gradient-to-r from-[#1A1F2C]/60 via-[#1E293B]/60 to-[#1A1F2C]/60 border-b border-[#3A4366]/20">
         <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
           <TopicFilters 
@@ -431,7 +432,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
-      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-8">
+      {/* Main content with proper spacing below header */}
+      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-8 mt-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Main Content */}
