@@ -40,6 +40,7 @@ interface PremiumReplyProps {
   reply: ReplyData;
   onReplyToReply: (parentId: string, content: string, files: FilePreview[]) => void;
   onLike: (replyId: string) => void;
+  onImageClick?: (file: FilePreview) => void;
   className?: string;
 }
 
@@ -47,6 +48,7 @@ const PremiumReply = ({
   reply,
   onReplyToReply,
   onLike,
+  onImageClick,
   className
 }: PremiumReplyProps) => {
   const [isReplying, setIsReplying] = useState(false);
@@ -165,14 +167,15 @@ const PremiumReply = ({
                   key={file.id}
                   className={cn(
                     "overflow-hidden rounded-lg border border-[#3A4366]/30",
-                    "transition-all duration-300 group h-24"
+                    "transition-all duration-300 group h-24 cursor-pointer hover:border-indigo-500/50"
                   )}
+                  onClick={() => onImageClick && onImageClick(file)}
                 >
                   {file.type === 'image' && file.preview ? (
                     <img
                       src={file.preview}
                       alt="attachment"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     <div className="h-full w-full flex items-center justify-center bg-[#1A1E30]/50">
