@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -399,13 +398,9 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
   const totalReplies = Object.values(replies).reduce((total, replyArr) => total + replyArr.length, 0);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]"
-    >
-      {/* Extended background for header - now reaches sidebar */}
-      <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
+      {/* Fixed Header - extends full width and stays at top */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30">
         <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
           <div className="container mx-auto px-4">
             <TopicHeader 
@@ -420,8 +415,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
-      {/* Extended background for filters - now reaches sidebar */}
-      <div className="bg-gradient-to-r from-[#1A1F2C]/60 via-[#1E293B]/60 to-[#1A1F2C]/60 border-b border-[#3A4366]/20">
+      {/* Fixed Filters - positioned below header */}
+      <div className="fixed top-[120px] left-0 right-0 z-30 bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20">
         <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
           <TopicFilters 
             searchQuery={searchQuery}
@@ -432,8 +427,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         </div>
       </div>
       
-      {/* Main content with proper spacing below header */}
-      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-8 mt-8">
+      {/* Main content with proper top margin to clear fixed elements */}
+      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-[200px]">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Main Content */}
@@ -506,7 +501,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         onClose={() => setSelectedFile(null)}
         file={selectedFile}
       />
-    </motion.div>
+    </div>
   );
 };
 
