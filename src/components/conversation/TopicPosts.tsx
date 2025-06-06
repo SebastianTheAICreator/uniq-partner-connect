@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -400,10 +399,11 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
-      {/* Fixed Header - positioned below main navbar (64px) */}
-      <div className="fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30">
-        <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
-          <div className="container mx-auto px-4">
+      {/* Main content with proper top margin to clear only the main navbar */}
+      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-16">
+        <div className="container mx-auto px-4">
+          {/* Scrollable Topic Header */}
+          <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30 -mx-4 px-4">
             <TopicHeader 
               topic={topic}
               onBack={onBack}
@@ -413,25 +413,19 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
               }}
             />
           </div>
-        </div>
-      </div>
-      
-      {/* Fixed Filters - positioned below topic header */}
-      <div className="fixed top-[136px] left-0 right-0 z-30 bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20">
-        <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
-          <TopicFilters 
-            searchQuery={searchQuery}
-            sortBy={sortBy}
-            onSearchChange={setSearchQuery}
-            onSortChange={setSortBy}
-          />
-        </div>
-      </div>
-      
-      {/* Main content with proper top margin to clear navbar, header, and filters */}
-      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-[216px]">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          
+          {/* Scrollable Filters */}
+          <div className="bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20 -mx-4 px-4">
+            <TopicFilters 
+              searchQuery={searchQuery}
+              sortBy={sortBy}
+              onSearchChange={setSearchQuery}
+              onSortChange={setSortBy}
+            />
+          </div>
+          
+          {/* Content with proper spacing */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-8">
             {/* Main Content */}
             <div className="lg:col-span-3 space-y-8">
               <PremiumPostCreator 
