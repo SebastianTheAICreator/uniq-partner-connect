@@ -160,13 +160,20 @@ const SidebarContent = ({
                   );
                 })}
               </div>
+              
+              {/* Add separator after each section except the last one */}
+              {sectionIndex < menuSections.length - 1 && (
+                <div className="pt-4">
+                  <Separator className="bg-white/10" />
+                </div>
+              )}
             </motion.div>
           ))}
 
           {/* Conversations section - only show when not collapsed */}
           {!collapsed && conversations.length > 0 && (
             <motion.div variants={itemVariants}>
-              <Separator className="my-4 bg-gray-800/50" />
+              <Separator className="my-4 bg-white/10" />
               
               <h3 className="px-3 mb-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Conversații
