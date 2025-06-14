@@ -7,14 +7,16 @@ import Sidebar from '@/components/sidebar/Sidebar';
 import CommunityConversations from '@/components/community/CommunityConversations';
 import TopicPosts from '@/components/conversation/TopicPosts';
 import { useNotifications } from "@/contexts/NotificationContext";
+import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 
-const CommunityPage = () => {
+const CommunityContent = () => {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(() => {
     const savedTopic = localStorage.getItem('selectedTopic');
     return savedTopic || null;
   });
   
   const { addNotification } = useNotifications();
+  const { collapsed, isMobile } = useSidebar();
 
   const handleTopicSelect = (topicId: string) => {
     setSelectedTopic(topicId);
@@ -39,6 +41,14 @@ const CommunityPage = () => {
     { id: '3', title: 'AI și Viitorul' }
   ];
 
+  // Calculate dynamic padding based on sidebar state
+  const getMainContentPadding = () => {
+    if (isMobile) {
+      return 'pl-0'; // No padding on mobile as sidebar is overlay
+    }
+    return collapsed ? 'pl-16' : 'pl-72';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10] flex flex-col">
       <Navbar />
@@ -51,7 +61,7 @@ const CommunityPage = () => {
         />
 
         {/* Main Content */}
-        <div className="flex-1 pl-[280px] sm:pl-[80px] transition-all duration-300">
+        <div className={`flex-1 transition-all duration-300 ${getMainContentPadding()}`}>
           <AnimatePresence mode="wait">
             {selectedTopic ? (
               <motion.div
@@ -87,6 +97,14 @@ const CommunityPage = () => {
       
       <Footer />
     </div>
+  );
+};
+
+const CommunityPage = () => {
+  return (
+    <SidebarProvider>
+      <CommunityContent />
+    </SidebarProvider>
   );
 };
 

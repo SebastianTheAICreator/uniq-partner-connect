@@ -2,8 +2,8 @@
 import { cn } from '@/lib/utils';
 import SidebarContent from './SidebarContent';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { useSidebar } from '@/contexts/SidebarContext';
 
 interface SidebarProps {
   conversations: Array<{
@@ -17,21 +17,7 @@ const Sidebar = ({
   conversations,
   onConversationClick
 }: SidebarProps) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 1024) {
-        setCollapsed(true);
-      }
-    };
-    
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
+  const { collapsed, setCollapsed, isMobile } = useSidebar();
 
   return (
     <>
