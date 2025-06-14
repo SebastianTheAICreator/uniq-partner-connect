@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -15,9 +14,11 @@ import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
 import FeedSearchInput from '@/components/feed/FeedSearchInput';
 import FeedFilterPanel from '@/components/feed/FeedFilterPanel';
 import ThreadModal from '@/components/feed/ThreadModal';
+import ThreadPreview from '@/components/feed/ThreadPreview';
 import { Post } from '@/components/feed/FeedPost';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import { useFeedFilters } from '@/hooks/useFeedFilters';
+import { useThreads } from '@/hooks/useThreads';
 
 // Mock conversation data to display in the sidebar
 const mockConversations = [
@@ -101,7 +102,19 @@ const mockPosts: Post[] = [
 const FeedContent = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [showThreadPreview, setShowThreadPreview] = useState<string | null>(null);
   const { collapsed, isMobile } = useSidebar();
+  
+  // Thread management
+  const {
+    getThreadData,
+    openThread,
+    closeThread,
+    addReply,
+    likeReply,
+    openThreadId,
+    currentThread
+  } = useThreads();
   
   // Use the filter hook
   const {
@@ -125,6 +138,22 @@ const FeedContent = () => {
       title: "Post published",
       description: "Your post has been published successfully."
     });
+  };
+
+  const handleReplyClick = (postId: string) => {
+    const post = mockPosts.find(p => p.id === postId);
+    if (post) {
+      if (post.stats.replies > 0) {
+        setShowThreadPreview(postId);
+      } else {
+        openThread(postId);
+      }
+    }
+  };
+
+  const handleViewFullThread = (postId: string) => {
+    setShowThreadPreview(null);
+    openThread(postId);
   };
 
   // Mock loading more posts on scroll
@@ -304,14 +333,26 @@ const FeedContent = () => {
                       </div>
                     )}
 
-                    {/* Filtered posts */}
+                    {/* Posts with thread previews */}
                     <AnimatePresence>
                       {filteredPosts.map((post, index) => (
-                        <FeedPost 
-                          key={post.id} 
-                          post={post} 
-                          delay={index * 0.1} 
-                        />
+                        <div key={post.id} className="space-y-0">
+                          <FeedPost 
+                            post={post} 
+                            delay={index * 0.1}
+                            onReplyClick={() => handleReplyClick(post.id)}
+                          />
+                          
+                          {/* Thread Preview */}
+                          {showThreadPreview === post.id && post.stats.replies > 0 && (
+                            <ThreadPreview
+                              replies={getThreadData(post).replies}
+                              totalReplies={post.stats.replies}
+                              participants={getThreadData(post).stats.participants}
+                              onViewFull={() => handleViewFullThread(post.id)}
+                            />
+                          )}
+                        </div>
                       ))}
                     </AnimatePresence>
                     
@@ -333,6 +374,15 @@ const FeedContent = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Thread Modal */}
+      <ThreadModal
+        isOpen={!!openThreadId}
+        onClose={closeThread}
+        threadData={currentThread}
+        onReply={addReply}
+        onLikeReply={(replyId) => openThreadId && likeReply(openThreadId, replyId)}
+      />
     </div>
   );
 };
