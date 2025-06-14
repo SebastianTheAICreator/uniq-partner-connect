@@ -7,6 +7,8 @@ import { FilePreview } from './post/types';
 import PremiumPost from './post/PremiumPost';
 import PremiumReply from './post/PremiumReply';
 import PremiumReplyInput from './post/PremiumReplyInput';
+import FileViewerModal from './FileViewerModal';
+import { useAttachmentViewer } from '@/hooks/useAttachmentViewer';
 
 interface PostThreadProps {
   post: PostData;
@@ -37,65 +39,83 @@ const PostThread = ({
   onCancelReply,
   onImageClick
 }: PostThreadProps) => {
+  const { isOpen: viewerOpen, currentFile, openViewer, closeViewer } = useAttachmentViewer();
+
+  const handleImageClick = (file: FilePreview) => {
+    if (onImageClick) {
+      onImageClick(file);
+    } else {
+      openViewer(file);
+    }
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-4"
-    >
-      {/* Main Post */}
-      <PremiumPost
-        post={post}
-        onReplyClick={onReplyClick}
-        onLikeClick={onLikeClick}
-        onDislikeClick={onDislikeClick}
-        onShareClick={onShareClick}
-        onImageClick={onImageClick}
-      />
-      
-      {/* Reply Input */}
-      <div className="ml-8">
-        <AnimatePresence>
-          {replyingTo === post.id && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mb-4"
-            >
-              <PremiumReplyInput
-                postId={post.id}
-                onReply={onReply}
-                onCancel={onCancelReply}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-4"
+      >
+        {/* Main Post */}
+        <PremiumPost
+          post={post}
+          onReplyClick={onReplyClick}
+          onLikeClick={onLikeClick}
+          onDislikeClick={onDislikeClick}
+          onShareClick={onShareClick}
+          onImageClick={handleImageClick}
+        />
         
-        {/* Replies */}
-        {replies.length > 0 && (
-          <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-px bg-gradient-to-r from-indigo-500/30 to-transparent flex-1" />
-              <span className="text-xs text-white/50 px-2">
-                {replies.length} {replies.length === 1 ? 'răspuns' : 'răspunsuri'}
-              </span>
-              <div className="h-px bg-gradient-to-l from-indigo-500/30 to-transparent flex-1" />
+        {/* Reply Input */}
+        <div className="ml-8">
+          <AnimatePresence>
+            {replyingTo === post.id && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-4"
+              >
+                <PremiumReplyInput
+                  postId={post.id}
+                  onReply={onReply}
+                  onCancel={onCancelReply}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          
+          {/* Replies */}
+          {replies.length > 0 && (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-px bg-gradient-to-r from-indigo-500/30 to-transparent flex-1" />
+                <span className="text-xs text-white/50 px-2">
+                  {replies.length} {replies.length === 1 ? 'răspuns' : 'răspunsuri'}
+                </span>
+                <div className="h-px bg-gradient-to-l from-indigo-500/30 to-transparent flex-1" />
+              </div>
+              
+              {replies.map((reply) => (
+                <PremiumReply
+                  key={reply.id}
+                  reply={reply}
+                  onReplyToReply={onReplyToReply}
+                  onLike={onLikeReply}
+                  onImageClick={handleImageClick}
+                />
+              ))}
             </div>
-            
-            {replies.map((reply) => (
-              <PremiumReply
-                key={reply.id}
-                reply={reply}
-                onReplyToReply={onReplyToReply}
-                onLike={onLikeReply}
-                onImageClick={onImageClick}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </motion.div>
+          )}
+        </div>
+      </motion.div>
+
+      <FileViewerModal
+        isOpen={viewerOpen}
+        onClose={closeViewer}
+        file={currentFile}
+      />
+    </>
   );
 };
 

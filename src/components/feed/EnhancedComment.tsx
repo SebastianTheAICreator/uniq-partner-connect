@@ -390,6 +390,7 @@ const EnhancedComment = ({
                 onDelete={onDelete}
                 onReactionToggle={onReactionToggle}
                 onToggleCollapse={onToggleCollapse}
+                onAttachmentView={onAttachmentView}
                 maxDepth={maxDepth}
               />
             ))}

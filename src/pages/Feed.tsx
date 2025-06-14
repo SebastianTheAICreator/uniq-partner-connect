@@ -363,7 +363,7 @@ const FeedContent = () => {
                       </div>
                     )}
 
-                    {/* Posts with simple comments */}
+                    {/* Posts with enhanced comments */}
                     <AnimatePresence>
                       {filteredPosts.map((post, index) => (
                         <FeedPost 

@@ -3,14 +3,18 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ThumbsUp, MessageCircle, MoreHorizontal, Clock } from 'lucide-react';
+import { ThumbsUp, MessageCircle, MoreHorizontal, Clock, Image as ImageIcon, FileText, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThreadReply as ThreadReplyType } from './ThreadModal';
+import { CommentAttachment } from '@/types/comment';
 
 interface ThreadReplyProps {
-  reply: ThreadReplyType;
+  reply: ThreadReplyType & {
+    attachments?: CommentAttachment[];
+  };
   onLike: () => void;
   onReply: () => void;
+  onAttachmentView?: (attachment: CommentAttachment) => void;
   isReplying: boolean;
   depth?: number;
 }
@@ -19,12 +23,29 @@ const ThreadReply = ({
   reply,
   onLike,
   onReply,
+  onAttachmentView,
   isReplying,
   depth = 0
 }: ThreadReplyProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const maxDepth = 3;
   const shouldNest = depth < maxDepth;
+
+  const handleAttachmentClick = (attachment: CommentAttachment) => {
+    if (onAttachmentView) {
+      onAttachmentView(attachment);
+    } else {
+      // Fallback behavior
+      if (attachment.type === 'link') {
+        window.open(attachment.url, '_blank', 'noopener,noreferrer');
+      } else if (attachment.type === 'document') {
+        const link = document.createElement('a');
+        link.href = attachment.url;
+        link.download = attachment.name || 'document';
+        link.click();
+      }
+    }
+  };
 
   return (
     <motion.div
@@ -88,6 +109,64 @@ const ThreadReply = ({
           </p>
         </div>
 
+        {/* Attachments */}
+        {reply.attachments && reply.attachments.length > 0 && (
+          <div className="mb-3 space-y-2">
+            {reply.attachments.map((attachment) => (
+              <div
+                key={attachment.id}
+                onClick={() => handleAttachmentClick(attachment)}
+                className="flex items-center gap-3 p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700/50 cursor-pointer transition-all duration-200 border border-gray-600/20 hover:border-gray-500/40"
+              >
+                {attachment.type === 'image' && attachment.previewUrl ? (
+                  <div className="relative">
+                    <img
+                      src={attachment.previewUrl}
+                      alt={attachment.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                    <div className="absolute inset-0 bg-black/20 rounded flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                      <ImageIcon className="h-4 w-4 text-white" />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 flex items-center justify-center bg-gray-600 rounded">
+                    {attachment.type === 'document' ? (
+                      <FileText className="h-6 w-6 text-gray-300" />
+                    ) : (
+                      <ExternalLink className="h-6 w-6 text-gray-300" />
+                    )}
+                  </div>
+                )}
+                
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-200 truncate">
+                    {attachment.name}
+                  </p>
+                  {attachment.metadata?.description && (
+                    <p className="text-xs text-gray-400 truncate">
+                      {attachment.metadata.description}
+                    </p>
+                  )}
+                  {attachment.size && (
+                    <p className="text-xs text-gray-500">
+                      {(attachment.size / 1024).toFixed(1)} KB
+                    </p>
+                  )}
+                </div>
+                
+                <div className="flex items-center gap-1">
+                  {attachment.type === 'image' && (
+                    <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-500/30">
+                      View
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Reply actions */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -142,6 +221,7 @@ const ThreadReply = ({
                 reply={nestedReply}
                 onLike={() => {}} // Handle nested reply likes
                 onReply={() => {}} // Handle nested reply replies
+                onAttachmentView={onAttachmentView}
                 isReplying={false}
                 depth={depth + 1}
               />
