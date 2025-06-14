@@ -32,6 +32,7 @@ import RichCommentInput from './RichCommentInput';
 import EnhancedComment from './EnhancedComment';
 import ThreadModal from './ThreadModal';
 import FeedAttachmentPreview from './FeedAttachmentPreview';
+import { EnhancedComment as CommentType, CommentAttachment } from '@/types/comment';
 
 export interface PostAuthor {
   id: string;
@@ -120,6 +121,7 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
         verified: comment.author.verified
       },
       timestamp: comment.timestamp,
+      parentId: undefined,
       depth: 0,
       reactions: {
         like: {
@@ -133,9 +135,11 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
           hasReacted: false
         }
       },
-      attachments: [],
+      attachments: [] as CommentAttachment[],
       isEdited: false,
-      replies: []
+      editedAt: undefined,
+      replies: [] as CommentType[],
+      isCollapsed: false
     }));
   }, [post.comments]);
 
@@ -175,7 +179,7 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
     });
   };
 
-  const handleComment = (commentContent: string) => {
+  const handleComment = (commentContent: string, attachments: CommentAttachment[] = []) => {
     toast({
       title: "Comment added",
       description: "Your comment has been added successfully."
@@ -189,7 +193,7 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
     });
   };
 
-  const handleCommentReply = (parentId: string, content: string, attachments: any[]) => {
+  const handleCommentReply = (parentId: string, content: string, attachments: CommentAttachment[]) => {
     toast({
       title: "Reply added",
       description: "Your reply has been added successfully."
@@ -197,7 +201,6 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleToggleCollapse = (commentId: string) => {
-    // Handle comment collapse/expand logic here
     toast({
       title: "Comment toggled",
       description: "Comment visibility has been toggled."

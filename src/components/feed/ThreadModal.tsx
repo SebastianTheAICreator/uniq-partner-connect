@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -81,6 +81,9 @@ const ThreadModal = ({
                 <DialogTitle className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
                   Thread Discussion
                 </DialogTitle>
+                <DialogDescription className="sr-only">
+                  View and participate in the thread discussion for this post
+                </DialogDescription>
                 <div className="flex items-center gap-3">
                   <Badge variant="outline" className="bg-blue-900/20 text-blue-300 border-blue-500/30">
                     <MessageCircle className="h-3 w-3 mr-1" />
@@ -111,7 +114,6 @@ const ThreadModal = ({
           <div className="flex-1 overflow-hidden">
             <ScrollArea className="h-full">
               <div className="p-6 space-y-6">
-                {/* Original Post */}
                 <div className="relative">
                   <div className="absolute -left-2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full" />
                   <FeedPost post={post} className="ml-4 border-l-0" />
@@ -119,14 +121,12 @@ const ThreadModal = ({
 
                 <Separator className="bg-gray-800" />
 
-                {/* Reply Input */}
                 <ThreadReplyInput
                   onSubmit={handleReplySubmit}
                   onCancel={() => setReplyingTo(null)}
                   placeholder={replyingTo ? "Write a reply..." : "Join the conversation..."}
                 />
 
-                {/* Replies */}
                 {replies.length > 0 && (
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
