@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, Image, Smile, X } from 'lucide-react';
+import { Send, Image, Smile } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ThreadReplyInputProps {

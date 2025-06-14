@@ -119,14 +119,18 @@ export const useThreads = () => {
   }, [threads]);
 
   const openThread = useCallback((postId: string) => {
+    console.log('Opening thread for post:', postId);
     setOpenThreadId(postId);
   }, []);
 
   const closeThread = useCallback(() => {
+    console.log('Closing thread');
     setOpenThreadId(null);
   }, []);
 
   const addReply = useCallback((postId: string, content: string, parentId?: string) => {
+    console.log('Adding reply to post:', postId, 'content:', content, 'parentId:', parentId);
+    
     const newReply: ThreadReply = {
       id: `reply-${Date.now()}`,
       content,
@@ -185,6 +189,8 @@ export const useThreads = () => {
   }, []);
 
   const likeReply = useCallback((postId: string, replyId: string) => {
+    console.log('Liking reply:', replyId, 'in post:', postId);
+    
     setThreads(prev => {
       const thread = prev[postId];
       if (!thread) return prev;

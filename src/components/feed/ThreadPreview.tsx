@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronDown, ChevronUp, MessageCircle, Users, Clock } from 'lucide-react';
+import { ChevronDown, ChevronUp, MessageCircle, Users, Clock, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThreadReply } from './ThreadModal';
 
@@ -69,9 +69,10 @@ const ThreadPreview = ({
               variant="ghost"
               size="sm"
               onClick={onViewFull}
-              className="h-7 px-3 text-xs text-blue-400 hover:text-blue-300 hover:bg-blue-900/20"
+              className="h-7 px-3 text-xs text-blue-400 hover:text-blue-300 hover:bg-blue-900/20 transition-all duration-200"
             >
               View thread
+              <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           </div>
         </div>
@@ -86,7 +87,8 @@ const ThreadPreview = ({
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="flex items-start gap-3 p-3 rounded-lg bg-gray-900/30 hover:bg-gray-900/50 transition-colors"
+              className="flex items-start gap-3 p-3 rounded-lg bg-gray-900/30 hover:bg-gray-900/50 transition-colors cursor-pointer"
+              onClick={onViewFull}
             >
               <div className="h-6 w-6 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-bold flex-shrink-0">
                 {reply.author.name.charAt(0)}
@@ -134,7 +136,8 @@ const ThreadPreview = ({
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-gray-900/30 hover:bg-gray-900/50 transition-colors"
+                    className="flex items-start gap-3 p-3 rounded-lg bg-gray-900/30 hover:bg-gray-900/50 transition-colors cursor-pointer"
+                    onClick={onViewFull}
                   >
                     <div className="h-6 w-6 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-bold flex-shrink-0">
                       {reply.author.name.charAt(0)}
@@ -166,7 +169,7 @@ const ThreadPreview = ({
                     </div>
                   </motion.div>
                 ))}
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>
         </div>

@@ -144,8 +144,10 @@ const FeedContent = () => {
     const post = mockPosts.find(p => p.id === postId);
     if (post) {
       if (post.stats.replies > 0) {
+        // Show thread preview first
         setShowThreadPreview(postId);
       } else {
+        // Open thread modal directly for new conversations
         openThread(postId);
       }
     }
@@ -154,6 +156,14 @@ const FeedContent = () => {
   const handleViewFullThread = (postId: string) => {
     setShowThreadPreview(null);
     openThread(postId);
+  };
+
+  const handleAddReply = (postId: string, content: string, parentId?: string) => {
+    addReply(postId, content, parentId);
+    toast({
+      title: "Reply added",
+      description: "Your reply has been posted successfully."
+    });
   };
 
   // Mock loading more posts on scroll
@@ -380,7 +390,7 @@ const FeedContent = () => {
         isOpen={!!openThreadId}
         onClose={closeThread}
         threadData={currentThread}
-        onReply={addReply}
+        onReply={handleAddReply}
         onLikeReply={(replyId) => openThreadId && likeReply(openThreadId, replyId)}
       />
     </div>

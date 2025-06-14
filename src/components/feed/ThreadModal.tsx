@@ -61,6 +61,15 @@ const ThreadModal = ({
 
   const { post, replies, stats } = threadData;
 
+  const handleReplySubmit = (content: string) => {
+    onReply(content, replyingTo || undefined);
+    setReplyingTo(null);
+  };
+
+  const handleReplyToReply = (replyId: string) => {
+    setReplyingTo(replyId);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-full h-[90vh] p-0 bg-gray-900 border-gray-700">
@@ -112,10 +121,7 @@ const ThreadModal = ({
 
                 {/* Reply Input */}
                 <ThreadReplyInput
-                  onSubmit={(content) => {
-                    onReply(content, replyingTo);
-                    setReplyingTo(null);
-                  }}
+                  onSubmit={handleReplySubmit}
                   onCancel={() => setReplyingTo(null)}
                   placeholder={replyingTo ? "Write a reply..." : "Join the conversation..."}
                 />
@@ -142,7 +148,7 @@ const ThreadModal = ({
                           <ThreadReply
                             reply={reply}
                             onLike={() => onLikeReply(reply.id)}
-                            onReply={() => setReplyingTo(reply.id)}
+                            onReply={() => handleReplyToReply(reply.id)}
                             isReplying={replyingTo === reply.id}
                           />
                         </motion.div>
