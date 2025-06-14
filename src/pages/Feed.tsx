@@ -221,7 +221,7 @@ const FeedContent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
       <Navbar />
       
       <div className="container mx-auto pt-20 px-4 md:px-8 flex">
@@ -234,16 +234,16 @@ const FeedContent = () => {
             transition={{ duration: 0.5 }}
             className="mt-4 space-y-6"
           >
-            {/* Enhanced Feed header with improved dark theme */}
-            <div className="sticky top-16 z-20 py-4 backdrop-blur-xl bg-gradient-to-r from-slate-950/95 via-slate-900/95 to-slate-950/95 border-b border-slate-800/50 shadow-2xl">
+            {/* Premium Feed header with enhanced dark theme */}
+            <div className="sticky top-16 z-20 py-4 backdrop-blur-xl bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 border-b border-[#3A4366]/30 shadow-2xl rounded-2xl mx-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">
+                  <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#4A90E2] via-[#7B68EE] to-[#00D4FF]">
                     Feed
                   </h1>
-                  <div className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 animate-pulse shadow-lg shadow-blue-500/50"></div>
+                  <div className="h-2 w-2 rounded-full bg-gradient-to-r from-[#4A90E2] to-[#7B68EE] animate-pulse shadow-lg shadow-[#4A90E2]/50"></div>
                   {hasActiveFilters && (
-                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30 shadow-lg">
+                    <Badge variant="secondary" className="bg-[#4A90E2]/20 text-[#4A90E2] border-[#4A90E2]/30 shadow-lg">
                       {resultCount} results
                     </Badge>
                   )}
@@ -255,10 +255,10 @@ const FeedContent = () => {
                     size="sm" 
                     onClick={() => setFilters({ ...filters, sortBy: 'trending' })} 
                     className={cn(
-                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg",
+                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg border border-[#3A4366]/20",
                       filters.sortBy === 'trending' 
-                        ? 'bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-blue-300 border border-blue-500/50 shadow-blue-500/25' 
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 hover:shadow-lg'
+                        ? 'bg-gradient-to-r from-[#4A90E2]/30 to-[#7B68EE]/30 text-[#4A90E2] border-[#4A90E2]/50 shadow-[#4A90E2]/25' 
+                        : 'text-[#B0C4DE] hover:text-white hover:bg-gradient-to-r hover:from-[#2A3441] hover:to-[#3A4366] hover:shadow-lg'
                     )}
                   >
                     <TrendingUp className="mr-2 h-4 w-4" />
@@ -270,10 +270,10 @@ const FeedContent = () => {
                     size="sm" 
                     onClick={() => setFilters({ ...filters, sortBy: 'recent' })} 
                     className={cn(
-                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg",
+                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg border border-[#3A4366]/20",
                       filters.sortBy === 'recent' 
-                        ? 'bg-gradient-to-r from-purple-600/30 to-pink-600/30 text-purple-300 border border-purple-500/50 shadow-purple-500/25' 
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 hover:shadow-lg'
+                        ? 'bg-gradient-to-r from-[#7B68EE]/30 to-[#DA70D6]/30 text-[#7B68EE] border-[#7B68EE]/50 shadow-[#7B68EE]/25' 
+                        : 'text-[#B0C4DE] hover:text-white hover:bg-gradient-to-r hover:from-[#2A3441] hover:to-[#3A4366] hover:shadow-lg'
                     )}
                   >
                     <Clock className="mr-2 h-4 w-4" />
@@ -285,10 +285,10 @@ const FeedContent = () => {
                     size="sm" 
                     onClick={toggleFilter} 
                     className={cn(
-                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg",
+                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg border border-[#3A4366]/20",
                       filterOpen || hasActiveFilters 
-                        ? 'bg-gradient-to-r from-green-600/30 to-emerald-600/30 text-green-300 border border-green-500/50 shadow-green-500/25' 
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 hover:shadow-lg'
+                        ? 'bg-gradient-to-r from-[#32CD32]/30 to-[#00FF7F]/30 text-[#32CD32] border-[#32CD32]/50 shadow-[#32CD32]/25' 
+                        : 'text-[#B0C4DE] hover:text-white hover:bg-gradient-to-r hover:from-[#2A3441] hover:to-[#3A4366] hover:shadow-lg'
                     )}
                   >
                     <Filter className="h-4 w-4" />
@@ -302,10 +302,10 @@ const FeedContent = () => {
                     size="sm" 
                     onClick={toggleDiscovery} 
                     className={cn(
-                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg",
+                      "rounded-xl px-4 py-2 transition-all duration-300 shadow-lg border border-[#3A4366]/20",
                       discoveryOpen 
-                        ? 'bg-gradient-to-r from-orange-600/30 to-yellow-600/30 text-orange-300 border border-orange-500/50 shadow-orange-500/25' 
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 hover:shadow-lg'
+                        ? 'bg-gradient-to-r from-[#FF8C00]/30 to-[#FFD700]/30 text-[#FF8C00] border-[#FF8C00]/50 shadow-[#FF8C00]/25' 
+                        : 'text-[#B0C4DE] hover:text-white hover:bg-gradient-to-r hover:from-[#2A3441] hover:to-[#3A4366] hover:shadow-lg'
                     )}
                   >
                     <Sparkles className="h-4 w-4" />
@@ -313,7 +313,7 @@ const FeedContent = () => {
                 </div>
               </div>
 
-              {/* Advanced Search Input with enhanced styling */}
+              {/* Enhanced Search Input with premium styling */}
               <div className="relative">
                 <FeedSearchInput
                   value={query}
@@ -325,45 +325,45 @@ const FeedContent = () => {
                   searchHistory={searchHistory}
                   selectedSuggestion={selectedSuggestion}
                   onKeyDown={handleKeyDown}
-                  className="w-full max-w-md bg-slate-800/50 border-slate-700/50 focus:border-blue-500/50 shadow-xl"
+                  className="w-full max-w-md bg-gradient-to-r from-[#2A3441]/80 to-[#3A4366]/80 border-[#4A90E2]/30 focus:border-[#4A90E2]/50 shadow-xl backdrop-blur-sm"
                   advanced={true}
                 />
                 
-                {/* Active filters summary with improved styling */}
+                {/* Active filters with premium styling */}
                 {hasActiveFilters && (
                   <div className="flex items-center gap-2 mt-3">
                     <div className="flex flex-wrap gap-2">
                       {query && (
-                        <Badge variant="outline" className="bg-blue-900/30 text-blue-300 border-blue-500/50 shadow-lg">
+                        <Badge variant="outline" className="bg-[#4A90E2]/20 text-[#4A90E2] border-[#4A90E2]/50 shadow-lg backdrop-blur-sm">
                           Search: "{query}"
                           <button 
                             onClick={clearSearch}
-                            className="ml-1 hover:text-blue-200 transition-colors"
+                            className="ml-1 hover:text-[#7B68EE] transition-colors"
                           >
                             <X className="h-3 w-3" />
                           </button>
                         </Badge>
                       )}
                       {filters.tags.map(tag => (
-                        <Badge key={tag} variant="outline" className="bg-purple-900/30 text-purple-300 border-purple-500/50 shadow-lg">
+                        <Badge key={tag} variant="outline" className="bg-[#7B68EE]/20 text-[#7B68EE] border-[#7B68EE]/50 shadow-lg backdrop-blur-sm">
                           #{tag}
                           <button 
                             onClick={() => setFilters({
                               ...filters,
                               tags: filters.tags.filter(t => t !== tag)
                             })}
-                            className="ml-1 hover:text-purple-200 transition-colors"
+                            className="ml-1 hover:text-[#DA70D6] transition-colors"
                           >
                             <X className="h-3 w-3" />
                           </button>
                         </Badge>
                       ))}
                       {filters.minEngagement && (
-                        <Badge variant="outline" className="bg-green-900/30 text-green-300 border-green-500/50 shadow-lg">
+                        <Badge variant="outline" className="bg-[#32CD32]/20 text-[#32CD32] border-[#32CD32]/50 shadow-lg backdrop-blur-sm">
                           {filters.minEngagement}+ engagement
                           <button 
                             onClick={() => setFilters({ ...filters, minEngagement: null })}
-                            className="ml-1 hover:text-green-200 transition-colors"
+                            className="ml-1 hover:text-[#00FF7F] transition-colors"
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -374,7 +374,7 @@ const FeedContent = () => {
                       onClick={resetFilters}
                       variant="ghost"
                       size="sm"
-                      className="text-slate-400 hover:text-slate-200 text-xs transition-colors"
+                      className="text-[#B0C4DE] hover:text-white text-xs transition-colors"
                     >
                       Clear all
                     </Button>
@@ -383,33 +383,33 @@ const FeedContent = () => {
               </div>
             </div>
             
-            {/* New Feed Creator with enhanced styling */}
-            <div className="bg-gradient-to-r from-slate-900/50 via-slate-800/50 to-slate-900/50 rounded-2xl border border-slate-700/50 shadow-2xl">
+            {/* Premium Feed Creator with enhanced styling */}
+            <div className="bg-gradient-to-br from-[#1A1F2C]/80 via-[#2A3441]/80 to-[#1A1F2C]/80 rounded-2xl border border-[#3A4366]/30 shadow-2xl backdrop-blur-xl">
               <PremiumFeedCreator onPostCreated={handlePostCreated} />
             </div>
             
             <div className="flex gap-6">
-              {/* Main feed with enhanced card styling */}
+              {/* Main feed with premium card styling */}
               <div className="flex-1">
                 <div className="space-y-6 pb-20">
-                  {/* No results message with enhanced styling */}
+                  {/* No results message with premium styling */}
                   {searchResults.length === 0 && (query || hasActiveFilters) && (
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-center py-16 bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl border border-slate-700/50 shadow-2xl"
+                      className="text-center py-16 bg-gradient-to-br from-[#1A1F2C]/60 to-[#2A3441]/60 rounded-2xl border border-[#3A4366]/30 shadow-2xl backdrop-blur-xl"
                     >
-                      <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center shadow-lg">
-                        <Search className="h-10 w-10 text-blue-400" />
+                      <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#4A90E2]/20 to-[#7B68EE]/20 flex items-center justify-center shadow-lg">
+                        <Search className="h-10 w-10 text-[#4A90E2]" />
                       </div>
-                      <h3 className="text-xl font-semibold text-slate-200 mb-3">No posts found</h3>
-                      <p className="text-slate-400 mb-6 max-w-md mx-auto">Try adjusting your search or filters to find what you're looking for</p>
+                      <h3 className="text-xl font-semibold text-white mb-3">No posts found</h3>
+                      <p className="text-[#B0C4DE] mb-6 max-w-md mx-auto">Try adjusting your search or filters to find what you're looking for</p>
                       <div className="flex gap-3 justify-center">
                         <Button 
                           onClick={clearSearch} 
                           variant="outline" 
                           size="sm"
-                          className="bg-slate-800/50 border-slate-600/50 hover:bg-slate-700/50 shadow-lg"
+                          className="bg-[#2A3441]/60 border-[#3A4366]/50 hover:bg-[#3A4366]/60 shadow-lg backdrop-blur-sm"
                         >
                           Clear search
                         </Button>
@@ -417,7 +417,7 @@ const FeedContent = () => {
                           onClick={resetFilters} 
                           variant="outline" 
                           size="sm"
-                          className="bg-slate-800/50 border-slate-600/50 hover:bg-slate-700/50 shadow-lg"
+                          className="bg-[#2A3441]/60 border-[#3A4366]/50 hover:bg-[#3A4366]/60 shadow-lg backdrop-blur-sm"
                         >
                           Reset filters
                         </Button>
@@ -425,7 +425,7 @@ const FeedContent = () => {
                     </motion.div>
                   )}
 
-                  {/* Posts with enhanced styling */}
+                  {/* Posts with premium styling */}
                   <AnimatePresence>
                     {searchResults.map((post, index) => (
                       <motion.div
@@ -433,7 +433,7 @@ const FeedContent = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="bg-gradient-to-br from-slate-900/60 via-slate-800/60 to-slate-900/60 rounded-2xl border border-slate-700/50 shadow-2xl hover:shadow-blue-500/10 transition-all duration-300"
+                        className="bg-gradient-to-br from-[#1A1F2C]/70 via-[#2A3441]/70 to-[#1A1F2C]/70 rounded-2xl border border-[#3A4366]/30 shadow-2xl hover:shadow-[#4A90E2]/10 transition-all duration-300 backdrop-blur-xl"
                       >
                         <FeedPost 
                           post={post} 
@@ -443,13 +443,13 @@ const FeedContent = () => {
                     ))}
                   </AnimatePresence>
                   
-                  {/* Infinite scroll trigger with enhanced styling */}
+                  {/* Infinite scroll trigger with premium styling */}
                   {pagination.hasNextPage && searchResults.length > 0 && (
                     <div ref={loadMoreRef} className="flex justify-center py-8">
                       {pagination.isLoading ? (
-                        <div className="flex items-center gap-3 bg-slate-900/50 px-6 py-3 rounded-xl border border-slate-700/50 shadow-xl">
-                          <div className="w-6 h-6 border-2 border-t-blue-500 border-r-purple-500 border-b-transparent border-l-transparent rounded-full animate-spin shadow-lg"></div>
-                          <span className="text-slate-300 font-medium">Loading more posts...</span>
+                        <div className="flex items-center gap-3 bg-[#1A1F2C]/60 px-6 py-3 rounded-xl border border-[#3A4366]/30 shadow-xl backdrop-blur-sm">
+                          <div className="w-6 h-6 border-2 border-t-[#4A90E2] border-r-[#7B68EE] border-b-transparent border-l-transparent rounded-full animate-spin shadow-lg"></div>
+                          <span className="text-white font-medium">Loading more posts...</span>
                         </div>
                       ) : (
                         <motion.div
@@ -457,34 +457,34 @@ const FeedContent = () => {
                           animate={{ opacity: 1 }}
                           className="text-center"
                         >
-                          <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse shadow-lg shadow-blue-500/50"></div>
+                          <div className="w-3 h-3 bg-gradient-to-r from-[#4A90E2] to-[#7B68EE] rounded-full animate-pulse shadow-lg shadow-[#4A90E2]/50"></div>
                         </motion.div>
                       )}
                     </div>
                   )}
 
-                  {/* End of posts indicator with enhanced styling */}
+                  {/* End of posts indicator with premium styling */}
                   {!pagination.hasNextPage && searchResults.length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-center py-12 bg-gradient-to-r from-slate-900/30 to-slate-800/30 rounded-2xl border border-slate-700/30"
+                      className="text-center py-12 bg-gradient-to-r from-[#1A1F2C]/40 to-[#2A3441]/40 rounded-2xl border border-[#3A4366]/20 backdrop-blur-sm"
                     >
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-lg">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#4A90E2]/20 via-[#7B68EE]/20 to-[#FF69B4]/20 flex items-center justify-center shadow-lg">
                         <span className="text-2xl animate-bounce">🎉</span>
                       </div>
-                      <p className="text-slate-400 text-sm font-medium">You've reached the end! Great job staying connected.</p>
+                      <p className="text-[#B0C4DE] text-sm font-medium">You've reached the end! Great job staying connected.</p>
                     </motion.div>
                   )}
                 </div>
               </div>
               
-              {/* Enhanced sidebar with improved styling */}
+              {/* Premium sidebar with enhanced styling */}
               <div className="hidden lg:block w-72 absolute right-8 top-24 space-y-6">
-                <div className="bg-gradient-to-br from-slate-900/60 via-slate-800/60 to-slate-900/60 rounded-2xl border border-slate-700/50 shadow-2xl">
+                <div className="bg-gradient-to-br from-[#1A1F2C]/70 via-[#2A3441]/70 to-[#1A1F2C]/70 rounded-2xl border border-[#3A4366]/30 shadow-2xl backdrop-blur-xl">
                   <FeedTrendingPanel />
                 </div>
-                <div className="bg-gradient-to-br from-slate-900/60 via-slate-800/60 to-slate-900/60 rounded-2xl border border-slate-700/50 shadow-2xl">
+                <div className="bg-gradient-to-br from-[#1A1F2C]/70 via-[#2A3441]/70 to-[#1A1F2C]/70 rounded-2xl border border-[#3A4366]/30 shadow-2xl backdrop-blur-xl">
                   <DiscoveryPanel />
                 </div>
               </div>
@@ -509,7 +509,7 @@ const FeedContent = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/70 z-40 lg:hidden backdrop-blur-sm"
             onClick={() => setDiscoveryOpen(false)}
           >
             <motion.div
@@ -519,7 +519,7 @@ const FeedContent = () => {
               className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 border border-slate-700/50 shadow-2xl">
+              <div className="bg-gradient-to-br from-[#1A1F2C]/95 via-[#2A3441]/95 to-[#1A1F2C]/95 border border-[#3A4366]/30 shadow-2xl backdrop-blur-xl">
                 <DiscoveryPanel className="rounded-t-2xl border-t" />
               </div>
             </motion.div>

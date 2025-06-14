@@ -91,7 +91,7 @@ const SidebarContent = ({
           {menuSections.map((section, sectionIndex) => (
             <motion.div key={section.title} variants={itemVariants}>
               {!collapsed && (
-                <h3 className="px-3 mb-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <h3 className="px-3 mb-3 text-xs font-semibold text-[#7B68EE] uppercase tracking-wider">
                   {section.title}
                 </h3>
               )}
@@ -105,12 +105,12 @@ const SidebarContent = ({
                       key={item.label}
                       variant="ghost"
                       className={cn(
-                        "w-full transition-all duration-300 group relative rounded-xl shadow-lg",
+                        "w-full transition-all duration-300 group relative rounded-xl shadow-lg backdrop-blur-sm",
                         collapsed ? "h-12 px-0 justify-center" : "h-11 px-3 justify-start",
                         isActive 
-                          ? "bg-gradient-to-r from-blue-600/30 to-purple-600/30 text-blue-300 border-r-2 border-blue-400 shadow-blue-500/25 shadow-lg" 
-                          : "text-slate-400 hover:text-slate-200 hover:bg-gradient-to-r hover:from-slate-800/60 hover:to-slate-700/60 hover:shadow-xl",
-                        item.isPro && "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 shadow-orange-500/20"
+                          ? "bg-gradient-to-r from-[#4A90E2]/30 to-[#7B68EE]/30 text-[#4A90E2] border-r-2 border-[#4A90E2] shadow-[#4A90E2]/25 shadow-lg" 
+                          : "text-[#B0C4DE] hover:text-white hover:bg-gradient-to-r hover:from-[#2A3441]/80 hover:to-[#3A4366]/80 hover:shadow-xl",
+                        item.isPro && "bg-gradient-to-r from-[#FF8C00]/20 to-[#FFD700]/20 border border-[#FF8C00]/30 shadow-[#FF8C00]/20"
                       )}
                       onClick={() => handleMenuItemClick(item.path)}
                     >
@@ -120,8 +120,8 @@ const SidebarContent = ({
                       )}>
                         <item.icon className={cn(
                           "h-5 w-5 transition-all duration-200",
-                          isActive ? "text-blue-400 drop-shadow-lg" : "",
-                          item.isPro ? "text-orange-400" : "",
+                          isActive ? "text-[#4A90E2] drop-shadow-lg" : "",
+                          item.isPro ? "text-[#FF8C00]" : "",
                           !isActive && "group-hover:text-white group-hover:drop-shadow-lg"
                         )} />
                         
@@ -133,17 +133,17 @@ const SidebarContent = ({
                             
                             {item.badge && (
                               <span className={cn(
-                                "px-2 py-1 rounded-lg text-xs font-bold transition-all duration-200 shadow-sm",
+                                "px-2 py-1 rounded-lg text-xs font-bold transition-all duration-200 shadow-sm backdrop-blur-sm",
                                 isActive 
-                                  ? "bg-blue-500/30 text-blue-200 shadow-blue-500/30"
-                                  : "bg-slate-700/60 text-slate-300 group-hover:bg-slate-600/60 group-hover:text-white"
+                                  ? "bg-[#4A90E2]/30 text-[#4A90E2] shadow-[#4A90E2]/30"
+                                  : "bg-[#2A3441]/80 text-[#B0C4DE] group-hover:bg-[#3A4366]/80 group-hover:text-white"
                               )}>
                                 {item.badge}
                               </span>
                             )}
                             
                             {item.isPro && (
-                              <span className="px-2 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30">
+                              <span className="px-2 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-[#FF8C00] to-[#FFD700] text-white shadow-lg shadow-[#FF8C00]/30">
                                 PRO
                               </span>
                             )}
@@ -151,11 +151,11 @@ const SidebarContent = ({
                         )}
                       </div>
                       
-                      {/* Enhanced tooltip for collapsed state */}
+                      {/* Premium tooltip for collapsed state */}
                       {collapsed && (
-                        <div className="absolute left-full ml-3 px-3 py-2 bg-slate-900/95 border border-slate-700/50 text-white text-sm rounded-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-200 whitespace-nowrap z-50 shadow-2xl backdrop-blur-sm">
+                        <div className="absolute left-full ml-3 px-3 py-2 bg-[#1A1F2C]/95 border border-[#3A4366]/50 text-white text-sm rounded-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-200 whitespace-nowrap z-50 shadow-2xl backdrop-blur-sm">
                           {item.label}
-                          <div className="absolute left-[-6px] top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[6px] border-b-[6px] border-r-[6px] border-transparent border-r-slate-900/95"></div>
+                          <div className="absolute left-[-6px] top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[6px] border-b-[6px] border-r-[6px] border-transparent border-r-[#1A1F2C]/95"></div>
                         </div>
                       )}
                     </Button>
@@ -165,12 +165,12 @@ const SidebarContent = ({
             </motion.div>
           ))}
 
-          {/* Conversations section with enhanced styling */}
+          {/* Conversations section with premium styling */}
           {!collapsed && conversations.length > 0 && (
             <motion.div variants={itemVariants}>
-              <Separator className="my-4 bg-slate-800/60" />
+              <Separator className="my-4 bg-[#3A4366]/40" />
               
-              <h3 className="px-3 mb-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <h3 className="px-3 mb-3 text-xs font-semibold text-[#7B68EE] uppercase tracking-wider">
                 Conversații
               </h3>
               
@@ -179,7 +179,7 @@ const SidebarContent = ({
                   <Button
                     key={conv.id}
                     variant="ghost"
-                    className="w-full h-9 px-3 justify-start text-slate-400 hover:text-slate-200 hover:bg-gradient-to-r hover:from-slate-800/60 hover:to-slate-700/60 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="w-full h-9 px-3 justify-start text-[#B0C4DE] hover:text-white hover:bg-gradient-to-r hover:from-[#2A3441]/80 hover:to-[#3A4366]/80 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl backdrop-blur-sm"
                     onClick={() => onConversationClick?.(conv.id)}
                   >
                     <MessageSquare className="h-4 w-4 mr-3 transition-transform duration-200 group-hover:scale-105" />
@@ -192,8 +192,8 @@ const SidebarContent = ({
         </motion.div>
       </ScrollArea>
 
-      {/* Enhanced Footer */}
-      <div className="p-3 border-t border-slate-800/50 bg-gradient-to-r from-slate-900/60 to-slate-800/60 backdrop-blur-sm">
+      {/* Premium Footer */}
+      <div className="p-3 border-t border-[#3A4366]/30 bg-gradient-to-r from-[#1A1F2C]/80 to-[#2A3441]/80 backdrop-blur-sm">
         <div className={cn(
           "flex gap-2",
           collapsed ? "flex-col" : "flex-row"
@@ -201,7 +201,7 @@ const SidebarContent = ({
           <Button
             variant="ghost"
             className={cn(
-              "transition-all duration-300 text-slate-400 hover:text-slate-200 hover:bg-gradient-to-r hover:from-slate-800/60 hover:to-slate-700/60 rounded-xl shadow-lg hover:shadow-xl hover:scale-105",
+              "transition-all duration-300 text-[#B0C4DE] hover:text-white hover:bg-gradient-to-r hover:from-[#2A3441]/80 hover:to-[#3A4366]/80 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 backdrop-blur-sm",
               collapsed ? "h-12 px-0 justify-center" : "flex-1 justify-center"
             )}
             onClick={() => console.log('Profile clicked')}
@@ -213,7 +213,7 @@ const SidebarContent = ({
           <Button
             variant="ghost"
             className={cn(
-              "transition-all duration-300 text-red-400 hover:text-red-300 hover:bg-gradient-to-r hover:from-red-600/20 hover:to-red-500/20 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 border border-transparent hover:border-red-500/30",
+              "transition-all duration-300 text-[#FF6B6B] hover:text-[#FF8E8E] hover:bg-gradient-to-r hover:from-[#FF6B6B]/20 hover:to-[#FF4757]/20 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 border border-transparent hover:border-[#FF6B6B]/30 backdrop-blur-sm",
               collapsed ? "h-12 px-0 justify-center" : "flex-1 justify-center"
             )}
             onClick={() => console.log('Logout clicked')}

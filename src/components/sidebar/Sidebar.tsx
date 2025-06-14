@@ -21,15 +21,15 @@ const Sidebar = ({
 
   return (
     <>
-      {/* Enhanced Dark Sidebar Container */}
+      {/* Premium Dark Sidebar Container */}
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         className={cn(
           "fixed left-0 top-[4rem] h-[calc(100vh-4rem)] z-50",
-          "bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950",
-          "border-r border-slate-800/50 shadow-2xl",
+          "bg-gradient-to-b from-[#0A0C10] via-[#0F1117] to-[#0A0C10]",
+          "border-r border-[#3A4366]/30 shadow-2xl",
           "backdrop-blur-xl",
           "transition-all duration-300 ease-out",
           collapsed ? "w-16" : "w-72",
@@ -37,18 +37,18 @@ const Sidebar = ({
           isMobile && collapsed ? "-translate-x-full" : ""
         )}
         style={{
-          boxShadow: "4px 0 25px rgba(0, 0, 0, 0.3), 0 0 50px rgba(59, 130, 246, 0.05)"
+          boxShadow: "4px 0 25px rgba(0, 0, 0, 0.4), 0 0 50px rgba(74, 144, 226, 0.08)"
         }}
       >
-        {/* Header with integrated toggle and enhanced styling */}
+        {/* Header with premium styling */}
         <div className="relative h-full flex flex-col">
-          <div className="flex items-center justify-between p-4 border-b border-slate-800/50 bg-gradient-to-r from-slate-900/80 to-slate-800/80 backdrop-blur-sm">
+          <div className="flex items-center justify-between p-4 border-b border-[#3A4366]/30 bg-gradient-to-r from-[#1A1F2C]/90 to-[#2A3441]/90 backdrop-blur-sm">
             {!collapsed && (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 via-purple-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#4A90E2] via-[#7B68EE] to-[#00D4FF] flex items-center justify-center shadow-lg shadow-[#4A90E2]/30">
                   <Menu className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#4A90E2] to-[#7B68EE]">
                   UniQuest
                 </span>
               </div>
@@ -57,23 +57,23 @@ const Sidebar = ({
             <button
               onClick={() => setCollapsed(!collapsed)}
               className={cn(
-                "p-2 rounded-xl bg-slate-800/60 hover:bg-slate-700/60",
-                "border border-slate-700/50 hover:border-slate-600/50",
+                "p-2 rounded-xl bg-[#2A3441]/80 hover:bg-[#3A4366]/80",
+                "border border-[#3A4366]/50 hover:border-[#4A90E2]/50",
                 "transition-all duration-200 shadow-lg hover:shadow-xl",
-                "hover:scale-105 active:scale-95",
+                "hover:scale-105 active:scale-95 backdrop-blur-sm",
                 collapsed ? "mx-auto" : ""
               )}
             >
               {collapsed ? (
-                <ChevronRight className="h-4 w-4 text-slate-300 hover:text-white transition-colors" />
+                <ChevronRight className="h-4 w-4 text-[#B0C4DE] hover:text-white transition-colors" />
               ) : (
-                <ChevronLeft className="h-4 w-4 text-slate-300 hover:text-white transition-colors" />
+                <ChevronLeft className="h-4 w-4 text-[#B0C4DE] hover:text-white transition-colors" />
               )}
             </button>
           </div>
 
-          {/* Content with enhanced dark theme */}
-          <div className="flex-1 overflow-hidden bg-gradient-to-b from-slate-900/50 to-slate-950/50">
+          {/* Content with premium dark theme */}
+          <div className="flex-1 overflow-hidden bg-gradient-to-b from-[#1A1F2C]/60 to-[#0A0C10]/60 backdrop-blur-sm">
             <SidebarContent 
               conversations={conversations}
               onConversationClick={onConversationClick}
@@ -83,13 +83,13 @@ const Sidebar = ({
         </div>
       </motion.div>
 
-      {/* Enhanced mobile overlay */}
+      {/* Premium mobile overlay */}
       {isMobile && !collapsed && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/70 z-40 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/80 z-40 backdrop-blur-sm"
           onClick={() => setCollapsed(true)}
         />
       )}
