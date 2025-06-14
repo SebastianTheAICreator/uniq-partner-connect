@@ -1,33 +1,33 @@
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Index from '@/pages/Index';
-import Feed from '@/pages/Feed';
-import Communities from '@/pages/Communities';
-import Community from '@/pages/Community';
-import DiscoverPeople from '@/pages/DiscoverPeople';
-import TrendingTopics from '@/pages/TrendingTopics';
-import { Toaster } from '@/components/ui/toaster';
-import { NotificationProvider } from '@/contexts/NotificationContext';
-import './App.css';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Index from "./pages/Index";
+import Community from "./pages/Community";
+import Feed from "./pages/Feed";
+import TrendingTopics from "./pages/TrendingTopics";
+import DiscoverPeople from "./pages/DiscoverPeople";
 
-function App() {
-  return (
-    <NotificationProvider>
-      <Router>
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/feed" element={<Feed />} />
-            <Route path="/communities" element={<Communities />} />
-            <Route path="/community/:id" element={<Community />} />
-            <Route path="/discover-people" element={<DiscoverPeople />} />
-            <Route path="/trending-topics" element={<TrendingTopics />} />
-          </Routes>
-          <Toaster />
-        </div>
-      </Router>
-    </NotificationProvider>
-  );
-}
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/feed" replace />} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/trending-topics" element={<TrendingTopics />} />
+          <Route path="/discover-people" element={<DiscoverPeople />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
