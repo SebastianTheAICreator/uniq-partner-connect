@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 interface PremiumFeedCreatorProps {
-  onPostCreated: (post: { content: string; files: FilePreview[] }) => void;
+  onPostCreated: (post: { content: string; files: FilePreview[]; hashtags: string[] }) => void;
 }
 
 const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
@@ -30,9 +30,24 @@ const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isMentioning, setIsMentioning] = useState(false);
   const [isTagging, setIsTagging] = useState(false);
+  const [hashtags, setHashtags] = useState<string[]>([]);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Extract hashtags from content
+  const extractHashtags = (text: string): string[] => {
+    const hashtagRegex = /#[a-zA-Z0-9_]+/g;
+    const matches = text.match(hashtagRegex);
+    return matches ? matches.map(tag => tag.slice(1).toLowerCase()) : [];
+  };
+
+  // Predefined hashtag suggestions
+  const hashtagSuggestions = [
+    'technology', 'ai', 'innovation', 'startup', 'productivity',
+    'design', 'coding', 'business', 'marketing', 'community',
+    'learning', 'motivation', 'success', 'growth', 'future'
+  ];
 
   const handleFileSelect = (type: 'image' | 'video' | 'document') => {
     if (fileInputRef.current) {
@@ -125,18 +140,22 @@ const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
   const handleSubmit = () => {
     if (!content.trim() && selectedFiles.length === 0) return;
     
+    const extractedHashtags = extractHashtags(content);
+    
     onPostCreated({
       content: content.trim(),
-      files: selectedFiles
+      files: selectedFiles,
+      hashtags: extractedHashtags
     });
     
     setContent('');
     setSelectedFiles([]);
+    setHashtags([]);
     setIsExpanded(false);
     
     toast({
       title: "Post published",
-      description: "Your post has been published successfully."
+      description: `Your post has been published${extractedHashtags.length > 0 ? ` with ${extractedHashtags.length} hashtag${extractedHashtags.length > 1 ? 's' : ''}` : ''}.`
     });
   };
   
@@ -152,6 +171,10 @@ const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
     const newContent = e.target.value;
     setContent(newContent);
 
+    // Extract and update hashtags
+    const extractedHashtags = extractHashtags(newContent);
+    setHashtags(extractedHashtags);
+
     const words = newContent.split(' ');
     const lastWord = words[words.length - 1];
     
@@ -165,6 +188,30 @@ const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
       setIsMentioning(false);
       setIsTagging(false);
     }
+  };
+
+  const handleHashtagSelect = (hashtag: string) => {
+    const words = content.split(' ');
+    const lastWordIndex = words.length - 1;
+    words[lastWordIndex] = `#${hashtag}`;
+    const newContent = words.join(' ') + ' ';
+    setContent(newContent);
+    setIsTagging(false);
+    textareaRef.current?.focus();
+  };
+
+  // Filter hashtag suggestions based on current input
+  const getFilteredHashtagSuggestions = () => {
+    if (!isTagging) return [];
+    
+    const words = content.split(' ');
+    const lastWord = words[words.length - 1];
+    const searchTerm = lastWord.slice(1).toLowerCase(); // Remove # and lowercase
+    
+    return hashtagSuggestions.filter(tag => 
+      tag.toLowerCase().includes(searchTerm) && 
+      !hashtags.includes(tag)
+    ).slice(0, 5);
   };
   
   return (
@@ -193,7 +240,7 @@ const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
                 value={content}
                 onChange={handleContentChange}
                 onClick={!isExpanded ? expand : undefined}
-                placeholder={isExpanded ? "What's on your mind? Share with the community..." : "Share your thoughts..."}
+                placeholder={isExpanded ? "What's on your mind? Share with the community... Use #hashtags to categorize your post!" : "Share your thoughts..."}
                 className="resize-none bg-gray-800/50 border-gray-700/50 focus:border-blue-500/50 rounded-xl placeholder:text-gray-500 min-h-[60px] transition-all duration-300"
                 rows={isExpanded ? 4 : 2}
                 readOnly={!isExpanded}
@@ -210,8 +257,8 @@ const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
                 </div>
               )}
 
-              {/* Mention/Tag suggestions */}
-              {(isMentioning || isTagging) && isExpanded && (
+              {/* Hashtag suggestions */}
+              {isTagging && isExpanded && (
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -219,22 +266,60 @@ const PremiumFeedCreator = ({ onPostCreated }: PremiumFeedCreatorProps) => {
                 >
                   <div className="p-2">
                     <div className="flex items-center px-3 py-2 text-xs text-gray-400">
-                      {isMentioning ? (
-                        <>
-                          <AtSign className="h-3.5 w-3.5 mr-2 text-blue-400" />
-                          <span>Mention someone</span>
-                        </>
-                      ) : (
-                        <>
-                          <Hash className="h-3.5 w-3.5 mr-2 text-purple-400" />
-                          <span>Add a hashtag</span>
-                        </>
-                      )}
+                      <Hash className="h-3.5 w-3.5 mr-2 text-purple-400" />
+                      <span>Suggested hashtags</span>
+                    </div>
+                    <div className="max-h-32 overflow-y-auto">
+                      {getFilteredHashtagSuggestions().map((hashtag, index) => (
+                        <button
+                          key={hashtag}
+                          onClick={() => handleHashtagSelect(hashtag)}
+                          className="w-full text-left px-3 py-2 hover:bg-gray-700/50 text-gray-300 text-sm rounded-md transition-colors"
+                        >
+                          <span className="text-purple-400">#{hashtag}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Mention suggestions */}
+              {isMentioning && isExpanded && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute left-4 right-4 bottom-2 bg-gray-800/95 backdrop-blur-sm border border-gray-600 rounded-lg shadow-xl z-10"
+                >
+                  <div className="p-2">
+                    <div className="flex items-center px-3 py-2 text-xs text-gray-400">
+                      <AtSign className="h-3.5 w-3.5 mr-2 text-blue-400" />
+                      <span>Mention someone</span>
                     </div>
                   </div>
                 </motion.div>
               )}
             </div>
+
+            {/* Hashtag preview */}
+            {hashtags.length > 0 && isExpanded && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-3"
+              >
+                <div className="flex flex-wrap gap-2">
+                  {hashtags.map(hashtag => (
+                    <span 
+                      key={hashtag}
+                      className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs font-medium border border-purple-500/30"
+                    >
+                      #{hashtag}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
             {/* File previews */}
             <AnimatePresence>

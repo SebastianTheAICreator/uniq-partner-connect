@@ -6,6 +6,7 @@ import { FilePreview } from '@/components/conversation/post/types';
 export interface NewPost {
   content: string;
   files: FilePreview[];
+  hashtags?: string[];
 }
 
 interface PaginationState {
@@ -56,6 +57,15 @@ export const useFeedPosts = (initialPosts: Post[]) => {
   }, [allPosts, pagination]);
 
   const createPost = useCallback((newPost: NewPost) => {
+    // Extract hashtags from content if not provided
+    const extractHashtags = (text: string): string[] => {
+      const hashtagRegex = /#[a-zA-Z0-9_]+/g;
+      const matches = text.match(hashtagRegex);
+      return matches ? matches.map(tag => tag.slice(1).toLowerCase()) : [];
+    };
+
+    const hashtags = newPost.hashtags || extractHashtags(newPost.content);
+
     const post: Post = {
       id: Math.random().toString(36).substr(2, 9),
       content: newPost.content,
@@ -74,8 +84,9 @@ export const useFeedPosts = (initialPosts: Post[]) => {
         shares: 0,
         views: 1
       },
-      tags: extractTags(newPost.content),
+      tags: hashtags,
       isPinned: false,
+      hasLiked: false,
       attachments: newPost.files.map(file => ({
         type: file.type,
         url: file.preview || URL.createObjectURL(file.file),
@@ -123,10 +134,4 @@ export const useFeedPosts = (initialPosts: Post[]) => {
     updatePost,
     deletePost
   };
-};
-
-// Helper function to extract hashtags from content
-const extractTags = (content: string): string[] => {
-  const hashtags = content.match(/#\w+/g);
-  return hashtags ? hashtags.map(tag => tag.slice(1)) : [];
 };

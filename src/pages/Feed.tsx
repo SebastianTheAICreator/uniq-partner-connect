@@ -204,11 +204,12 @@ const FeedContent = () => {
   const toggleFilter = () => setFilterOpen(prev => !prev);
   const toggleDiscovery = () => setDiscoveryOpen(prev => !prev);
   
-  const handlePostCreated = (newPost: { content: string; files: any[] }) => {
+  const handlePostCreated = (newPost: { content: string; files: any[]; hashtags?: string[] }) => {
     createPost(newPost);
+    const hashtagCount = newPost.hashtags?.length || 0;
     toast({
       title: "Post published successfully",
-      description: "Your post is now live and visible to the community",
+      description: `Your post is now live${hashtagCount > 0 ? ` with ${hashtagCount} hashtag${hashtagCount > 1 ? 's' : ''}` : ''}`,
     });
   };
 
