@@ -230,14 +230,14 @@ const DiscoveryPanel = ({ className }: DiscoveryPanelProps) => {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-4"
             >
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 w-full">
                 {['AI', 'Design', 'Startup', 'Tech', 'UX', 'Code'].map((topic, index) => (
                   <motion.button
                     key={topic}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1 }}
-                    className="p-3 rounded-lg border border-gray-700/30 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all duration-200 text-left"
+                    className="w-full p-3 rounded-lg border border-gray-700/30 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all duration-200 text-left"
                   >
                     <div className="font-medium text-white">#{topic}</div>
                     <div className="text-sm text-gray-400">{Math.floor(Math.random() * 100) + 20} posts</div>
