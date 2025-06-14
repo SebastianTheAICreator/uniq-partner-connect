@@ -310,9 +310,7 @@ const FeedContent = () => {
   return (
     <div className="min-h-screen bg-[#0d1117] text-gray-100">
       <Navbar>
-        <div className="flex items-center gap-4">
-          <EnhancedNotificationSystem />
-        </div>
+        <EnhancedNotificationSystem />
       </Navbar>
       
       <div className="container mx-auto pt-20 px-4 md:px-8 flex">
@@ -339,7 +337,6 @@ const FeedContent = () => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <EnhancedNotificationSystem />
                   <Button 
                     variant="ghost" 
                     size="sm" 
