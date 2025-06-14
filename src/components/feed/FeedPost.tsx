@@ -1,10 +1,12 @@
+
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { ThumbsUp, ThumbsDown, MessageCircle, Share2, MoreHorizontal, Bookmark, Eye, Clock, ChevronDown, ChevronUp, ExternalLink, Heart, Play } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageCircle, Share2, MoreHorizontal, Bookmark, Eye, Clock, ChevronDown, ChevronUp, ExternalLink, Heart, Play, Send } from 'lucide-react';
 
 export interface PostAuthor {
   id: string;
@@ -28,6 +30,15 @@ export interface PostAttachment {
   previewUrl?: string;
 }
 
+export interface Comment {
+  id: string;
+  content: string;
+  author: PostAuthor;
+  timestamp: string;
+  likes: number;
+  hasLiked: boolean;
+}
+
 export interface Post {
   id: string;
   content: string;
@@ -40,6 +51,7 @@ export interface Post {
   isPinned?: boolean;
   isEdited?: boolean;
   tags?: string[];
+  comments?: Comment[];
 }
 
 interface FeedPostProps {
@@ -81,7 +93,12 @@ const FeedPost = ({
   const [likeCount, setLikeCount] = useState(post.stats.likes);
   const [dislikeCount, setDislikeCount] = useState(post.stats.dislikes);
   const [isHovered, setIsHovered] = useState(false);
-  const [showThreadPreview, setShowThreadPreview] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  
+  // Simple commenting state
+  const [comments, setComments] = useState<Comment[]>(post.comments || []);
+  const [newComment, setNewComment] = useState('');
+  const [isCommenting, setIsCommenting] = useState(false);
   
   const isLongContent = post.content.length > 280;
   const shouldTruncate = isLongContent && !showFullContent;
@@ -139,8 +156,50 @@ const FeedPost = ({
     if (onReplyClick) {
       onReplyClick();
     } else {
-      setShowThreadPreview(true);
+      setShowComments(!showComments);
+      if (!showComments) {
+        setIsCommenting(true);
+      }
     }
+  };
+
+  const handleAddComment = () => {
+    if (newComment.trim()) {
+      const comment: Comment = {
+        id: `comment-${Date.now()}`,
+        content: newComment.trim(),
+        author: {
+          id: 'current-user',
+          name: 'You',
+          verified: false
+        },
+        timestamp: 'now',
+        likes: 0,
+        hasLiked: false
+      };
+      
+      setComments(prev => [...prev, comment]);
+      setNewComment('');
+      setIsCommenting(false);
+      
+      toast({
+        title: "Comment added",
+        description: "Your comment has been posted successfully."
+      });
+    }
+  };
+
+  const handleLikeComment = (commentId: string) => {
+    setComments(prev => prev.map(comment => {
+      if (comment.id === commentId) {
+        return {
+          ...comment,
+          hasLiked: !comment.hasLiked,
+          likes: comment.hasLiked ? comment.likes - 1 : comment.likes + 1
+        };
+      }
+      return comment;
+    }));
   };
   
   const hasAttachments = post.attachments && post.attachments.length > 0;
@@ -369,8 +428,8 @@ const FeedPost = ({
             whileHover={{ scale: 1.05, color: "#a855f7" }}
           >
             <MessageCircle className="h-4 w-4 text-purple-400" />
-            <span className="font-medium">{post.stats.replies.toLocaleString()}</span>
-            <span className="text-xs">replies</span>
+            <span className="font-medium">{comments.length.toLocaleString()}</span>
+            <span className="text-xs">comments</span>
           </motion.div>
           <motion.div 
             className="flex items-center gap-2"
@@ -427,14 +486,14 @@ const FeedPost = ({
                 onClick={handleReplyClick}
                 className={cn(
                   "h-11 px-4 rounded-xl text-gray-400 hover:text-purple-400 hover:bg-purple-900/20 transition-all duration-200 relative",
-                  post.stats.replies > 0 && "text-purple-400 bg-purple-900/10"
+                  showComments && "text-purple-400 bg-purple-900/10"
                 )}
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 <span className="text-sm font-medium">
-                  {post.stats.replies > 0 ? post.stats.replies.toLocaleString() : 'Reply'}
+                  {comments.length > 0 ? comments.length.toLocaleString() : 'Comment'}
                 </span>
-                {post.stats.replies > 0 && (
+                {comments.length > 0 && (
                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
                 )}
               </Button>
@@ -530,24 +589,131 @@ const FeedPost = ({
         </div>
       </div>
       
-      {/* Thread Preview - shows when there are replies */}
-      {showThreadPreview && post.stats.replies > 0 && (
-        <div className="border-t border-gray-800/50">
-          <div className="p-4 bg-gray-800/20">
-            <div className="flex items-center gap-3 text-sm text-gray-400">
-              <MessageCircle className="h-4 w-4 text-purple-400" />
-              <span>{post.stats.replies} replies in this thread</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-blue-400 hover:text-blue-300 text-xs ml-auto"
-              >
-                View conversation →
-              </Button>
+      {/* Simple Comments Section */}
+      <AnimatePresence>
+        {showComments && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="border-t border-gray-800/50 bg-gray-800/20"
+          >
+            <div className="p-6 space-y-4">
+              {/* Comment Input */}
+              {isCommenting && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-gray-800/30 rounded-xl p-4"
+                >
+                  <Textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Write a comment..."
+                    className="bg-transparent border-gray-700/50 text-gray-200 placeholder:text-gray-400 resize-none"
+                    rows={3}
+                  />
+                  <div className="flex justify-between items-center mt-3">
+                    <div className="text-xs text-gray-500">
+                      {newComment.length}/500
+                    </div>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => {
+                          setIsCommenting(false);
+                          setNewComment('');
+                        }}
+                        className="text-gray-400 hover:text-gray-200"
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        size="sm"
+                        onClick={handleAddComment}
+                        disabled={!newComment.trim()}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        <Send className="h-3 w-3 mr-1" />
+                        Comment
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Add Comment Button */}
+              {!isCommenting && (
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsCommenting(true)}
+                  className="w-full justify-start text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 border border-dashed border-gray-700/50 hover:border-gray-600/50 h-12 rounded-xl"
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Write a comment...
+                </Button>
+              )}
+
+              {/* Comments List */}
+              {comments.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <MessageCircle className="h-4 w-4" />
+                    <span>{comments.length} comment{comments.length !== 1 ? 's' : ''}</span>
+                  </div>
+                  
+                  {comments.map((comment, index) => (
+                    <motion.div
+                      key={comment.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-gray-800/30 rounded-lg p-4 hover:bg-gray-800/50 transition-colors"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+                          {comment.author.name.charAt(0)}
+                        </div>
+                        
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-sm font-medium text-gray-200">
+                              {comment.author.name}
+                            </span>
+                            {comment.author.verified && (
+                              <Badge className="bg-blue-500/20 text-blue-300 text-xs px-1 py-0">✓</Badge>
+                            )}
+                            <span className="text-xs text-gray-400">{comment.timestamp}</span>
+                          </div>
+                          
+                          <p className="text-sm text-gray-300 mb-2">{comment.content}</p>
+                          
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleLikeComment(comment.id)}
+                            className={cn(
+                              "h-7 px-2 text-xs rounded-lg transition-all duration-200",
+                              comment.hasLiked 
+                                ? "text-blue-400 bg-blue-900/20" 
+                                : "text-gray-400 hover:text-blue-400 hover:bg-blue-900/10"
+                            )}
+                          >
+                            <ThumbsUp className={`h-3 w-3 mr-1 ${comment.hasLiked ? 'fill-blue-400' : ''}`} />
+                            {comment.likes > 0 && comment.likes}
+                          </Button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
