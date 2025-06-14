@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -33,6 +32,8 @@ import RichCommentInput from './RichCommentInput';
 import EnhancedComment from './EnhancedComment';
 import ThreadModal from './ThreadModal';
 import FeedAttachmentPreview from './FeedAttachmentPreview';
+import FileViewerModal from '@/components/conversation/FileViewerModal';
+import { useAttachmentViewer } from '@/hooks/useAttachmentViewer';
 import { EnhancedComment as CommentType, CommentAttachment } from '@/types/comment';
 
 export interface PostAuthor {
@@ -104,6 +105,9 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   // State for managing comments locally
   const [localComments, setLocalComments] = useState<CommentType[]>([]);
   const [commentStats, setCommentStats] = useState(post.stats);
+
+  // Attachment viewer integration
+  const { isOpen: viewerOpen, currentFile, openViewer, closeViewer } = useAttachmentViewer();
 
   const displayStats = useMemo(() => {
     return {
@@ -550,6 +554,7 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
                         onReactionToggle={handleCommentReact}
                         onReply={handleCommentReply}
                         onToggleCollapse={handleToggleCollapse}
+                        onAttachmentView={openViewer}
                         delay={index * 0.1}
                       />
                     ))}
@@ -601,6 +606,13 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
             description: "You liked this reply."
           });
         }}
+      />
+
+      {/* File Viewer Modal */}
+      <FileViewerModal
+        isOpen={viewerOpen}
+        onClose={closeViewer}
+        file={currentFile}
       />
     </div>
   );
