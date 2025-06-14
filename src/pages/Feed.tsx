@@ -12,6 +12,7 @@ import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
 import { Post } from '@/components/feed/FeedPost';
+import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 
 const mockConversations = [
   { id: '1', title: 'My first conversation' },
@@ -91,11 +92,12 @@ const mockPosts: Post[] = [
   }
 ];
 
-const Feed = () => {
+const FeedContent = () => {
   const { toast } = useToast();
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'trending' | 'recent'>('trending');
   const [isLoading, setIsLoading] = useState(false);
+  const { collapsed, isMobile } = useSidebar();
   
   const toggleFilter = () => setFilterOpen(prev => !prev);
   
@@ -117,6 +119,14 @@ const Feed = () => {
     }, 1500);
   };
 
+  // Calculate dynamic padding based on sidebar state
+  const getMainContentPadding = () => {
+    if (isMobile) {
+      return 'pl-0'; // No padding on mobile as sidebar is overlay
+    }
+    return collapsed ? 'pl-16' : 'pl-72';
+  };
+
   return (
     <div className="min-h-screen bg-[#0d1117] text-gray-100">
       <Navbar />
@@ -124,7 +134,7 @@ const Feed = () => {
       <div className="container mx-auto pt-20 px-4 md:px-8 flex">
         <Sidebar conversations={mockConversations} />
         
-        <div className="w-full lg:pr-72 pl-0 sm:pl-20 md:pl-24 xl:pl-28">
+        <div className={`w-full lg:pr-72 transition-all duration-300 ${getMainContentPadding()}`}>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -215,6 +225,14 @@ const Feed = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Feed = () => {
+  return (
+    <SidebarProvider>
+      <FeedContent />
+    </SidebarProvider>
   );
 };
 
