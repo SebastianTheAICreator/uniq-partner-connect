@@ -46,6 +46,7 @@ interface FeedPostProps {
   post: Post;
   className?: string;
   delay?: number;
+  onReplyClick?: () => void;
 }
 
 // Enhanced tag color function with more vibrant gradients
@@ -68,7 +69,8 @@ const getTagColor = (tag: string) => {
 const FeedPost = ({
   post,
   className,
-  delay = 0
+  delay = 0,
+  onReplyClick
 }: FeedPostProps) => {
   const { toast } = useToast();
   const [expanded, setExpanded] = useState(false);
@@ -134,8 +136,11 @@ const FeedPost = ({
   };
 
   const handleReplyClick = () => {
-    setShowThreadPreview(true);
-    // This will be handled by parent component to open thread modal
+    if (onReplyClick) {
+      onReplyClick();
+    } else {
+      setShowThreadPreview(true);
+    }
   };
   
   const hasAttachments = post.attachments && post.attachments.length > 0;
