@@ -1,23 +1,23 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/sidebar/Sidebar';
-import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { TrendingUp, Clock, Filter, Search, Bookmark, Settings, Plus, X } from 'lucide-react';
+import { TrendingUp, Clock, Filter, Search, X, Settings, Sparkles } from 'lucide-react';
 import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
 import FeedSearchInput from '@/components/feed/FeedSearchInput';
-import FeedFilterPanel from '@/components/feed/FeedFilterPanel';
+import AdvancedFilterPanel from '@/components/feed/AdvancedFilterPanel';
+import DiscoveryPanel from '@/components/feed/DiscoveryPanel';
 import { Post } from '@/components/feed/FeedPost';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
-import { useFeedFilters } from '@/hooks/useFeedFilters';
 import { useFeedPosts } from '@/hooks/useFeedPosts';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { useAdvancedSearch } from '@/hooks/useAdvancedSearch';
+import { cn } from '@/lib/utils';
 
 // Mock conversation data to display in the sidebar
 const mockConversations = [
@@ -164,28 +164,36 @@ const FeedContent = () => {
   // Use the posts management hook with infinite scroll support
   const { posts, pagination, loadMorePosts, createPost } = useFeedPosts(initialMockPosts);
   
+  // Use the advanced search hook
+  const {
+    query,
+    setQuery,
+    filters,
+    setFilters,
+    suggestions,
+    isSearching,
+    searchHistory,
+    searchResults,
+    selectedSuggestion,
+    executeSearch,
+    clearSearch,
+    resetFilters,
+    handleKeyNavigation,
+    hasActiveFilters,
+    resultCount
+  } = useAdvancedSearch(posts);
+  
   // Use the infinite scroll hook
   const { isFetching, loadMoreRef } = useInfiniteScroll({
     hasNextPage: pagination.hasNextPage,
     isLoading: pagination.isLoading
   });
   
-  // Use the filter hook
-  const {
-    searchQuery,
-    setSearchQuery,
-    filters,
-    setFilters,
-    sortBy,
-    setSortBy,
-    filteredPosts,
-    hasActiveFilters,
-    clearAllFilters
-  } = useFeedFilters(posts);
-
   const [filterOpen, setFilterOpen] = useState(false);
+  const [discoveryOpen, setDiscoveryOpen] = useState(false);
   
   const toggleFilter = () => setFilterOpen(prev => !prev);
+  const toggleDiscovery = () => setDiscoveryOpen(prev => !prev);
   
   const handlePostCreated = (newPost: { content: string; files: any[] }) => {
     createPost(newPost);
@@ -220,7 +228,7 @@ const FeedContent = () => {
             transition={{ duration: 0.5 }}
             className="mt-4 space-y-6"
           >
-            {/* Feed header with gradient background */}
+            {/* Enhanced Feed header */}
             <div className="sticky top-16 z-20 py-4 backdrop-blur-lg bg-gradient-to-r from-[#0d1117]/95 via-[#1a1f2c]/95 to-[#0d1117]/95 border-b border-[#30363d]">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -228,7 +236,7 @@ const FeedContent = () => {
                   <div className="h-5 w-5 rounded-full bg-blue-500 animate-pulse"></div>
                   {hasActiveFilters && (
                     <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
-                      {filteredPosts.length} filtered
+                      {resultCount} results
                     </Badge>
                   )}
                 </div>
@@ -237,8 +245,8 @@ const FeedContent = () => {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    onClick={() => setSortBy('trending')} 
-                    className={`rounded-lg px-3 ${sortBy === 'trending' ? 'bg-blue-900/30 text-blue-400' : 'text-gray-400'}`}
+                    onClick={() => setFilters({ ...filters, sortBy: 'trending' })} 
+                    className={`rounded-lg px-3 ${filters.sortBy === 'trending' ? 'bg-blue-900/30 text-blue-400' : 'text-gray-400'}`}
                   >
                     <TrendingUp className="mr-2 h-4 w-4" />
                     <span className="hidden sm:inline">Trending</span>
@@ -247,8 +255,8 @@ const FeedContent = () => {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    onClick={() => setSortBy('recent')} 
-                    className={`rounded-lg px-3 ${sortBy === 'recent' ? 'bg-purple-900/30 text-purple-400' : 'text-gray-400'}`}
+                    onClick={() => setFilters({ ...filters, sortBy: 'recent' })} 
+                    className={`rounded-lg px-3 ${filters.sortBy === 'recent' ? 'bg-purple-900/30 text-purple-400' : 'text-gray-400'}`}
                   >
                     <Clock className="mr-2 h-4 w-4" />
                     <span className="hidden sm:inline">Recent</span>
@@ -269,26 +277,47 @@ const FeedContent = () => {
                       <span className="ml-1 text-xs">•</span>
                     )}
                   </Button>
+
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={toggleDiscovery} 
+                    className={`rounded-lg px-3 transition-colors ${
+                      discoveryOpen 
+                        ? 'bg-purple-900/30 text-purple-400 border border-purple-500/30' 
+                        : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+                    }`}
+                  >
+                    <Sparkles className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
 
-              {/* Search Input */}
+              {/* Advanced Search Input */}
               <div className="relative">
                 <FeedSearchInput
-                  value={searchQuery}
-                  onChange={setSearchQuery}
+                  value={query}
+                  onChange={setQuery}
+                  onSearch={executeSearch}
+                  onClear={clearSearch}
+                  suggestions={suggestions}
+                  isSearching={isSearching}
+                  searchHistory={searchHistory}
+                  selectedSuggestion={selectedSuggestion}
+                  onKeyDown={handleKeyNavigation}
                   className="w-full max-w-md"
+                  advanced={true}
                 />
                 
                 {/* Active filters summary */}
                 {hasActiveFilters && (
                   <div className="flex items-center gap-2 mt-3">
                     <div className="flex flex-wrap gap-2">
-                      {searchQuery && (
+                      {query && (
                         <Badge variant="outline" className="bg-blue-900/20 text-blue-300 border-blue-500/30">
-                          Search: "{searchQuery}"
+                          Search: "{query}"
                           <button 
-                            onClick={() => setSearchQuery('')}
+                            onClick={clearSearch}
                             className="ml-1 hover:text-blue-200"
                           >
                             <X className="h-3 w-3" />
@@ -309,11 +338,11 @@ const FeedContent = () => {
                           </button>
                         </Badge>
                       ))}
-                      {filters.minViews && (
+                      {filters.minEngagement && (
                         <Badge variant="outline" className="bg-green-900/20 text-green-300 border-green-500/30">
-                          {filters.minViews}+ views
+                          {filters.minEngagement}+ engagement
                           <button 
-                            onClick={() => setFilters({ ...filters, minViews: null })}
+                            onClick={() => setFilters({ ...filters, minEngagement: null })}
                             className="ml-1 hover:text-green-200"
                           >
                             <X className="h-3 w-3" />
@@ -322,7 +351,7 @@ const FeedContent = () => {
                       )}
                     </div>
                     <Button
-                      onClick={clearAllFilters}
+                      onClick={resetFilters}
                       variant="ghost"
                       size="sm"
                       className="text-gray-400 hover:text-gray-200 text-xs"
@@ -331,41 +360,38 @@ const FeedContent = () => {
                     </Button>
                   </div>
                 )}
-
-                {/* Filter Panel */}
-                <FeedFilterPanel
-                  isOpen={filterOpen}
-                  onClose={() => setFilterOpen(false)}
-                  filters={filters}
-                  onFiltersChange={setFilters}
-                />
               </div>
             </div>
             
-            {/* New Feed Creator with colorful accents */}
+            {/* New Feed Creator */}
             <PremiumFeedCreator onPostCreated={handlePostCreated} />
             
             <div className="flex gap-6">
-              {/* Main feed with infinite scroll */}
+              {/* Main feed with search results */}
               <div className="flex-1">
                 <div className="space-y-6 pb-20">
                   {/* No results message */}
-                  {filteredPosts.length === 0 && hasActiveFilters && (
+                  {searchResults.length === 0 && (query || hasActiveFilters) && (
                     <div className="text-center py-12">
                       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
                         <Search className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-medium text-gray-300 mb-2">No posts found</h3>
                       <p className="text-gray-400 mb-4">Try adjusting your search or filters</p>
-                      <Button onClick={clearAllFilters} variant="outline" size="sm">
-                        Clear all filters
-                      </Button>
+                      <div className="flex gap-2 justify-center">
+                        <Button onClick={clearSearch} variant="outline" size="sm">
+                          Clear search
+                        </Button>
+                        <Button onClick={resetFilters} variant="outline" size="sm">
+                          Reset filters
+                        </Button>
+                      </div>
                     </div>
                   )}
 
-                  {/* Posts with enhanced reactions */}
+                  {/* Posts with enhanced search results */}
                   <AnimatePresence>
-                    {filteredPosts.map((post, index) => (
+                    {searchResults.map((post, index) => (
                       <FeedPost 
                         key={post.id}
                         post={post} 
@@ -375,7 +401,7 @@ const FeedContent = () => {
                   </AnimatePresence>
                   
                   {/* Infinite scroll trigger */}
-                  {pagination.hasNextPage && (
+                  {pagination.hasNextPage && searchResults.length > 0 && (
                     <div ref={loadMoreRef} className="flex justify-center py-8">
                       {pagination.isLoading ? (
                         <div className="flex items-center gap-3">
@@ -395,7 +421,7 @@ const FeedContent = () => {
                   )}
 
                   {/* End of posts indicator */}
-                  {!pagination.hasNextPage && filteredPosts.length > 0 && (
+                  {!pagination.hasNextPage && searchResults.length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -410,14 +436,47 @@ const FeedContent = () => {
                 </div>
               </div>
               
-              {/* Redesigned Trending panel with more color */}
-              <div className="hidden lg:block w-72 absolute right-8 top-24">
+              {/* Enhanced sidebar with trending and discovery */}
+              <div className="hidden lg:block w-72 absolute right-8 top-24 space-y-6">
                 <FeedTrendingPanel />
+                <DiscoveryPanel />
               </div>
             </div>
           </motion.div>
         </div>
       </div>
+
+      {/* Advanced Filter Panel */}
+      <AdvancedFilterPanel
+        isOpen={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        filters={filters}
+        onFiltersChange={setFilters}
+        onReset={resetFilters}
+      />
+
+      {/* Discovery Panel Overlay for mobile */}
+      <AnimatePresence>
+        {discoveryOpen && isMobile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setDiscoveryOpen(false)}
+          >
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <DiscoveryPanel className="rounded-t-2xl border-t" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

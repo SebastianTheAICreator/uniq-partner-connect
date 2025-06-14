@@ -2,23 +2,39 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, X } from 'lucide-react';
+import { Search, X, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AdvancedSearchInput from './AdvancedSearchInput';
+import { SearchSuggestion } from '@/services/aiService';
 
 interface FeedSearchInputProps {
   value: string;
   onChange: (value: string) => void;
+  onSearch?: (query: string) => void;
   onClear?: () => void;
+  suggestions?: SearchSuggestion[];
+  isSearching?: boolean;
+  searchHistory?: string[];
+  selectedSuggestion?: number;
+  onKeyDown?: (event: React.KeyboardEvent) => void;
   className?: string;
   placeholder?: string;
+  advanced?: boolean;
 }
 
 const FeedSearchInput = ({
   value,
   onChange,
+  onSearch,
   onClear,
+  suggestions = [],
+  isSearching = false,
+  searchHistory = [],
+  selectedSuggestion = -1,
+  onKeyDown,
   className,
-  placeholder = "Search posts, authors, or topics..."
+  placeholder = "Search posts, authors, or topics...",
+  advanced = false
 }: FeedSearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -27,6 +43,33 @@ const FeedSearchInput = ({
     onClear?.();
   };
 
+  const handleSearch = (query: string) => {
+    onSearch?.(query);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    onKeyDown?.(event);
+  };
+
+  // Use advanced search input if advanced prop is true
+  if (advanced) {
+    return (
+      <AdvancedSearchInput
+        value={value}
+        onChange={onChange}
+        onSearch={handleSearch}
+        suggestions={suggestions}
+        isSearching={isSearching}
+        searchHistory={searchHistory}
+        selectedSuggestion={selectedSuggestion}
+        onKeyDown={handleKeyDown}
+        className={className}
+        placeholder={placeholder}
+      />
+    );
+  }
+
+  // Fallback to original simple search input
   return (
     <div className={cn("relative", className)}>
       <div className={cn(
@@ -39,6 +82,7 @@ const FeedSearchInput = ({
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={cn(
             "pl-10 pr-10 bg-gray-800/50 border-gray-700/50 text-gray-100",
