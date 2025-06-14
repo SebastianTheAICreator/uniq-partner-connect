@@ -1,3 +1,4 @@
+
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -84,6 +85,7 @@ export interface Post {
   stats: PostStats;
   tags: string[];
   isPinned: boolean;
+  hasLiked?: boolean;
   comments: PostComment[];
   attachments?: PostAttachment[];
 }

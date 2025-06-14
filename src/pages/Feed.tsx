@@ -53,6 +53,7 @@ const initialMockPosts: Post[] = [
     },
     tags: ['artificial-intelligence', 'productivity', 'future-of-work'],
     isPinned: true,
+    hasLiked: false,
     comments: [
       {
         id: 'comment1',
@@ -102,6 +103,7 @@ const initialMockPosts: Post[] = [
     },
     tags: ['market-analysis', 'consumer-trends', 'strategy'],
     isPinned: false,
+    hasLiked: true,
     attachments: [
       {
         type: 'image' as const,
@@ -144,6 +146,7 @@ const initialMockPosts: Post[] = [
     },
     tags: ['funding', 'startup', 'venture-capital'],
     isPinned: false,
+    hasLiked: false,
     comments: [
       {
         id: 'comment4',
