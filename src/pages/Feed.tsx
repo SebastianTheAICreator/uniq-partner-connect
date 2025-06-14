@@ -1,19 +1,23 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/sidebar/Sidebar';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { TrendingUp, Clock, Filter, Search, Bookmark, Settings, Plus } from 'lucide-react';
+import { TrendingUp, Clock, Filter, Search, Bookmark, Settings, Plus, X } from 'lucide-react';
 import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
+import FeedSearchInput from '@/components/feed/FeedSearchInput';
+import FeedFilterPanel from '@/components/feed/FeedFilterPanel';
 import { Post } from '@/components/feed/FeedPost';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
+import { useFeedFilters } from '@/hooks/useFeedFilters';
 
+// Mock conversation data to display in the sidebar
 const mockConversations = [
   { id: '1', title: 'My first conversation' },
   { id: '2', title: 'Another conversation' }, 
@@ -94,10 +98,23 @@ const mockPosts: Post[] = [
 
 const FeedContent = () => {
   const { toast } = useToast();
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<'trending' | 'recent'>('trending');
   const [isLoading, setIsLoading] = useState(false);
   const { collapsed, isMobile } = useSidebar();
+  
+  // Use the filter hook
+  const {
+    searchQuery,
+    setSearchQuery,
+    filters,
+    setFilters,
+    sortBy,
+    setSortBy,
+    filteredPosts,
+    hasActiveFilters,
+    clearAllFilters
+  } = useFeedFilters(mockPosts);
+
+  const [filterOpen, setFilterOpen] = useState(false);
   
   const toggleFilter = () => setFilterOpen(prev => !prev);
   
@@ -142,49 +159,124 @@ const FeedContent = () => {
             className="mt-4 space-y-6"
           >
             {/* Feed header with gradient background */}
-            <div className="flex items-center justify-between sticky top-16 z-20 py-4 backdrop-blur-lg bg-gradient-to-r from-[#0d1117]/95 via-[#1a1f2c]/95 to-[#0d1117]/95 border-b border-[#30363d]">
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Feed</h1>
-                <div className="h-5 w-5 rounded-full bg-blue-500 animate-pulse"></div>
+            <div className="sticky top-16 z-20 py-4 backdrop-blur-lg bg-gradient-to-r from-[#0d1117]/95 via-[#1a1f2c]/95 to-[#0d1117]/95 border-b border-[#30363d]">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Feed</h1>
+                  <div className="h-5 w-5 rounded-full bg-blue-500 animate-pulse"></div>
+                  {hasActiveFilters && (
+                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
+                      {filteredPosts.length} filtered
+                    </Badge>
+                  )}
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setSortBy('trending')} 
+                    className={`rounded-lg px-3 ${sortBy === 'trending' ? 'bg-blue-900/30 text-blue-400' : 'text-gray-400'}`}
+                  >
+                    <TrendingUp className="mr-2 h-4 w-4" />
+                    <span className="hidden sm:inline">Trending</span>
+                  </Button>
+                  
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setSortBy('recent')} 
+                    className={`rounded-lg px-3 ${sortBy === 'recent' ? 'bg-purple-900/30 text-purple-400' : 'text-gray-400'}`}
+                  >
+                    <Clock className="mr-2 h-4 w-4" />
+                    <span className="hidden sm:inline">Recent</span>
+                  </Button>
+                  
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={toggleFilter} 
+                    className={`rounded-lg px-3 transition-colors ${
+                      filterOpen || hasActiveFilters 
+                        ? 'bg-green-900/30 text-green-400 border border-green-500/30' 
+                        : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+                    }`}
+                  >
+                    <Filter className="h-4 w-4" />
+                    {hasActiveFilters && (
+                      <span className="ml-1 text-xs">•</span>
+                    )}
+                  </Button>
+                </div>
               </div>
-              
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setSortBy('trending')} 
-                  className={`rounded-lg px-3 ${sortBy === 'trending' ? 'bg-blue-900/30 text-blue-400' : 'text-gray-400'}`}
-                >
-                  <TrendingUp className="mr-2 h-4 w-4" />
-                  <span className="hidden sm:inline">Trending</span>
-                </Button>
-                
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setSortBy('recent')} 
-                  className={`rounded-lg px-3 ${sortBy === 'recent' ? 'bg-purple-900/30 text-purple-400' : 'text-gray-400'}`}
-                >
-                  <Clock className="mr-2 h-4 w-4" />
-                  <span className="hidden sm:inline">Recent</span>
-                </Button>
-                
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={toggleFilter} 
-                  className="rounded-lg px-3 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                >
-                  <Filter className="h-4 w-4" />
-                </Button>
 
-                <Button 
-                  variant="ghost" 
-                  size="sm"  
-                  className="rounded-lg px-3 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
-                >
-                  <Search className="h-4 w-4" />
-                </Button>
+              {/* Search Input */}
+              <div className="relative">
+                <FeedSearchInput
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  className="w-full max-w-md"
+                />
+                
+                {/* Active filters summary */}
+                {hasActiveFilters && (
+                  <div className="flex items-center gap-2 mt-3">
+                    <div className="flex flex-wrap gap-2">
+                      {searchQuery && (
+                        <Badge variant="outline" className="bg-blue-900/20 text-blue-300 border-blue-500/30">
+                          Search: "{searchQuery}"
+                          <button 
+                            onClick={() => setSearchQuery('')}
+                            className="ml-1 hover:text-blue-200"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      )}
+                      {filters.tags.map(tag => (
+                        <Badge key={tag} variant="outline" className="bg-purple-900/20 text-purple-300 border-purple-500/30">
+                          #{tag}
+                          <button 
+                            onClick={() => setFilters({
+                              ...filters,
+                              tags: filters.tags.filter(t => t !== tag)
+                            })}
+                            className="ml-1 hover:text-purple-200"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                      {filters.minViews && (
+                        <Badge variant="outline" className="bg-green-900/20 text-green-300 border-green-500/30">
+                          {filters.minViews}+ views
+                          <button 
+                            onClick={() => setFilters({ ...filters, minViews: null })}
+                            className="ml-1 hover:text-green-200"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      )}
+                    </div>
+                    <Button
+                      onClick={clearAllFilters}
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-400 hover:text-gray-200 text-xs"
+                    >
+                      Clear all
+                    </Button>
+                  </div>
+                )}
+
+                {/* Filter Panel */}
+                <FeedFilterPanel
+                  isOpen={filterOpen}
+                  onClose={() => setFilterOpen(false)}
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                />
               </div>
             </div>
             
@@ -196,8 +288,23 @@ const FeedContent = () => {
               <div className="flex-1">
                 <ScrollArea className="h-[calc(100vh-14rem)]">
                   <div className="space-y-6 pb-20">
+                    {/* No results message */}
+                    {filteredPosts.length === 0 && hasActiveFilters && (
+                      <div className="text-center py-12">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
+                          <Search className="h-8 w-8 text-gray-400" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-300 mb-2">No posts found</h3>
+                        <p className="text-gray-400 mb-4">Try adjusting your search or filters</p>
+                        <Button onClick={clearAllFilters} variant="outline" size="sm">
+                          Clear all filters
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Filtered posts */}
                     <AnimatePresence>
-                      {mockPosts.map((post, index) => (
+                      {filteredPosts.map((post, index) => (
                         <FeedPost 
                           key={post.id} 
                           post={post} 
