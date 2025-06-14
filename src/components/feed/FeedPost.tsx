@@ -223,16 +223,6 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
     return [...originalComments, ...localComments];
   }, [post.comments, localComments]);
 
-  const handleLike = (type: 'like' | 'dislike') => {
-    if (type === 'like') {
-      setIsLiked(!isLiked);
-      setIsDisliked(false);
-    } else {
-      setIsDisliked(!isDisliked);
-      setIsLiked(false);
-    }
-  };
-
   const handleBookmark = () => {
     setIsBookmarked(!isBookmarked);
   };

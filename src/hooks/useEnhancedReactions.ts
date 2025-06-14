@@ -9,9 +9,9 @@ export interface PostReaction {
   hasReacted: boolean;
 }
 
-export interface PostReactions {
+export type PostReactions = {
   [K in ReactionType]: PostReaction;
-}
+};
 
 export const useEnhancedReactions = (initialReactions: PostReactions) => {
   const [reactions, setReactions] = useState<PostReactions>(initialReactions);
