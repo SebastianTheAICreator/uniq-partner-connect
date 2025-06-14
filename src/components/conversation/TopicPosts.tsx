@@ -400,8 +400,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
-      {/* Topic Header - extends to sidebar */}
-      <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30 pl-[280px] sm:pl-[80px] transition-all duration-300 pt-16">
+      {/* Topic Header - extends to sidebar with rounded corners */}
+      <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30 pl-[280px] sm:pl-[80px] transition-all duration-300 pt-16 rounded-b-2xl mx-4 mb-2">
         <TopicHeader 
           topic={topic}
           onBack={onBack}
@@ -412,8 +412,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         />
       </div>
       
-      {/* Topic Filters - extends to sidebar */}
-      <div className="bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20 pl-[280px] sm:pl-[80px] transition-all duration-300">
+      {/* Topic Filters - extends to sidebar with rounded corners */}
+      <div className="bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20 pl-[280px] sm:pl-[80px] transition-all duration-300 rounded-2xl mx-4 mb-4">
         <TopicFilters 
           searchQuery={searchQuery}
           sortBy={sortBy}
