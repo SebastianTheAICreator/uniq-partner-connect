@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
@@ -13,7 +12,7 @@ import {
   Sparkles,
   Brain,
   Target,
-  Refresh
+  RefreshCw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { aiService, TrendingTopic, UserMatch } from '@/services/aiService';
@@ -76,7 +75,7 @@ const DiscoveryPanel = ({ className }: DiscoveryPanelProps) => {
             className="text-gray-400 hover:text-gray-200"
             disabled={isLoading}
           >
-            <Refresh className={cn("h-4 w-4", isLoading && "animate-spin")} />
+            <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
           </Button>
         </div>
 

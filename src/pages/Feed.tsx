@@ -199,6 +199,11 @@ const FeedContent = () => {
     createPost(newPost);
   };
 
+  // Fix the keyboard event handler type
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    handleKeyNavigation(event.nativeEvent);
+  };
+
   // Trigger load more when infinite scroll detects intersection
   useEffect(() => {
     if (isFetching) {
@@ -304,7 +309,7 @@ const FeedContent = () => {
                   isSearching={isSearching}
                   searchHistory={searchHistory}
                   selectedSuggestion={selectedSuggestion}
-                  onKeyDown={handleKeyNavigation}
+                  onKeyDown={handleKeyDown}
                   className="w-full max-w-md"
                   advanced={true}
                 />
