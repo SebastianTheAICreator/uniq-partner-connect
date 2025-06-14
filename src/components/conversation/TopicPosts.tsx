@@ -400,8 +400,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
-      {/* Topic Header with premium styling */}
-      <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30 pt-16 rounded-b-2xl mx-4 mb-2 backdrop-blur-xl shadow-2xl">
+      {/* Topic Header - no padding as it's handled by parent */}
+      <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30 pt-16 rounded-b-2xl mx-4 mb-2">
         <TopicHeader 
           topic={topic}
           onBack={onBack}
@@ -412,8 +412,8 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         />
       </div>
       
-      {/* Topic Filters with premium styling */}
-      <div className="bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20 rounded-2xl mx-4 mb-4 shadow-xl">
+      {/* Topic Filters - no padding as it's handled by parent */}
+      <div className="bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20 rounded-2xl mx-4 mb-4">
         <TopicFilters 
           searchQuery={searchQuery}
           sortBy={sortBy}
@@ -422,7 +422,7 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
         />
       </div>
 
-      {/* Main content with premium styling */}
+      {/* Main content - no padding as it's handled by parent */}
       <div className="transition-all duration-300">
         <div className="container mx-auto px-4">
           {/* Content with proper spacing */}
@@ -459,13 +459,13 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-center py-20 bg-gradient-to-br from-[#1A1F2C]/60 to-[#2A3441]/60 rounded-2xl border border-[#3A4366]/30 shadow-2xl backdrop-blur-xl"
+                      className="text-center py-20"
                     >
-                      <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-[#4A90E2]/20 to-[#7B68EE]/20 flex items-center justify-center mb-4 shadow-lg">
-                        <MessageCircle className="h-8 w-8 text-[#4A90E2]" />
+                      <div className="mx-auto w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
+                        <MessageCircle className="h-8 w-8 text-indigo-400" />
                       </div>
-                      <h3 className="text-xl font-medium text-white mb-2">Nicio postare găsită</h3>
-                      <p className="text-[#B0C4DE] max-w-md mx-auto">
+                      <h3 className="text-xl font-medium text-white/90 mb-2">Nicio postare găsită</h3>
+                      <p className="text-white/60 max-w-md mx-auto">
                         {searchQuery 
                           ? `Nu există postări care să conțină "${searchQuery}"`
                           : "Nu există postări în această conversație. Fii primul care postează!"}
