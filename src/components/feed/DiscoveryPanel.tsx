@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
@@ -135,7 +134,7 @@ const DiscoveryPanel = ({ className }: DiscoveryPanelProps) => {
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-1 mb-6 bg-gray-800/50 rounded-lg p-1">
+        <div className="flex items-center gap-0.5 mb-6 bg-gray-800/50 rounded-lg p-1">
           {[
             { key: 'trending', label: 'Trending', icon: TrendingUp },
             { key: 'people', label: 'People', icon: Users },
@@ -145,14 +144,14 @@ const DiscoveryPanel = ({ className }: DiscoveryPanelProps) => {
               key={key}
               onClick={() => setActiveTab(key as any)}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-colors",
+                "flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-sm font-medium transition-colors overflow-hidden",
                 activeTab === key
                   ? "bg-blue-500/20 text-blue-300"
                   : "text-gray-400 hover:text-gray-200 hover:bg-gray-700/30"
               )}
             >
-              <Icon className="h-4 w-4" />
-              {label}
+              <Icon className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate">{label}</span>
             </button>
           ))}
         </div>
