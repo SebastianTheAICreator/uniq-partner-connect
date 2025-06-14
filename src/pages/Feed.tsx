@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -340,6 +339,7 @@ const FeedContent = () => {
                 </div>
                 
                 <div className="flex items-center gap-2">
+                  <EnhancedNotificationSystem />
                   <Button 
                     variant="ghost" 
                     size="sm" 
