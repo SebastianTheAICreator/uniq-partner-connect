@@ -17,6 +17,7 @@ import FeedFilterPanel from '@/components/feed/FeedFilterPanel';
 import { Post } from '@/components/feed/FeedPost';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import { useFeedFilters } from '@/hooks/useFeedFilters';
+import { useFeedPosts } from '@/hooks/useFeedPosts';
 
 // Mock conversation data to display in the sidebar
 const mockConversations = [
@@ -26,7 +27,7 @@ const mockConversations = [
 ];
 
 // Mock post data to display in the feed with sample comments
-const mockPosts: Post[] = [
+const initialMockPosts: Post[] = [
   {
     id: '1',
     content: 'Just launched our revolutionary AI feature that helps businesses increase productivity by 300%. Early users are seeing unprecedented results across their workflows.',
@@ -160,6 +161,9 @@ const FeedContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { collapsed, isMobile } = useSidebar();
   
+  // Use the posts management hook
+  const { posts, createPost } = useFeedPosts(initialMockPosts);
+  
   // Use the filter hook
   const {
     searchQuery,
@@ -171,17 +175,14 @@ const FeedContent = () => {
     filteredPosts,
     hasActiveFilters,
     clearAllFilters
-  } = useFeedFilters(mockPosts);
+  } = useFeedFilters(posts);
 
   const [filterOpen, setFilterOpen] = useState(false);
   
   const toggleFilter = () => setFilterOpen(prev => !prev);
   
-  const handlePostCreated = (content: string) => {
-    toast({
-      title: "Post published",
-      description: "Your post has been published successfully."
-    });
+  const handlePostCreated = (newPost: { content: string; files: any[] }) => {
+    createPost(newPost);
   };
 
   // Mock loading more posts on scroll
