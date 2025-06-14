@@ -12,6 +12,7 @@ import {
   Share2,
   Eye,
   ThumbsDown,
+  ThumbsUp,
   Bookmark,
   MoreHorizontal,
   Clock,
@@ -80,9 +81,10 @@ export interface Post {
 interface FeedPostProps {
   post: Post;
   delay?: number;
+  className?: string;
 }
 
-const FeedPost = ({ post, delay = 0 }: FeedPostProps) => {
+const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   const { toast } = useToast();
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
@@ -464,12 +466,16 @@ const FeedPost = ({ post, delay = 0 }: FeedPostProps) => {
     return {
       ...comment,
       reactions: {
-        [oppositeType]: oppositeReaction,
-        [reactionType]: {
-          ...comment.reactions[reactionType],
-          count: comment.reactions[reactionType].count + 1,
+        like: reactionType === 'like' ? {
+          ...comment.reactions.like,
+          count: comment.reactions.like.count + 1,
           hasReacted: true
-        }
+        } : oppositeReaction,
+        dislike: reactionType === 'dislike' ? {
+          ...comment.reactions.dislike,
+          count: comment.reactions.dislike.count + 1,
+          hasReacted: true
+        } : (reactionType === 'like' ? oppositeReaction : comment.reactions.dislike)
       }
     };
   };
@@ -574,7 +580,7 @@ const FeedPost = ({ post, delay = 0 }: FeedPostProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay }}
-        className="group relative"
+        className={cn("group relative", className)}
       >
         {/* Pinned indicator */}
         {post.isPinned && (
@@ -899,7 +905,6 @@ const FeedPost = ({ post, delay = 0 }: FeedPostProps) => {
                 <RichCommentInput
                   onSubmit={handleComment}
                   placeholder="Share your thoughts..."
-                  showEmojiPicker={true}
                 />
               </div>
 
