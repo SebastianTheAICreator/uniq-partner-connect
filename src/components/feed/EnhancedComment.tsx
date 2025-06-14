@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -18,7 +17,8 @@ import {
   Trash2,
   ExternalLink,
   FileText,
-  Download
+  Download,
+  Image as ImageIcon
 } from 'lucide-react';
 import { EnhancedComment as CommentType, CommentAttachment } from '@/types/comment';
 import RichCommentInput from './RichCommentInput';
@@ -30,6 +30,7 @@ interface EnhancedCommentProps {
   onDelete?: (commentId: string) => void;
   onReactionToggle: (commentId: string, reactionType: 'like' | 'dislike') => void;
   onToggleCollapse: (commentId: string) => void;
+  onAttachmentView?: (attachment: CommentAttachment) => void;
   maxDepth?: number;
   className?: string;
 }
@@ -41,6 +42,7 @@ const EnhancedComment = ({
   onDelete,
   onReactionToggle,
   onToggleCollapse,
+  onAttachmentView,
   maxDepth = 5,
   className
 }: EnhancedCommentProps) => {
@@ -62,14 +64,18 @@ const EnhancedComment = ({
   };
 
   const handleAttachmentClick = (attachment: CommentAttachment) => {
-    if (attachment.type === 'link') {
-      window.open(attachment.url, '_blank', 'noopener,noreferrer');
-    } else if (attachment.type === 'document') {
-      // Create download link
-      const link = document.createElement('a');
-      link.href = attachment.url;
-      link.download = attachment.name || 'document';
-      link.click();
+    if (onAttachmentView) {
+      onAttachmentView(attachment);
+    } else {
+      // Fallback behavior
+      if (attachment.type === 'link') {
+        window.open(attachment.url, '_blank', 'noopener,noreferrer');
+      } else if (attachment.type === 'document') {
+        const link = document.createElement('a');
+        link.href = attachment.url;
+        link.download = attachment.name || 'document';
+        link.click();
+      }
     }
   };
 
@@ -165,21 +171,26 @@ const EnhancedComment = ({
               dangerouslySetInnerHTML={{ __html: formatContent(comment.content) }}
             />
             
-            {/* Attachments */}
+            {/* Enhanced Attachments with Modal Integration */}
             {comment.attachments.length > 0 && (
               <div className="mt-3 space-y-2">
                 {comment.attachments.map((attachment) => (
                   <div
                     key={attachment.id}
                     onClick={() => handleAttachmentClick(attachment)}
-                    className="flex items-center gap-3 p-2 bg-gray-700/30 rounded-lg hover:bg-gray-700/50 cursor-pointer transition-colors"
+                    className="flex items-center gap-3 p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700/50 cursor-pointer transition-all duration-200 border border-gray-600/20 hover:border-gray-500/40"
                   >
                     {attachment.type === 'image' && attachment.previewUrl ? (
-                      <img
-                        src={attachment.previewUrl}
-                        alt={attachment.name}
-                        className="w-12 h-12 object-cover rounded"
-                      />
+                      <div className="relative">
+                        <img
+                          src={attachment.previewUrl}
+                          alt={attachment.name}
+                          className="w-12 h-12 object-cover rounded"
+                        />
+                        <div className="absolute inset-0 bg-black/20 rounded flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                          <ImageIcon className="h-4 w-4 text-white" />
+                        </div>
+                      </div>
                     ) : (
                       <div className="w-12 h-12 flex items-center justify-center bg-gray-600 rounded">
                         {attachment.type === 'document' ? (
@@ -206,9 +217,25 @@ const EnhancedComment = ({
                       )}
                     </div>
                     
-                    {attachment.type === 'document' && (
-                      <Download className="h-4 w-4 text-gray-400" />
-                    )}
+                    <div className="flex items-center gap-1">
+                      {attachment.type === 'image' && (
+                        <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-500/30">
+                          View
+                        </Badge>
+                      )}
+                      {attachment.type === 'document' && (
+                        <Badge variant="outline" className="text-xs bg-green-500/10 text-green-400 border-green-500/30">
+                          <Download className="h-3 w-3 mr-1" />
+                          Download
+                        </Badge>
+                      )}
+                      {attachment.type === 'link' && (
+                        <Badge variant="outline" className="text-xs bg-purple-500/10 text-purple-400 border-purple-500/30">
+                          <ExternalLink className="h-3 w-3 mr-1" />
+                          Open
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
