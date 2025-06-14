@@ -196,6 +196,14 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
     });
   };
 
+  const handleToggleCollapse = (commentId: string) => {
+    // Handle comment collapse/expand logic here
+    toast({
+      title: "Comment toggled",
+      description: "Comment visibility has been toggled."
+    });
+  };
+
   const formatNumber = (num: number): string => {
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + 'M';
@@ -420,8 +428,9 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
                       <EnhancedComment
                         key={comment.id}
                         comment={comment}
-                        onReact={handleCommentReact}
+                        onReactionToggle={handleCommentReact}
                         onReply={handleCommentReply}
+                        onToggleCollapse={handleToggleCollapse}
                         delay={index * 0.1}
                       />
                     ))}
