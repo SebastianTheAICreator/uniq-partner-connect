@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,7 @@ interface EnhancedCommentProps {
   onToggleCollapse: (commentId: string) => void;
   onAttachmentView?: (attachment: CommentAttachment) => void;
   maxDepth?: number;
+  delay?: number;
   className?: string;
 }
 
@@ -44,6 +46,7 @@ const EnhancedComment = ({
   onToggleCollapse,
   onAttachmentView,
   maxDepth = 5,
+  delay = 0,
   className
 }: EnhancedCommentProps) => {
   const { toast } = useToast();
@@ -94,6 +97,7 @@ const EnhancedComment = ({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay }}
       className={cn(
         "relative",
         comment.depth > 0 && "ml-6 pl-4 border-l border-gray-700/30",
