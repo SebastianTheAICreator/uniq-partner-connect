@@ -1,3 +1,4 @@
+
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -108,6 +109,63 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
 
   // Attachment viewer integration
   const { isOpen: viewerOpen, currentFile, openViewer, closeViewer } = useAttachmentViewer();
+
+  // Helper function to recursively find and update a comment or reply
+  const updateCommentRecursively = (
+    comments: CommentType[], 
+    commentId: string, 
+    updateFn: (comment: CommentType) => CommentType
+  ): CommentType[] => {
+    return comments.map(comment => {
+      if (comment.id === commentId) {
+        return updateFn(comment);
+      }
+      if (comment.replies && comment.replies.length > 0) {
+        return {
+          ...comment,
+          replies: updateCommentRecursively(comment.replies, commentId, updateFn)
+        };
+      }
+      return comment;
+    });
+  };
+
+  // Helper function to recursively add a reply to the correct parent
+  const addReplyRecursively = (
+    comments: CommentType[],
+    parentId: string,
+    newReply: CommentType
+  ): CommentType[] => {
+    return comments.map(comment => {
+      if (comment.id === parentId) {
+        return {
+          ...comment,
+          replies: [...comment.replies, newReply]
+        };
+      }
+      if (comment.replies && comment.replies.length > 0) {
+        return {
+          ...comment,
+          replies: addReplyRecursively(comment.replies, parentId, newReply)
+        };
+      }
+      return comment;
+    });
+  };
+
+  // Helper function to calculate depth for nested replies
+  const calculateDepth = (parentId: string, comments: CommentType[]): number => {
+    for (const comment of comments) {
+      if (comment.id === parentId) {
+        return comment.depth + 1;
+      }
+      if (comment.replies && comment.replies.length > 0) {
+        const depth = calculateDepth(parentId, comment.replies);
+        if (depth > 0) return depth;
+      }
+    }
+    return 1; // Default depth for top-level replies
+  };
 
   const displayStats = useMemo(() => {
     return {
@@ -232,29 +290,26 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleCommentReact = (commentId: string, reaction: 'like' | 'dislike') => {
-    setLocalComments(prev => prev.map(comment => {
-      if (comment.id === commentId) {
-        const currentReaction = comment.reactions[reaction];
-        const oppositeReaction = reaction === 'like' ? comment.reactions.dislike : comment.reactions.like;
-        
-        return {
-          ...comment,
-          reactions: {
-            ...comment.reactions,
-            [reaction]: {
-              ...currentReaction,
-              count: currentReaction.hasReacted ? currentReaction.count - 1 : currentReaction.count + 1,
-              hasReacted: !currentReaction.hasReacted
-            },
-            [oppositeReaction.type]: oppositeReaction.hasReacted ? {
-              ...oppositeReaction,
-              count: oppositeReaction.count - 1,
-              hasReacted: false
-            } : oppositeReaction
-          }
-        };
-      }
-      return comment;
+    setLocalComments(prev => updateCommentRecursively(prev, commentId, (comment) => {
+      const currentReaction = comment.reactions[reaction];
+      const oppositeReaction = reaction === 'like' ? comment.reactions.dislike : comment.reactions.like;
+      
+      return {
+        ...comment,
+        reactions: {
+          ...comment.reactions,
+          [reaction]: {
+            ...currentReaction,
+            count: currentReaction.hasReacted ? currentReaction.count - 1 : currentReaction.count + 1,
+            hasReacted: !currentReaction.hasReacted
+          },
+          [oppositeReaction.type]: oppositeReaction.hasReacted ? {
+            ...oppositeReaction,
+            count: oppositeReaction.count - 1,
+            hasReacted: false
+          } : oppositeReaction
+        }
+      };
     }));
 
     toast({
@@ -264,6 +319,8 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleCommentReply = (parentId: string, content: string, attachments: CommentAttachment[]) => {
+    const depth = calculateDepth(parentId, localComments);
+    
     const newReply: CommentType = {
       id: Math.random().toString(36).substr(2, 9),
       content,
@@ -275,7 +332,7 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
       },
       timestamp: 'now',
       parentId,
-      depth: 1,
+      depth,
       reactions: {
         like: {
           type: 'like',
@@ -295,16 +352,7 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
       isCollapsed: false
     };
 
-    setLocalComments(prev => prev.map(comment => {
-      if (comment.id === parentId) {
-        return {
-          ...comment,
-          replies: [...comment.replies, newReply]
-        };
-      }
-      return comment;
-    }));
-
+    setLocalComments(prev => addReplyRecursively(prev, parentId, newReply));
     setCommentStats(prev => ({ ...prev, replies: prev.replies + 1 }));
     
     toast({
@@ -314,12 +362,10 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleToggleCollapse = (commentId: string) => {
-    setLocalComments(prev => prev.map(comment => {
-      if (comment.id === commentId) {
-        return { ...comment, isCollapsed: !comment.isCollapsed };
-      }
-      return comment;
-    }));
+    setLocalComments(prev => updateCommentRecursively(prev, commentId, (comment) => ({
+      ...comment,
+      isCollapsed: !comment.isCollapsed
+    })));
     
     toast({
       title: "Comment toggled",
