@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -80,6 +79,7 @@ const FeedPost = ({
   const [likeCount, setLikeCount] = useState(post.stats.likes);
   const [dislikeCount, setDislikeCount] = useState(post.stats.dislikes);
   const [isHovered, setIsHovered] = useState(false);
+  const [showThreadPreview, setShowThreadPreview] = useState(false);
   
   const isLongContent = post.content.length > 280;
   const shouldTruncate = isLongContent && !showFullContent;
@@ -131,6 +131,11 @@ const FeedPost = ({
       title: "Link copied!",
       description: "Post link has been copied to clipboard"
     });
+  };
+
+  const handleReplyClick = () => {
+    setShowThreadPreview(true);
+    // This will be handled by parent component to open thread modal
   };
   
   const hasAttachments = post.attachments && post.attachments.length > 0;
@@ -372,7 +377,7 @@ const FeedPost = ({
           </motion.div>
         </div>
         
-        {/* Enhanced action buttons with better animations */}
+        {/* Enhanced action buttons with thread indicator */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-800/50">
           <div className="flex items-center gap-1">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -414,10 +419,19 @@ const FeedPost = ({
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="h-11 px-4 rounded-xl text-gray-400 hover:text-purple-400 hover:bg-purple-900/20 transition-all duration-200"
+                onClick={handleReplyClick}
+                className={cn(
+                  "h-11 px-4 rounded-xl text-gray-400 hover:text-purple-400 hover:bg-purple-900/20 transition-all duration-200 relative",
+                  post.stats.replies > 0 && "text-purple-400 bg-purple-900/10"
+                )}
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
-                <span className="text-sm font-medium">Reply</span>
+                <span className="text-sm font-medium">
+                  {post.stats.replies > 0 ? post.stats.replies.toLocaleString() : 'Reply'}
+                </span>
+                {post.stats.replies > 0 && (
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+                )}
               </Button>
             </motion.div>
             
@@ -510,6 +524,25 @@ const FeedPost = ({
           </motion.div>
         </div>
       </div>
+      
+      {/* Thread Preview - shows when there are replies */}
+      {showThreadPreview && post.stats.replies > 0 && (
+        <div className="border-t border-gray-800/50">
+          <div className="p-4 bg-gray-800/20">
+            <div className="flex items-center gap-3 text-sm text-gray-400">
+              <MessageCircle className="h-4 w-4 text-purple-400" />
+              <span>{post.stats.replies} replies in this thread</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-blue-400 hover:text-blue-300 text-xs ml-auto"
+              >
+                View conversation →
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

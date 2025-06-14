@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -13,6 +14,7 @@ import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
 import FeedSearchInput from '@/components/feed/FeedSearchInput';
 import FeedFilterPanel from '@/components/feed/FeedFilterPanel';
+import ThreadModal from '@/components/feed/ThreadModal';
 import { Post } from '@/components/feed/FeedPost';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import { useFeedFilters } from '@/hooks/useFeedFilters';
