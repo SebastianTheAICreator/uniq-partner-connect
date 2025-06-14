@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -34,7 +33,9 @@ import EnhancedComment from './EnhancedComment';
 import ThreadModal from './ThreadModal';
 import FeedAttachmentPreview from './FeedAttachmentPreview';
 import FileViewerModal from '@/components/conversation/FileViewerModal';
+import EnhancedReactionPicker from './EnhancedReactionPicker';
 import { useAttachmentViewer } from '@/hooks/useAttachmentViewer';
+import { useEnhancedReactions, PostReactions } from '@/hooks/useEnhancedReactions';
 import { EnhancedComment as CommentType, CommentAttachment } from '@/types/comment';
 
 export interface PostAuthor {
@@ -95,8 +96,6 @@ interface FeedPostProps {
 
 const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   const { toast } = useToast();
-  const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
@@ -106,6 +105,18 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   // State for managing comments locally
   const [localComments, setLocalComments] = useState<CommentType[]>([]);
   const [commentStats, setCommentStats] = useState(post.stats);
+
+  // Initialize enhanced reactions
+  const initialReactions: PostReactions = {
+    like: { type: 'like', count: post.stats.likes, hasReacted: false },
+    love: { type: 'love', count: 0, hasReacted: false },
+    laugh: { type: 'laugh', count: 0, hasReacted: false },
+    wow: { type: 'wow', count: 0, hasReacted: false },
+    sad: { type: 'sad', count: 0, hasReacted: false },
+    angry: { type: 'angry', count: 0, hasReacted: false },
+  };
+
+  const { reactions, toggleReaction, getTotalReactions } = useEnhancedReactions(initialReactions);
 
   // Attachment viewer integration
   const { isOpen: viewerOpen, currentFile, openViewer, closeViewer } = useAttachmentViewer();
@@ -169,12 +180,12 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
 
   const displayStats = useMemo(() => {
     return {
-      likes: commentStats.likes + (isLiked ? 1 : 0) - (isDisliked && isLiked ? 1 : 0),
-      dislikes: commentStats.dislikes + (isDisliked ? 1 : 0) - (isLiked && isDisliked ? 1 : 0),
+      likes: getTotalReactions(),
+      dislikes: commentStats.dislikes,
       replies: commentStats.replies,
       shares: commentStats.shares
     };
-  }, [commentStats, isLiked, isDisliked]);
+  }, [commentStats, getTotalReactions]);
 
   // Convert PostComments to EnhancedComments and include local comments
   const enhancedComments = useMemo(() => {
@@ -496,39 +507,15 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
             </div>
           </div>
 
-          {/* Action buttons */}
+          {/* Action buttons with enhanced reactions */}
           <div className="px-6 py-4 border-t border-gray-700/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <Button
-                  onClick={() => handleLike('like')}
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    "h-9 px-3 rounded-lg transition-all duration-200",
-                    isLiked 
-                      ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30" 
-                      : "text-gray-400 hover:text-blue-400 hover:bg-blue-500/10"
-                  )}
-                >
-                  <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked && "fill-current")} />
-                  <span>{formatNumber(displayStats.likes)}</span>
-                </Button>
-
-                <Button
-                  onClick={() => handleLike('dislike')}
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    "h-9 px-3 rounded-lg transition-all duration-200",
-                    isDisliked 
-                      ? "bg-red-500/20 text-red-400 hover:bg-red-500/30" 
-                      : "text-gray-400 hover:text-red-400 hover:bg-red-500/10"
-                  )}
-                >
-                  <ThumbsDown className={cn("h-4 w-4 mr-2", isDisliked && "fill-current")} />
-                  <span>{formatNumber(displayStats.dislikes)}</span>
-                </Button>
+                <EnhancedReactionPicker
+                  reactions={reactions}
+                  onReactionToggle={toggleReaction}
+                  size="md"
+                />
 
                 <Button
                   onClick={() => setShowComments(!showComments)}

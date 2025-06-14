@@ -8,8 +8,52 @@ export interface NewPost {
   files: FilePreview[];
 }
 
+interface PaginationState {
+  currentPage: number;
+  hasNextPage: boolean;
+  isLoading: boolean;
+  postsPerPage: number;
+}
+
 export const useFeedPosts = (initialPosts: Post[]) => {
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [allPosts, setAllPosts] = useState<Post[]>(initialPosts);
+  const [displayedPosts, setDisplayedPosts] = useState<Post[]>(initialPosts.slice(0, 5));
+  const [pagination, setPagination] = useState<PaginationState>({
+    currentPage: 1,
+    hasNextPage: initialPosts.length > 5,
+    isLoading: false,
+    postsPerPage: 5
+  });
+
+  const loadMorePosts = useCallback(() => {
+    if (pagination.isLoading || !pagination.hasNextPage) return;
+
+    setPagination(prev => ({ ...prev, isLoading: true }));
+
+    // Simulate loading delay
+    setTimeout(() => {
+      const nextPage = pagination.currentPage + 1;
+      const startIndex = (nextPage - 1) * pagination.postsPerPage;
+      const endIndex = startIndex + pagination.postsPerPage;
+      const newPosts = allPosts.slice(startIndex, endIndex);
+
+      if (newPosts.length > 0) {
+        setDisplayedPosts(prev => [...prev, ...newPosts]);
+        setPagination(prev => ({
+          ...prev,
+          currentPage: nextPage,
+          hasNextPage: endIndex < allPosts.length,
+          isLoading: false
+        }));
+      } else {
+        setPagination(prev => ({
+          ...prev,
+          hasNextPage: false,
+          isLoading: false
+        }));
+      }
+    }, 1000);
+  }, [allPosts, pagination]);
 
   const createPost = useCallback((newPost: NewPost) => {
     const post: Post = {
@@ -40,12 +84,25 @@ export const useFeedPosts = (initialPosts: Post[]) => {
       comments: []
     };
 
-    setPosts(prevPosts => [post, ...prevPosts]);
+    setAllPosts(prevPosts => [post, ...prevPosts]);
+    setDisplayedPosts(prevPosts => [post, ...prevPosts]);
+    
+    // Update pagination
+    setPagination(prev => ({
+      ...prev,
+      hasNextPage: allPosts.length + 1 > displayedPosts.length + 1
+    }));
+
     return post;
-  }, []);
+  }, [allPosts.length, displayedPosts.length]);
 
   const updatePost = useCallback((postId: string, updates: Partial<Post>) => {
-    setPosts(prevPosts => 
+    setAllPosts(prevPosts => 
+      prevPosts.map(post => 
+        post.id === postId ? { ...post, ...updates } : post
+      )
+    );
+    setDisplayedPosts(prevPosts => 
       prevPosts.map(post => 
         post.id === postId ? { ...post, ...updates } : post
       )
@@ -53,11 +110,15 @@ export const useFeedPosts = (initialPosts: Post[]) => {
   }, []);
 
   const deletePost = useCallback((postId: string) => {
-    setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+    setAllPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+    setDisplayedPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
   }, []);
 
   return {
-    posts,
+    posts: displayedPosts,
+    allPosts,
+    pagination,
+    loadMorePosts,
     createPost,
     updatePost,
     deletePost

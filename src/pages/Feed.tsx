@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -18,6 +17,7 @@ import { Post } from '@/components/feed/FeedPost';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import { useFeedFilters } from '@/hooks/useFeedFilters';
 import { useFeedPosts } from '@/hooks/useFeedPosts';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 // Mock conversation data to display in the sidebar
 const mockConversations = [
@@ -159,11 +159,16 @@ const initialMockPosts: Post[] = [
 
 const FeedContent = () => {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
   const { collapsed, isMobile } = useSidebar();
   
-  // Use the posts management hook
-  const { posts, createPost } = useFeedPosts(initialMockPosts);
+  // Use the posts management hook with infinite scroll support
+  const { posts, pagination, loadMorePosts, createPost } = useFeedPosts(initialMockPosts);
+  
+  // Use the infinite scroll hook
+  const { isFetching, loadMoreRef } = useInfiniteScroll({
+    hasNextPage: pagination.hasNextPage,
+    isLoading: pagination.isLoading
+  });
   
   // Use the filter hook
   const {
@@ -186,16 +191,12 @@ const FeedContent = () => {
     createPost(newPost);
   };
 
-  // Mock loading more posts on scroll
-  const handleLoadMore = () => {
-    if (isLoading) return;
-    setIsLoading(true);
-    
-    // Simulate loading delay
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-  };
+  // Trigger load more when infinite scroll detects intersection
+  useEffect(() => {
+    if (isFetching) {
+      loadMorePosts();
+    }
+  }, [isFetching, loadMorePosts]);
 
   // Calculate dynamic padding based on sidebar state
   const getMainContentPadding = () => {
@@ -345,43 +346,68 @@ const FeedContent = () => {
             <PremiumFeedCreator onPostCreated={handlePostCreated} />
             
             <div className="flex gap-6">
-              {/* Main feed with redesigned post cards */}
+              {/* Main feed with infinite scroll */}
               <div className="flex-1">
-                <ScrollArea className="h-[calc(100vh-14rem)]">
-                  <div className="space-y-6 pb-20">
-                    {/* No results message */}
-                    {filteredPosts.length === 0 && hasActiveFilters && (
-                      <div className="text-center py-12">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
-                          <Search className="h-8 w-8 text-gray-400" />
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-300 mb-2">No posts found</h3>
-                        <p className="text-gray-400 mb-4">Try adjusting your search or filters</p>
-                        <Button onClick={clearAllFilters} variant="outline" size="sm">
-                          Clear all filters
-                        </Button>
+                <div className="space-y-6 pb-20">
+                  {/* No results message */}
+                  {filteredPosts.length === 0 && hasActiveFilters && (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
+                        <Search className="h-8 w-8 text-gray-400" />
                       </div>
-                    )}
+                      <h3 className="text-lg font-medium text-gray-300 mb-2">No posts found</h3>
+                      <p className="text-gray-400 mb-4">Try adjusting your search or filters</p>
+                      <Button onClick={clearAllFilters} variant="outline" size="sm">
+                        Clear all filters
+                      </Button>
+                    </div>
+                  )}
 
-                    {/* Posts with enhanced comments */}
-                    <AnimatePresence>
-                      {filteredPosts.map((post, index) => (
-                        <FeedPost 
-                          key={post.id}
-                          post={post} 
-                          delay={index * 0.1}
-                        />
-                      ))}
-                    </AnimatePresence>
-                    
-                    {/* Loading indicator */}
-                    {isLoading && (
-                      <div className="flex justify-center py-8">
-                        <div className="w-8 h-8 border-4 border-t-blue-500 border-r-blue-500 border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                  {/* Posts with enhanced reactions */}
+                  <AnimatePresence>
+                    {filteredPosts.map((post, index) => (
+                      <FeedPost 
+                        key={post.id}
+                        post={post} 
+                        delay={index * 0.1}
+                      />
+                    ))}
+                  </AnimatePresence>
+                  
+                  {/* Infinite scroll trigger */}
+                  {pagination.hasNextPage && (
+                    <div ref={loadMoreRef} className="flex justify-center py-8">
+                      {pagination.isLoading ? (
+                        <div className="flex items-center gap-3">
+                          <div className="w-6 h-6 border-2 border-t-blue-500 border-r-blue-500 border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                          <span className="text-gray-400">Loading more posts...</span>
+                        </div>
+                      ) : (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-center"
+                        >
+                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                        </motion.div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* End of posts indicator */}
+                  {!pagination.hasNextPage && filteredPosts.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-8"
+                    >
+                      <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                        <span className="text-xl">🎉</span>
                       </div>
-                    )}
-                  </div>
-                </ScrollArea>
+                      <p className="text-gray-400 text-sm">You've reached the end! Great job staying connected.</p>
+                    </motion.div>
+                  )}
+                </div>
               </div>
               
               {/* Redesigned Trending panel with more color */}
