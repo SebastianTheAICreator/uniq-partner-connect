@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -399,31 +400,31 @@ const TopicPosts = ({ topicId, topic, onBack }: TopicPostsProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0C10] via-[#0F1117] to-[#0A0C10]">
-      {/* Main content with proper top margin to clear only the main navbar */}
-      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300 pt-16">
+      {/* Topic Header - extends to sidebar */}
+      <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30 pl-[280px] sm:pl-[80px] transition-all duration-300 pt-16">
+        <TopicHeader 
+          topic={topic}
+          onBack={onBack}
+          stats={{
+            totalPosts: posts.length,
+            totalReplies: totalReplies
+          }}
+        />
+      </div>
+      
+      {/* Topic Filters - extends to sidebar */}
+      <div className="bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20 pl-[280px] sm:pl-[80px] transition-all duration-300">
+        <TopicFilters 
+          searchQuery={searchQuery}
+          sortBy={sortBy}
+          onSearchChange={setSearchQuery}
+          onSortChange={setSortBy}
+        />
+      </div>
+
+      {/* Main content */}
+      <div className="pl-[280px] sm:pl-[80px] transition-all duration-300">
         <div className="container mx-auto px-4">
-          {/* Scrollable Topic Header */}
-          <div className="bg-gradient-to-r from-[#1A1F2C] via-[#1E293B] to-[#1A1F2C] border-b border-[#3A4366]/30 -mx-4 px-4">
-            <TopicHeader 
-              topic={topic}
-              onBack={onBack}
-              stats={{
-                totalPosts: posts.length,
-                totalReplies: totalReplies
-              }}
-            />
-          </div>
-          
-          {/* Scrollable Filters */}
-          <div className="bg-gradient-to-r from-[#1A1F2C]/95 via-[#1E293B]/95 to-[#1A1F2C]/95 backdrop-blur-xl border-b border-[#3A4366]/20 -mx-4 px-4">
-            <TopicFilters 
-              searchQuery={searchQuery}
-              sortBy={sortBy}
-              onSearchChange={setSearchQuery}
-              onSortChange={setSortBy}
-            />
-          </div>
-          
           {/* Content with proper spacing */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-8">
             {/* Main Content */}
