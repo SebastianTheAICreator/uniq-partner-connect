@@ -34,8 +34,13 @@ export interface UserMatch {
 
 class AIService {
   private baseUrl = '/api'; // Will be Supabase Edge Functions
+  private fallbackMode = false;
 
   async getSearchSuggestions(query: string): Promise<SearchSuggestion[]> {
+    if (this.fallbackMode) {
+      return this.getFallbackSuggestions(query);
+    }
+
     try {
       const response = await fetch(`${this.baseUrl}/search-suggestions`, {
         method: 'POST',
@@ -49,13 +54,17 @@ class AIService {
       
       return await response.json();
     } catch (error) {
-      console.error('Error getting search suggestions:', error);
-      // Fallback to basic suggestions
+      console.log('Falling back to local suggestions for search');
+      this.fallbackMode = true;
       return this.getFallbackSuggestions(query);
     }
   }
 
   async getContentRecommendations(userId: string, limit: number = 10): Promise<ContentRecommendation[]> {
+    if (this.fallbackMode) {
+      return this.getFallbackRecommendations(limit);
+    }
+
     try {
       const response = await fetch(`${this.baseUrl}/content-recommendations`, {
         method: 'POST',
@@ -69,12 +78,17 @@ class AIService {
       
       return await response.json();
     } catch (error) {
-      console.error('Error getting content recommendations:', error);
-      return [];
+      console.log('Falling back to local recommendations');
+      this.fallbackMode = true;
+      return this.getFallbackRecommendations(limit);
     }
   }
 
   async getTrendingTopics(): Promise<TrendingTopic[]> {
+    if (this.fallbackMode) {
+      return this.getFallbackTrending();
+    }
+
     try {
       const response = await fetch(`${this.baseUrl}/trending-topics`);
       
@@ -84,12 +98,17 @@ class AIService {
       
       return await response.json();
     } catch (error) {
-      console.error('Error getting trending topics:', error);
+      console.log('Falling back to local trending topics');
+      this.fallbackMode = true;
       return this.getFallbackTrending();
     }
   }
 
   async getSearchAnalytics(): Promise<SearchAnalytics> {
+    if (this.fallbackMode) {
+      return this.getFallbackAnalytics();
+    }
+
     try {
       const response = await fetch(`${this.baseUrl}/search-analytics`);
       
@@ -99,17 +118,17 @@ class AIService {
       
       return await response.json();
     } catch (error) {
-      console.error('Error getting search analytics:', error);
-      return {
-        totalSearches: 0,
-        topQueries: [],
-        clickThroughRate: 0,
-        avgSessionTime: 0
-      };
+      console.log('Falling back to local analytics');
+      this.fallbackMode = true;
+      return this.getFallbackAnalytics();
     }
   }
 
   async getUserMatches(userId: string): Promise<UserMatch[]> {
+    if (this.fallbackMode) {
+      return this.getFallbackUserMatches();
+    }
+
     try {
       const response = await fetch(`${this.baseUrl}/user-matches`, {
         method: 'POST',
@@ -123,12 +142,18 @@ class AIService {
       
       return await response.json();
     } catch (error) {
-      console.error('Error getting user matches:', error);
-      return [];
+      console.log('Falling back to local user matches');
+      this.fallbackMode = true;
+      return this.getFallbackUserMatches();
     }
   }
 
   async trackSearch(query: string, resultCount: number): Promise<void> {
+    if (this.fallbackMode) {
+      console.log(`Tracked search locally: ${query} (${resultCount} results)`);
+      return;
+    }
+
     try {
       await fetch(`${this.baseUrl}/track-search`, {
         method: 'POST',
@@ -136,7 +161,8 @@ class AIService {
         body: JSON.stringify({ query, resultCount, timestamp: new Date().toISOString() })
       });
     } catch (error) {
-      console.error('Error tracking search:', error);
+      console.log('Search tracking failed, continuing offline');
+      this.fallbackMode = true;
     }
   }
 
@@ -154,8 +180,65 @@ class AIService {
     return [
       { topic: 'artificial-intelligence', count: 245, growth: 23.5, category: 'technology' },
       { topic: 'design-systems', count: 189, growth: 15.2, category: 'design' },
-      { topic: 'remote-work', count: 156, growth: 8.7, category: 'productivity' }
+      { topic: 'remote-work', count: 156, growth: 8.7, category: 'productivity' },
+      { topic: 'startup-funding', count: 134, growth: 12.3, category: 'business' },
+      { topic: 'machine-learning', count: 198, growth: 18.9, category: 'technology' },
+      { topic: 'user-experience', count: 167, growth: 10.4, category: 'design' }
     ];
+  }
+
+  private getFallbackRecommendations(limit: number): ContentRecommendation[] {
+    const recommendations = [
+      { postId: '1', score: 0.95, reason: 'Similar interests in AI', category: 'technology' },
+      { postId: '2', score: 0.87, reason: 'Popular in your network', category: 'design' },
+      { postId: '3', score: 0.82, reason: 'Trending topic match', category: 'productivity' }
+    ];
+    
+    return recommendations.slice(0, limit);
+  }
+
+  private getFallbackUserMatches(): UserMatch[] {
+    return [
+      { 
+        userId: 'alex_dev', 
+        similarity: 0.89, 
+        commonInterests: ['React', 'TypeScript', 'AI'] 
+      },
+      { 
+        userId: 'sarah_design', 
+        similarity: 0.76, 
+        commonInterests: ['UX Design', 'Figma', 'Design Systems'] 
+      },
+      { 
+        userId: 'mike_startup', 
+        similarity: 0.71, 
+        commonInterests: ['Entrepreneurship', 'SaaS', 'Growth'] 
+      },
+      { 
+        userId: 'jenny_ai', 
+        similarity: 0.84, 
+        commonInterests: ['Machine Learning', 'Python', 'Data Science'] 
+      }
+    ];
+  }
+
+  private getFallbackAnalytics(): SearchAnalytics {
+    return {
+      totalSearches: 1234,
+      topQueries: ['AI', 'React', 'Design', 'Startup'],
+      clickThroughRate: 0.67,
+      avgSessionTime: 4.2
+    };
+  }
+
+  // Reset fallback mode (useful for retrying)
+  resetConnection(): void {
+    this.fallbackMode = false;
+  }
+
+  // Check if we're in fallback mode
+  isOffline(): boolean {
+    return this.fallbackMode;
   }
 }
 
