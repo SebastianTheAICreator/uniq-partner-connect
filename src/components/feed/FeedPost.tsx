@@ -1,12 +1,13 @@
-
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { ThumbsUp, ThumbsDown, MessageCircle, Share2, MoreHorizontal, Bookmark, Eye, Clock, ChevronDown, ChevronUp, ExternalLink, Heart, Play, Send } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageCircle, Share2, MoreHorizontal, Bookmark, Eye, Clock, ChevronDown, ChevronUp, ExternalLink, Heart, Play } from 'lucide-react';
+import { EnhancedComment as CommentType, CommentAttachment } from '@/types/comment';
+import RichCommentInput from './RichCommentInput';
+import EnhancedComment from './EnhancedComment';
 
 export interface PostAuthor {
   id: string;
@@ -95,9 +96,8 @@ const FeedPost = ({
   const [isHovered, setIsHovered] = useState(false);
   const [showComments, setShowComments] = useState(false);
   
-  // Simple commenting state
-  const [comments, setComments] = useState<Comment[]>(post.comments || []);
-  const [newComment, setNewComment] = useState('');
+  // Enhanced commenting state
+  const [enhancedComments, setEnhancedComments] = useState<CommentType[]>([]);
   const [isCommenting, setIsCommenting] = useState(false);
   
   const isLongContent = post.content.length > 280;
@@ -163,43 +163,126 @@ const FeedPost = ({
     }
   };
 
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      const comment: Comment = {
-        id: `comment-${Date.now()}`,
-        content: newComment.trim(),
-        author: {
-          id: 'current-user',
-          name: 'You',
-          verified: false
-        },
-        timestamp: 'now',
-        likes: 0,
-        hasLiked: false
-      };
-      
-      setComments(prev => [...prev, comment]);
-      setNewComment('');
-      setIsCommenting(false);
-      
-      toast({
-        title: "Comment added",
-        description: "Your comment has been posted successfully."
-      });
-    }
+  const handleAddComment = (content: string, attachments: CommentAttachment[]) => {
+    const comment: CommentType = {
+      id: `comment-${Date.now()}`,
+      content,
+      author: {
+        id: 'current-user',
+        name: 'You',
+        verified: false
+      },
+      timestamp: 'now',
+      parentId: undefined,
+      depth: 0,
+      reactions: {
+        like: { type: 'like', count: 0, hasReacted: false },
+        dislike: { type: 'dislike', count: 0, hasReacted: false }
+      },
+      attachments,
+      isEdited: false,
+      replies: []
+    };
+    
+    setEnhancedComments(prev => [...prev, comment]);
+    setIsCommenting(false);
+    
+    toast({
+      title: "Comment added",
+      description: "Your comment has been posted successfully."
+    });
   };
 
-  const handleLikeComment = (commentId: string) => {
-    setComments(prev => prev.map(comment => {
-      if (comment.id === commentId) {
+  const handleAddReply = (parentId: string, content: string, attachments: CommentAttachment[]) => {
+    const findParentDepth = (comments: CommentType[], id: string): number => {
+      for (const comment of comments) {
+        if (comment.id === id) {
+          return comment.depth;
+        }
+        const depth = findParentDepth(comment.replies, id);
+        if (depth !== -1) return depth;
+      }
+      return -1;
+    };
+
+    const parentDepth = findParentDepth(enhancedComments, parentId);
+    
+    const reply: CommentType = {
+      id: `reply-${Date.now()}`,
+      content,
+      author: {
+        id: 'current-user',
+        name: 'You',
+        verified: false
+      },
+      timestamp: 'now',
+      parentId,
+      depth: parentDepth + 1,
+      reactions: {
+        like: { type: 'like', count: 0, hasReacted: false },
+        dislike: { type: 'dislike', count: 0, hasReacted: false }
+      },
+      attachments,
+      isEdited: false,
+      replies: []
+    };
+
+    const addReplyToComment = (comments: CommentType[]): CommentType[] => {
+      return comments.map(comment => {
+        if (comment.id === parentId) {
+          return {
+            ...comment,
+            replies: [...comment.replies, reply]
+          };
+        }
         return {
           ...comment,
-          hasLiked: !comment.hasLiked,
-          likes: comment.hasLiked ? comment.likes - 1 : comment.likes + 1
+          replies: addReplyToComment(comment.replies)
         };
-      }
-      return comment;
-    }));
+      });
+    };
+
+    setEnhancedComments(addReplyToComment);
+  };
+
+  const handleReactionToggle = (commentId: string, reactionType: 'like' | 'dislike') => {
+    const toggleReaction = (comments: CommentType[]): CommentType[] => {
+      return comments.map(comment => {
+        if (comment.id === commentId) {
+          const currentReaction = comment.reactions[reactionType];
+          const oppositeType = reactionType === 'like' ? 'dislike' : 'like';
+          const oppositeReaction = comment.reactions[oppositeType];
+          
+          return {
+            ...comment,
+            reactions: {
+              ...comment.reactions,
+              [reactionType]: {
+                ...currentReaction,
+                hasReacted: !currentReaction.hasReacted,
+                count: currentReaction.hasReacted ? currentReaction.count - 1 : currentReaction.count + 1
+              },
+              [oppositeType]: oppositeReaction.hasReacted ? {
+                ...oppositeReaction,
+                hasReacted: false,
+                count: oppositeReaction.count - 1
+              } : oppositeReaction
+            }
+          };
+        }
+        return {
+          ...comment,
+          replies: toggleReaction(comment.replies)
+        };
+      });
+    };
+
+    setEnhancedComments(toggleReaction);
+  };
+
+  const handleToggleCollapse = (commentId: string) => {
+    // Implementation for collapsing comments
+    console.log('Toggle collapse for comment:', commentId);
   };
   
   const hasAttachments = post.attachments && post.attachments.length > 0;
@@ -589,7 +672,7 @@ const FeedPost = ({
         </div>
       </div>
       
-      {/* Simple Comments Section */}
+      {/* Enhanced Comments Section */}
       <AnimatePresence>
         {showComments && (
           <motion.div 
@@ -597,51 +680,18 @@ const FeedPost = ({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="border-t border-gray-800/50 bg-gray-800/20"
+            className="border-t border-gray-800/50 bg-gray-800/10"
           >
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-6">
               {/* Comment Input */}
               {isCommenting && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-gray-800/30 rounded-xl p-4"
-                >
-                  <Textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Write a comment..."
-                    className="bg-transparent border-gray-700/50 text-gray-200 placeholder:text-gray-400 resize-none"
-                    rows={3}
-                  />
-                  <div className="flex justify-between items-center mt-3">
-                    <div className="text-xs text-gray-500">
-                      {newComment.length}/500
-                    </div>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => {
-                          setIsCommenting(false);
-                          setNewComment('');
-                        }}
-                        className="text-gray-400 hover:text-gray-200"
-                      >
-                        Cancel
-                      </Button>
-                      <Button 
-                        size="sm"
-                        onClick={handleAddComment}
-                        disabled={!newComment.trim()}
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                      >
-                        <Send className="h-3 w-3 mr-1" />
-                        Comment
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
+                <RichCommentInput
+                  onSubmit={handleAddComment}
+                  onCancel={() => {
+                    setIsCommenting(false);
+                  }}
+                  placeholder="Write a comment..."
+                />
               )}
 
               {/* Add Comment Button */}
@@ -656,15 +706,36 @@ const FeedPost = ({
                 </Button>
               )}
 
-              {/* Comments List */}
-              {comments.length > 0 && (
+              {/* Enhanced Comments List */}
+              {enhancedComments.length > 0 && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-sm text-gray-400">
                     <MessageCircle className="h-4 w-4" />
-                    <span>{comments.length} comment{comments.length !== 1 ? 's' : ''}</span>
+                    <span>{enhancedComments.length} comment{enhancedComments.length !== 1 ? 's' : ''}</span>
                   </div>
                   
-                  {comments.map((comment, index) => (
+                  {enhancedComments.map((comment) => (
+                    <EnhancedComment
+                      key={comment.id}
+                      comment={comment}
+                      onReply={handleAddReply}
+                      onReactionToggle={handleReactionToggle}
+                      onToggleCollapse={handleToggleCollapse}
+                      maxDepth={5}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Legacy Comments (if any exist) */}
+              {post.comments && post.comments.length > 0 && enhancedComments.length === 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <MessageCircle className="h-4 w-4" />
+                    <span>{post.comments.length} comment{post.comments.length !== 1 ? 's' : ''}</span>
+                  </div>
+                  
+                  {post.comments.map((comment, index) => (
                     <motion.div
                       key={comment.id}
                       initial={{ opacity: 0, x: -10 }}
