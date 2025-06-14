@@ -57,12 +57,30 @@ const EnhancedComment = ({
   const handleReply = (parentId: string, content: string, attachments: CommentAttachment[]) => {
     onReply(parentId, content, attachments);
     setIsReplying(false);
+    toast({
+      title: "Reply added",
+      description: "Your reply has been posted successfully."
+    });
   };
 
   const handleEdit = (commentId: string, content: string, attachments: CommentAttachment[]) => {
     if (onEdit) {
       onEdit(commentId, content, attachments);
       setIsEditing(false);
+      toast({
+        title: "Comment updated",
+        description: "Your comment has been updated successfully."
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    if (onDelete && window.confirm('Are you sure you want to delete this comment?')) {
+      onDelete(comment.id);
+      toast({
+        title: "Comment deleted",
+        description: "Your comment has been deleted."
+      });
     }
   };
 
@@ -310,7 +328,7 @@ const EnhancedComment = ({
           </div>
           
           <div className="flex items-center gap-1">
-            {onEdit && (
+            {onEdit && comment.author.id === 'current-user' && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -321,11 +339,11 @@ const EnhancedComment = ({
               </Button>
             )}
             
-            {onDelete && (
+            {onDelete && comment.author.id === 'current-user' && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onDelete(comment.id)}
+                onClick={handleDelete}
                 className="h-8 w-8 p-0 text-gray-400 hover:text-red-400"
               >
                 <Trash2 className="h-3 w-3" />

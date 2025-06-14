@@ -1,3 +1,4 @@
+
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -99,19 +100,23 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   const [showAllComments, setShowAllComments] = useState(false);
   const [showThreadModal, setShowThreadModal] = useState(false);
   const [selectedComment, setSelectedComment] = useState<PostComment | null>(null);
+  
+  // State for managing comments locally
+  const [localComments, setLocalComments] = useState<CommentType[]>([]);
+  const [commentStats, setCommentStats] = useState(post.stats);
 
   const displayStats = useMemo(() => {
     return {
-      likes: post.stats.likes + (isLiked ? 1 : 0) - (isDisliked && isLiked ? 1 : 0),
-      dislikes: post.stats.dislikes + (isDisliked ? 1 : 0) - (isLiked && isDisliked ? 1 : 0),
-      replies: post.stats.replies,
-      shares: post.stats.shares
+      likes: commentStats.likes + (isLiked ? 1 : 0) - (isDisliked && isLiked ? 1 : 0),
+      dislikes: commentStats.dislikes + (isDisliked ? 1 : 0) - (isLiked && isDisliked ? 1 : 0),
+      replies: commentStats.replies,
+      shares: commentStats.shares
     };
-  }, [post.stats, isLiked, isDisliked]);
+  }, [commentStats, isLiked, isDisliked]);
 
-  // Convert PostComments to EnhancedComments for the EnhancedComment component
+  // Convert PostComments to EnhancedComments and include local comments
   const enhancedComments = useMemo(() => {
-    return post.comments.map(comment => ({
+    const originalComments = post.comments.map(comment => ({
       id: comment.id,
       content: comment.content,
       author: {
@@ -141,7 +146,9 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
       replies: [] as CommentType[],
       isCollapsed: false
     }));
-  }, [post.comments]);
+
+    return [...originalComments, ...localComments];
+  }, [post.comments, localComments]);
 
   const handleLike = (type: 'like' | 'dislike') => {
     if (type === 'like') {
@@ -180,6 +187,40 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleComment = (commentContent: string, attachments: CommentAttachment[] = []) => {
+    const newComment: CommentType = {
+      id: Math.random().toString(36).substr(2, 9),
+      content: commentContent,
+      author: {
+        id: 'current-user',
+        name: 'You',
+        role: 'User',
+        verified: false
+      },
+      timestamp: 'now',
+      parentId: undefined,
+      depth: 0,
+      reactions: {
+        like: {
+          type: 'like',
+          count: 0,
+          hasReacted: false
+        },
+        dislike: {
+          type: 'dislike',
+          count: 0,
+          hasReacted: false
+        }
+      },
+      attachments,
+      isEdited: false,
+      editedAt: undefined,
+      replies: [],
+      isCollapsed: false
+    };
+
+    setLocalComments(prev => [...prev, newComment]);
+    setCommentStats(prev => ({ ...prev, replies: prev.replies + 1 }));
+    
     toast({
       title: "Comment added",
       description: "Your comment has been added successfully."
@@ -187,6 +228,31 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleCommentReact = (commentId: string, reaction: 'like' | 'dislike') => {
+    setLocalComments(prev => prev.map(comment => {
+      if (comment.id === commentId) {
+        const currentReaction = comment.reactions[reaction];
+        const oppositeReaction = reaction === 'like' ? comment.reactions.dislike : comment.reactions.like;
+        
+        return {
+          ...comment,
+          reactions: {
+            ...comment.reactions,
+            [reaction]: {
+              ...currentReaction,
+              count: currentReaction.hasReacted ? currentReaction.count - 1 : currentReaction.count + 1,
+              hasReacted: !currentReaction.hasReacted
+            },
+            [oppositeReaction.type]: oppositeReaction.hasReacted ? {
+              ...oppositeReaction,
+              count: oppositeReaction.count - 1,
+              hasReacted: false
+            } : oppositeReaction
+          }
+        };
+      }
+      return comment;
+    }));
+
     toast({
       title: `Comment ${reaction}d`,
       description: `You ${reaction}d this comment.`
@@ -194,6 +260,49 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleCommentReply = (parentId: string, content: string, attachments: CommentAttachment[]) => {
+    const newReply: CommentType = {
+      id: Math.random().toString(36).substr(2, 9),
+      content,
+      author: {
+        id: 'current-user',
+        name: 'You',
+        role: 'User',
+        verified: false
+      },
+      timestamp: 'now',
+      parentId,
+      depth: 1,
+      reactions: {
+        like: {
+          type: 'like',
+          count: 0,
+          hasReacted: false
+        },
+        dislike: {
+          type: 'dislike',
+          count: 0,
+          hasReacted: false
+        }
+      },
+      attachments,
+      isEdited: false,
+      editedAt: undefined,
+      replies: [],
+      isCollapsed: false
+    };
+
+    setLocalComments(prev => prev.map(comment => {
+      if (comment.id === parentId) {
+        return {
+          ...comment,
+          replies: [...comment.replies, newReply]
+        };
+      }
+      return comment;
+    }));
+
+    setCommentStats(prev => ({ ...prev, replies: prev.replies + 1 }));
+    
     toast({
       title: "Reply added",
       description: "Your reply has been added successfully."
@@ -201,6 +310,13 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
   };
 
   const handleToggleCollapse = (commentId: string) => {
+    setLocalComments(prev => prev.map(comment => {
+      if (comment.id === commentId) {
+        return { ...comment, isCollapsed: !comment.isCollapsed };
+      }
+      return comment;
+    }));
+    
     toast({
       title: "Comment toggled",
       description: "Comment visibility has been toggled."
@@ -324,7 +440,7 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
                   {formatNumber(post.stats.views)}
                 </span>
                 <span>{formatNumber(post.stats.likes)} likes</span>
-                <span>{formatNumber(post.stats.replies)} replies</span>
+                <span>{formatNumber(displayStats.replies)} replies</span>
               </div>
               <span>{formatNumber(post.stats.shares)} shares</span>
             </div>
