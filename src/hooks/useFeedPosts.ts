@@ -31,6 +31,7 @@ export const useFeedPosts = (initialPosts: Post[]) => {
         views: 1
       },
       tags: extractTags(newPost.content),
+      isPinned: false,
       attachments: newPost.files.map(file => ({
         type: file.type,
         url: file.preview || URL.createObjectURL(file.file),

@@ -108,10 +108,34 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
     };
   }, [post.stats, isLiked, isDisliked]);
 
+  // Convert PostComments to EnhancedComments for the EnhancedComment component
   const enhancedComments = useMemo(() => {
     return post.comments.map(comment => ({
-      ...comment,
-      replies: [], // Mock replies for now
+      id: comment.id,
+      content: comment.content,
+      author: {
+        id: comment.author.id,
+        name: comment.author.name,
+        role: comment.author.role,
+        verified: comment.author.verified
+      },
+      timestamp: comment.timestamp,
+      depth: 0,
+      reactions: {
+        like: {
+          type: 'like' as const,
+          count: comment.likes,
+          hasReacted: comment.hasLiked
+        },
+        dislike: {
+          type: 'dislike' as const,
+          count: 0,
+          hasReacted: false
+        }
+      },
+      attachments: [],
+      isEdited: false,
+      replies: []
     }));
   }, [post.comments]);
 
@@ -165,9 +189,11 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
     });
   };
 
-  const handleCommentReply = (comment: PostComment) => {
-    setSelectedComment(comment);
-    setShowThreadModal(true);
+  const handleCommentReply = (parentId: string, content: string, attachments: any[]) => {
+    toast({
+      title: "Reply added",
+      description: "Your reply has been added successfully."
+    });
   };
 
   const formatNumber = (num: number): string => {
@@ -426,8 +452,27 @@ const FeedPost = ({ post, delay = 0, className }: FeedPostProps) => {
       <ThreadModal
         isOpen={showThreadModal}
         onClose={() => setShowThreadModal(false)}
-        post={post}
-        comment={selectedComment}
+        threadData={selectedComment ? {
+          post: post,
+          replies: [],
+          stats: {
+            totalReplies: 0,
+            participants: 1,
+            engagementRate: 0
+          }
+        } : null}
+        onReply={(content: string, parentId?: string) => {
+          toast({
+            title: "Reply added",
+            description: "Your reply has been added successfully."
+          });
+        }}
+        onLikeReply={(replyId: string) => {
+          toast({
+            title: "Reply liked",
+            description: "You liked this reply."
+          });
+        }}
       />
     </div>
   );

@@ -96,6 +96,7 @@ const initialMockPosts: Post[] = [
       views: 8943
     },
     tags: ['market-analysis', 'consumer-trends', 'strategy'],
+    isPinned: false,
     attachments: [
       {
         type: 'image' as const,
