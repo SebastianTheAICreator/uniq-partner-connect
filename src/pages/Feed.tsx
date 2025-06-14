@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -5,7 +6,7 @@ import Sidebar from '@/components/sidebar/Sidebar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { TrendingUp, Clock, Filter, Search, X, Settings, Sparkles } from 'lucide-react';
+import { TrendingUp, Clock, Filter, Search, X, Sparkles, Menu } from 'lucide-react';
 import PremiumFeedCreator from '@/components/feed/PremiumFeedCreator';
 import FeedPost from '@/components/feed/FeedPost';
 import FeedTrendingPanel from '@/components/feed/FeedTrendingPanel';
@@ -159,7 +160,7 @@ const initialMockPosts: Post[] = [
 
 const FeedContent = () => {
   const { toast } = useToast();
-  const { collapsed, isMobile } = useSidebar();
+  const { collapsed, setCollapsed, isMobile } = useSidebar();
   
   // Use the posts management hook with infinite scroll support
   const { posts, pagination, loadMorePosts, createPost } = useFeedPosts(initialMockPosts);
@@ -191,6 +192,7 @@ const FeedContent = () => {
   
   const [filterOpen, setFilterOpen] = useState(false);
   const [discoveryOpen, setDiscoveryOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const toggleFilter = () => setFilterOpen(prev => !prev);
   const toggleDiscovery = () => setDiscoveryOpen(prev => !prev);
@@ -211,243 +213,315 @@ const FeedContent = () => {
     }
   }, [isFetching, loadMorePosts]);
 
-  // Calculate dynamic padding based on sidebar state
-  const getMainContentPadding = () => {
-    if (isMobile) {
-      return 'pl-0'; // No padding on mobile as sidebar is overlay
-    }
-    return collapsed ? 'pl-16' : 'pl-72';
-  };
-
   return (
-    <div className="min-h-screen bg-[#0d1117] text-gray-100">
-      <Navbar />
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Premium Navbar */}
+      <div className="fixed top-0 left-0 right-0 z-50 luxury-backdrop border-b border-white/10">
+        <Navbar />
+      </div>
       
-      <div className="container mx-auto pt-20 px-4 md:px-8 flex">
+      {/* Mobile Sidebar Toggle */}
+      {isMobile && (
+        <Button
+          onClick={() => setCollapsed(!collapsed)}
+          variant="ghost"
+          size="sm"
+          className="fixed top-20 left-4 z-40 premium-button md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+      )}
+      
+      <div className="flex min-h-screen pt-16">
+        {/* Sidebar */}
         <Sidebar conversations={mockConversations} />
         
-        <div className={`w-full lg:pr-72 transition-all duration-300 ${getMainContentPadding()}`}>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mt-4 space-y-6"
-          >
-            {/* Enhanced Feed header */}
-            <div className="sticky top-16 z-20 py-4 backdrop-blur-lg bg-gradient-to-r from-[#0d1117]/95 via-[#1a1f2c]/95 to-[#0d1117]/95 border-b border-[#30363d]">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Feed</h1>
-                  <div className="h-5 w-5 rounded-full bg-blue-500 animate-pulse"></div>
-                  {hasActiveFilters && (
-                    <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
-                      {resultCount} results
-                    </Badge>
-                  )}
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setFilters({ ...filters, sortBy: 'trending' })} 
-                    className={`rounded-lg px-3 ${filters.sortBy === 'trending' ? 'bg-blue-900/30 text-blue-400' : 'text-gray-400'}`}
-                  >
-                    <TrendingUp className="mr-2 h-4 w-4" />
-                    <span className="hidden sm:inline">Trending</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setFilters({ ...filters, sortBy: 'recent' })} 
-                    className={`rounded-lg px-3 ${filters.sortBy === 'recent' ? 'bg-purple-900/30 text-purple-400' : 'text-gray-400'}`}
-                  >
-                    <Clock className="mr-2 h-4 w-4" />
-                    <span className="hidden sm:inline">Recent</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={toggleFilter} 
-                    className={`rounded-lg px-3 transition-colors ${
-                      filterOpen || hasActiveFilters 
-                        ? 'bg-green-900/30 text-green-400 border border-green-500/30' 
-                        : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
-                    }`}
-                  >
-                    <Filter className="h-4 w-4" />
+        {/* Main Content */}
+        <div className={cn(
+          "flex-1 transition-all duration-300 ease-out",
+          !isMobile && (collapsed ? "ml-16" : "ml-72"),
+          isMobile && "ml-0"
+        )}>
+          <div className="max-w-4xl mx-auto mobile-container">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mobile-spacing py-6"
+            >
+              {/* Premium Feed Header */}
+              <div className="sticky top-16 z-30 py-6 luxury-backdrop border-b border-white/5 mb-8">
+                {/* Header Title */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <motion.h1 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent"
+                    >
+                      Premium Feed
+                    </motion.h1>
+                    <motion.div 
+                      className="w-3 h-3 rounded-full bg-gradient-to-r from-white/80 to-white/40 animate-luxury-pulse"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.3 }}
+                    />
                     {hasActiveFilters && (
-                      <span className="ml-1 text-xs">•</span>
+                      <Badge className="bg-white/10 text-white border-white/20 animate-luxury-glow">
+                        {resultCount} results
+                      </Badge>
                     )}
-                  </Button>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setFilters({ ...filters, sortBy: 'trending' })} 
+                      className={cn(
+                        "premium-button text-xs sm:text-sm",
+                        filters.sortBy === 'trending' ? 'bg-white/20 text-white' : 'text-white/70'
+                      )}
+                    >
+                      <TrendingUp className="mr-1 h-4 w-4" />
+                      <span className="hidden sm:inline">Trending</span>
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setFilters({ ...filters, sortBy: 'recent' })} 
+                      className={cn(
+                        "premium-button text-xs sm:text-sm",
+                        filters.sortBy === 'recent' ? 'bg-white/20 text-white' : 'text-white/70'
+                      )}
+                    >
+                      <Clock className="mr-1 h-4 w-4" />
+                      <span className="hidden sm:inline">Recent</span>
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={toggleFilter} 
+                      className={cn(
+                        "premium-button",
+                        filterOpen || hasActiveFilters 
+                          ? 'bg-white/20 text-white border-white/30' 
+                          : 'text-white/70'
+                      )}
+                    >
+                      <Filter className="h-4 w-4" />
+                      {hasActiveFilters && (
+                        <span className="ml-1 text-xs">•</span>
+                      )}
+                    </Button>
 
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={toggleDiscovery} 
-                    className={`rounded-lg px-3 transition-colors ${
-                      discoveryOpen 
-                        ? 'bg-purple-900/30 text-purple-400 border border-purple-500/30' 
-                        : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
-                    }`}
-                  >
-                    <Sparkles className="h-4 w-4" />
-                  </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={toggleDiscovery} 
+                      className={cn(
+                        "premium-button",
+                        discoveryOpen 
+                          ? 'bg-white/20 text-white border-white/30' 
+                          : 'text-white/70'
+                      )}
+                    >
+                      <Sparkles className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
 
-              {/* Advanced Search Input */}
-              <div className="relative">
-                <FeedSearchInput
-                  value={query}
-                  onChange={setQuery}
-                  onSearch={executeSearch}
-                  onClear={clearSearch}
-                  suggestions={suggestions}
-                  isSearching={isSearching}
-                  searchHistory={searchHistory}
-                  selectedSuggestion={selectedSuggestion}
-                  onKeyDown={handleKeyDown}
-                  className="w-full max-w-md"
-                  advanced={true}
-                />
+                {/* Premium Search */}
+                <div className="relative mb-4">
+                  <FeedSearchInput
+                    value={query}
+                    onChange={setQuery}
+                    onSearch={executeSearch}
+                    onClear={clearSearch}
+                    suggestions={suggestions}
+                    isSearching={isSearching}
+                    searchHistory={searchHistory}
+                    selectedSuggestion={selectedSuggestion}
+                    onKeyDown={handleKeyDown}
+                    className="w-full premium-input"
+                    advanced={true}
+                  />
+                </div>
                 
-                {/* Active filters summary */}
+                {/* Active Filters */}
                 {hasActiveFilters && (
-                  <div className="flex items-center gap-2 mt-3">
-                    <div className="flex flex-wrap gap-2">
-                      {query && (
-                        <Badge variant="outline" className="bg-blue-900/20 text-blue-300 border-blue-500/30">
-                          Search: "{query}"
-                          <button 
-                            onClick={clearSearch}
-                            className="ml-1 hover:text-blue-200"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      )}
-                      {filters.tags.map(tag => (
-                        <Badge key={tag} variant="outline" className="bg-purple-900/20 text-purple-300 border-purple-500/30">
-                          #{tag}
-                          <button 
-                            onClick={() => setFilters({
-                              ...filters,
-                              tags: filters.tags.filter(t => t !== tag)
-                            })}
-                            className="ml-1 hover:text-purple-200"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
-                      {filters.minEngagement && (
-                        <Badge variant="outline" className="bg-green-900/20 text-green-300 border-green-500/30">
-                          {filters.minEngagement}+ engagement
-                          <button 
-                            onClick={() => setFilters({ ...filters, minEngagement: null })}
-                            className="ml-1 hover:text-green-200"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      )}
-                    </div>
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="flex items-center gap-2 flex-wrap"
+                  >
+                    {query && (
+                      <Badge className="premium-glass text-white border-white/20">
+                        Search: "{query}"
+                        <button 
+                          onClick={clearSearch}
+                          className="ml-1 hover:text-white/70"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    )}
+                    {filters.tags.map(tag => (
+                      <Badge key={tag} className="premium-glass text-white border-white/20">
+                        #{tag}
+                        <button 
+                          onClick={() => setFilters({
+                            ...filters,
+                            tags: filters.tags.filter(t => t !== tag)
+                          })}
+                          className="ml-1 hover:text-white/70"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                    {filters.minEngagement && (
+                      <Badge className="premium-glass text-white border-white/20">
+                        {filters.minEngagement}+ engagement
+                        <button 
+                          onClick={() => setFilters({ ...filters, minEngagement: null })}
+                          className="ml-1 hover:text-white/70"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    )}
                     <Button
                       onClick={resetFilters}
                       variant="ghost"
                       size="sm"
-                      className="text-gray-400 hover:text-gray-200 text-xs"
+                      className="text-white/60 hover:text-white text-xs premium-button"
                     >
                       Clear all
                     </Button>
-                  </div>
+                  </motion.div>
                 )}
               </div>
-            </div>
-            
-            {/* New Feed Creator */}
-            <PremiumFeedCreator onPostCreated={handlePostCreated} />
-            
-            <div className="flex gap-6">
-              {/* Main feed with search results */}
-              <div className="flex-1">
-                <div className="space-y-6 pb-20">
+              
+              {/* Premium Post Creator */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mb-8"
+              >
+                <PremiumFeedCreator onPostCreated={handlePostCreated} />
+              </motion.div>
+              
+              {/* Main Content Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                {/* Posts Feed */}
+                <div className="lg:col-span-3 mobile-spacing">
                   {/* No results message */}
                   {searchResults.length === 0 && (query || hasActiveFilters) && (
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
-                        <Search className="h-8 w-8 text-gray-400" />
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="text-center py-16 premium-card mobile-padding"
+                    >
+                      <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
+                        <Search className="h-8 w-8 text-white/40" />
                       </div>
-                      <h3 className="text-lg font-medium text-gray-300 mb-2">No posts found</h3>
-                      <p className="text-gray-400 mb-4">Try adjusting your search or filters</p>
-                      <div className="flex gap-2 justify-center">
-                        <Button onClick={clearSearch} variant="outline" size="sm">
+                      <h3 className="text-xl font-medium text-white mb-2">No posts found</h3>
+                      <p className="text-white/60 mb-6">Try adjusting your search or filters</p>
+                      <div className="flex gap-3 justify-center">
+                        <Button onClick={clearSearch} className="premium-button">
                           Clear search
                         </Button>
-                        <Button onClick={resetFilters} variant="outline" size="sm">
+                        <Button onClick={resetFilters} className="premium-button">
                           Reset filters
                         </Button>
                       </div>
-                    </div>
+                    </motion.div>
                   )}
 
-                  {/* Posts with enhanced search results */}
-                  <AnimatePresence>
+                  {/* Posts */}
+                  <AnimatePresence mode="popLayout">
                     {searchResults.map((post, index) => (
-                      <FeedPost 
+                      <motion.div
                         key={post.id}
-                        post={post} 
-                        delay={index * 0.1}
-                      />
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -30 }}
+                        transition={{ 
+                          duration: 0.5, 
+                          delay: index * 0.1,
+                          ease: "easeOut"
+                        }}
+                        className="luxury-hover"
+                      >
+                        <FeedPost 
+                          post={post} 
+                          delay={index * 0.1}
+                          className="premium-card"
+                        />
+                      </motion.div>
                     ))}
                   </AnimatePresence>
                   
-                  {/* Infinite scroll trigger */}
+                  {/* Infinite Scroll Loader */}
                   {pagination.hasNextPage && searchResults.length > 0 && (
-                    <div ref={loadMoreRef} className="flex justify-center py-8">
+                    <motion.div 
+                      ref={loadMoreRef} 
+                      className="flex justify-center py-12"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    >
                       {pagination.isLoading ? (
-                        <div className="flex items-center gap-3">
-                          <div className="w-6 h-6 border-2 border-t-blue-500 border-r-blue-500 border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-                          <span className="text-gray-400">Loading more posts...</span>
+                        <div className="flex items-center gap-3 premium-glass mobile-padding rounded-xl">
+                          <div className="w-6 h-6 border-2 border-t-white border-r-white border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                          <span className="text-white/80">Loading more posts...</span>
                         </div>
                       ) : (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="text-center"
-                        >
-                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                        </motion.div>
+                        <div className="w-2 h-2 bg-white/40 rounded-full animate-luxury-pulse"></div>
                       )}
-                    </div>
+                    </motion.div>
                   )}
 
-                  {/* End of posts indicator */}
+                  {/* End Indicator */}
                   {!pagination.hasNextPage && searchResults.length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-center py-8"
+                      className="text-center py-12"
                     >
-                      <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                        <span className="text-xl">🎉</span>
+                      <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-white/10 to-white/5 flex items-center justify-center animate-luxury-glow">
+                        <span className="text-2xl">✨</span>
                       </div>
-                      <p className="text-gray-400 text-sm">You've reached the end! Great job staying connected.</p>
+                      <p className="text-white/60 text-sm">You've reached the end! Great job staying connected.</p>
                     </motion.div>
                   )}
                 </div>
+                
+                {/* Sidebar Panels */}
+                <div className="lg:col-span-1 space-y-6 hidden lg:block">
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <FeedTrendingPanel />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <DiscoveryPanel />
+                  </motion.div>
+                </div>
               </div>
-              
-              {/* Enhanced sidebar with trending and discovery */}
-              <div className="hidden lg:block w-72 absolute right-8 top-24 space-y-6">
-                <FeedTrendingPanel />
-                <DiscoveryPanel />
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -460,14 +534,14 @@ const FeedContent = () => {
         onReset={resetFilters}
       />
 
-      {/* Discovery Panel Overlay for mobile */}
+      {/* Mobile Discovery Panel */}
       <AnimatePresence>
         {discoveryOpen && isMobile && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            className="fixed inset-0 bg-black/80 z-50 lg:hidden luxury-backdrop"
             onClick={() => setDiscoveryOpen(false)}
           >
             <motion.div
@@ -477,7 +551,7 @@ const FeedContent = () => {
               className="absolute bottom-0 left-0 right-0 max-h-[80vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <DiscoveryPanel className="rounded-t-2xl border-t" />
+              <DiscoveryPanel className="rounded-t-2xl border-t border-white/10 premium-glass" />
             </motion.div>
           </motion.div>
         )}

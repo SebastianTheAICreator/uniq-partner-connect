@@ -20,30 +20,53 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(240, 3.7%, 15.9%)",
-        input: "hsl(240, 3.7%, 15.9%)",
-        ring: "hsl(240, 4.9%, 83.9%)",
-        background: "#151822",
-        foreground: "#f3f3f3",
+        border: "rgba(255, 255, 255, 0.1)",
+        input: "rgba(255, 255, 255, 0.1)",
+        ring: "rgba(255, 255, 255, 0.2)",
+        background: "#000000",
+        foreground: "#ffffff",
         primary: {
-          DEFAULT: "#1E293B",
-          hover: "#0F172A",
+          DEFAULT: "#000000",
+          hover: "#0a0a0a",
+          foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "#334155",
-          hover: "#1E293B",
+          DEFAULT: "rgba(255, 255, 255, 0.05)",
+          hover: "rgba(255, 255, 255, 0.1)",
+          foreground: "#ffffff",
         },
         accent: {
-          DEFAULT: "#0F172A",
-          hover: "#0F172A",
+          DEFAULT: "rgba(255, 255, 255, 0.1)",
+          hover: "rgba(255, 255, 255, 0.15)",
+          foreground: "#ffffff",
         },
         interactive: {
-          DEFAULT: "#4A90E2",
-          hover: "#357ABD",
+          DEFAULT: "rgba(255, 255, 255, 0.2)",
+          hover: "rgba(255, 255, 255, 0.3)",
+          foreground: "#000000",
         },
         muted: {
-          DEFAULT: "#1A1F2C",
-          foreground: "#a1a1aa",
+          DEFAULT: "rgba(255, 255, 255, 0.05)",
+          foreground: "rgba(255, 255, 255, 0.6)",
+        },
+        destructive: {
+          DEFAULT: "#dc2626",
+          foreground: "#ffffff",
+        },
+        luxury: {
+          black: "#000000",
+          gray: {
+            50: "rgba(255, 255, 255, 0.05)",
+            100: "rgba(255, 255, 255, 0.1)",
+            200: "rgba(255, 255, 255, 0.15)",
+            300: "rgba(255, 255, 255, 0.2)",
+            400: "rgba(255, 255, 255, 0.3)",
+            500: "rgba(255, 255, 255, 0.5)",
+            600: "rgba(255, 255, 255, 0.6)",
+            700: "rgba(255, 255, 255, 0.7)",
+            800: "rgba(255, 255, 255, 0.8)",
+            900: "rgba(255, 255, 255, 0.9)",
+          }
         }
       },
       fontFamily: {
@@ -71,22 +94,38 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.7" }
         },
-        "subtle-glow": {
+        "luxury-glow": {
           "0%, 100%": { 
-            "box-shadow": "0 0 10px 0px rgba(74, 144, 226, 0.2)" 
+            "box-shadow": "0 0 20px rgba(255, 255, 255, 0.1)" 
           },
           "50%": { 
-            "box-shadow": "0 0 15px 5px rgba(74, 144, 226, 0.3)" 
+            "box-shadow": "0 0 30px rgba(255, 255, 255, 0.2)" 
           }
         },
-        "border-pulse": {
+        "luxury-pulse": {
           "0%, 100%": { 
-            "border-color": "rgba(255, 255, 255, 0.1)"
+            opacity: "1",
+            transform: "scale(1)"
           },
           "50%": { 
-            "border-color": "rgba(74, 144, 226, 0.2)"
+            opacity: "0.8",
+            transform: "scale(1.05)"
           }
         },
+        shimmer: {
+          "0%": { "background-position": "-200% 0" },
+          "100%": { "background-position": "200% 0" }
+        },
+        "luxury-fade-in": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(20px) scale(0.95)"
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0) scale(1)"
+          }
+        }
       },
       animation: {
         "fade-up": "fade-up 0.5s ease-out",
@@ -94,15 +133,20 @@ export default {
         "scale-in": "scale-in 0.3s ease-out",
         "float": "float 3s ease-in-out infinite",
         "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "subtle-glow": "subtle-glow 2s ease-in-out infinite",
-        "border-pulse": "border-pulse 2s ease-in-out infinite",
+        "luxury-glow": "luxury-glow 3s ease-in-out infinite",
+        "luxury-pulse": "luxury-pulse 2s ease-in-out infinite",
+        "shimmer": "shimmer 2s infinite",
+        "luxury-fade-in": "luxury-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1)"
       },
       boxShadow: {
-        'classic': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'classic-md': '0 6px 10px -2px rgba(0, 0, 0, 0.2), 0 3px 6px -2px rgba(0, 0, 0, 0.12)',
-        'classic-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)',
-        'classic-inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.15)',
-        'classic-blue': '0 4px 14px 0 rgba(74, 144, 226, 0.25)',
+        'luxury': '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05)',
+        'luxury-md': '0 10px 25px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2)',
+        'luxury-lg': '0 20px 40px -4px rgba(0, 0, 0, 0.6), 0 8px 16px -4px rgba(0, 0, 0, 0.3)',
+        'luxury-inner': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.1)',
+        'luxury-glow': '0 0 20px rgba(255, 255, 255, 0.1)',
+      },
+      backdropBlur: {
+        'luxury': '20px',
       }
     },
   },
