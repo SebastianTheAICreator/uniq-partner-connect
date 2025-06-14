@@ -284,8 +284,31 @@ const FeedPost = ({
     // Implementation for collapsing comments
     console.log('Toggle collapse for comment:', commentId);
   };
+
+  // Add the missing handleLikeComment function
+  const handleLikeComment = (commentId: string) => {
+    if (post.comments) {
+      // Handle legacy comment likes
+      const updatedComments = post.comments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            hasLiked: !comment.hasLiked,
+            likes: comment.hasLiked ? comment.likes - 1 : comment.likes + 1
+          };
+        }
+        return comment;
+      });
+      
+      // Update the post comments (this would normally be handled by a parent component)
+      console.log('Updated legacy comments:', updatedComments);
+    }
+  };
   
   const hasAttachments = post.attachments && post.attachments.length > 0;
+  
+  // Calculate total comments count
+  const totalCommentsCount = enhancedComments.length + (post.comments?.length || 0);
 
   return (
     <motion.div 
@@ -511,7 +534,7 @@ const FeedPost = ({
             whileHover={{ scale: 1.05, color: "#a855f7" }}
           >
             <MessageCircle className="h-4 w-4 text-purple-400" />
-            <span className="font-medium">{comments.length.toLocaleString()}</span>
+            <span className="font-medium">{totalCommentsCount.toLocaleString()}</span>
             <span className="text-xs">comments</span>
           </motion.div>
           <motion.div 
@@ -574,9 +597,9 @@ const FeedPost = ({
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 <span className="text-sm font-medium">
-                  {comments.length > 0 ? comments.length.toLocaleString() : 'Comment'}
+                  {totalCommentsCount > 0 ? totalCommentsCount.toLocaleString() : 'Comment'}
                 </span>
-                {comments.length > 0 && (
+                {totalCommentsCount > 0 && (
                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
                 )}
               </Button>
