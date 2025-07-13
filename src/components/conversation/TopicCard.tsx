@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
 import { useNotifications } from '@/contexts/NotificationContext';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Avatar } from '../ui/avatar';
 import { Badge } from '../ui/badge';
+import { ShareDialog } from './ShareDialog';
+import { useShareAnalytics } from '@/hooks/useShareAnalytics';
 
 interface TopicCardProps {
   topic: {
@@ -30,10 +32,18 @@ interface TopicCardProps {
 
 const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
   const { addNotification } = useNotifications();
+  const { trackShare, getTopicShares, loadAnalytics } = useShareAnalytics();
   const [participantCount, setParticipantCount] = useState(topic.participants);
   const [hasJoined, setHasJoined] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [likes, setLikes] = useState(0);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareCount, setShareCount] = useState(topic.shares || 0);
+
+  useEffect(() => {
+    loadAnalytics();
+    setShareCount(topic.shares || getTopicShares(topic.id));
+  }, [topic.id, topic.shares, getTopicShares, loadAnalytics]);
 
   const handleJoinTopic = () => {
     if (!hasJoined) {
@@ -69,7 +79,13 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Share implementation
+    setShareDialogOpen(true);
+  };
+
+  const handleShareComplete = (platform: string) => {
+    trackShare(topic.id, platform, true);
+    setShareCount(prev => prev + 1);
+    setShareDialogOpen(false);
   };
 
   const getTypeIcon = () => {
@@ -193,6 +209,16 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleShare}
+                className="flex items-center space-x-1.5 text-white/50 hover:text-blue-400 transition-colors"
+              >
+                <Share2 className="h-4 w-4" />
+                {shareCount > 0 && <span className="text-sm">{shareCount}</span>}
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleBookmark}
                 className="flex items-center space-x-1.5 text-white/50 hover:text-primary transition-colors"
               >
@@ -226,6 +252,14 @@ const TopicCard = ({ topic, onTopicClick }: TopicCardProps) => {
           </motion.button>
         </div>
       </div>
+
+      {/* Share Dialog */}
+      <ShareDialog
+        open={shareDialogOpen}
+        onOpenChange={setShareDialogOpen}
+        topic={topic}
+        onShareComplete={handleShareComplete}
+      />
     </motion.div>
   );
 };
